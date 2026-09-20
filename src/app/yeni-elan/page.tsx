@@ -8,6 +8,7 @@ import Link from "next/link";
 import { UploadCloud, CheckCircle, Info, Plus, ArrowRight, Crown, Star } from "lucide-react";
 import { AZERBAIJAN_CITIES } from "@/data/cities";
 import { uploadImageToImgBB } from "@/lib/imgbb";
+import { applySmartFilters } from "@/lib/smartFilters";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 
@@ -297,8 +298,8 @@ export default function NewAdPage() {
         <div className="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-12 h-12" />
         </div>
-        <h1 className="text-3xl font-bold text-black mb-4">Elanınız uğurla əlavə edildi!</h1>
-        <p className="text-gray-700 mb-8 font-medium">Yeni elanınız artıq yoxlanışa göndərildi və qısa zamanda saytda görünəcək. Daha çox alıcı tapmaq üçün elanınızı önə çəkə bilərsiniz.</p>
+        <h1 className="text-3xl font-bold text-black mb-4">Elanınız yoxlanışdadır (GÖZLƏMƏDƏ)!</h1>
+        <p className="text-gray-700 mb-8 font-medium">Elanınız avtomatik yoxlanışdan keçir (1 dəqiqə ərzində aktiv olacaq). Elanlar siyahısında izləyə bilərsiniz.</p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button 
@@ -308,10 +309,10 @@ export default function NewAdPage() {
             <Crown className="w-5 h-5" /> Reklam et
           </button>
           <Link 
-            href={`/elan/${createdAdId}`}
+            href={`/kabinet`}
             className="px-8 py-4 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl transition-colors"
           >
-            Elana bax
+            Elanlarıma bax (Kabinet)
           </Link>
         </div>
       </div>
@@ -381,17 +382,8 @@ export default function NewAdPage() {
                 
                 // Get options either from standard options or dynamicOptions based on parent value
                 let currentOptions = field.options;
-                // Smart Filter for Storage based on Model (iPhone examples)
-                if (field.name === 'storage' && dynamicDetails.brand === 'Apple' && dynamicDetails.model) {
-                  const model = dynamicDetails.model;
-                  if (model.includes('15 Pro Max') || model.includes('16 Pro Max')) {
-                    currentOptions = currentOptions?.filter(o => !['32 GB', '64 GB', '128 GB'].includes(o));
-                  } else if (model.includes('15') || model.includes('14') || model.includes('13')) {
-                    currentOptions = currentOptions?.filter(o => !['32 GB', '64 GB'].includes(o));
-                  } else if (model.includes('12') || model.includes('11')) {
-                    currentOptions = currentOptions?.filter(o => !['32 GB'].includes(o));
-                  }
-                }
+                // Apply global smart filters for all categories
+                currentOptions = applySmartFilters(field.name, currentOptions, dynamicDetails);
 
                 if (field.dependsOn && field.dynamicOptions) {
                   const parentVal = dynamicDetails[field.dependsOn];
