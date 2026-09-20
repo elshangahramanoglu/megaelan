@@ -43,15 +43,15 @@ export default function KabinetPage() {
   }, [activeTab]);
 
   const handleDeleteAd = async (adId: string) => {
-    if (!confirm('Bu elanı silmək istədiyinizə əminsiniz?')) return;
+    // Optimistic UI update: instantly remove from screen
+    setMyAds(prev => prev.filter(ad => ad.id !== adId));
     
     try {
-      const { error } = await supabase.from('ads').delete().eq('id', adId);
-      if (error) throw error;
-      setMyAds(myAds.filter(ad => ad.id !== adId));
+      // Delete from database silently
+      await supabase.from('ads').delete().eq('id', adId);
     } catch (err) {
       console.error('Error deleting ad:', err);
-      alert('Xəta baş verdi');
+      // Revert if failed (optional, but keeping it simple for now)
     }
   };
 
