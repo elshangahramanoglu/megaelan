@@ -51,7 +51,7 @@ export default function Home_Page({ searchParams }: { searchParams: Promise<{ se
         
         {searchQuery && (
           <div className="flex items-center gap-2 text-black font-bold">
-            <span className="text-gray-500 font-medium">Axtarış:</span> "{searchQuery}"
+            <span className="text-gray-500 font-medium">Axtarış:</span> &quot;{searchQuery}&quot;
             <button onClick={() => router.push("/")} className="text-blue-600 hover:underline text-sm ml-2">Təmizlə</button>
           </div>
         )}

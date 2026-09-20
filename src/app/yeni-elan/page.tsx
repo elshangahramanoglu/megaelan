@@ -11,6 +11,20 @@ export default function NewAdPage() {
   const { user, addAd, login } = useAppContext();
   const router = useRouter();
 
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [formData, setFormData] = useState({
+    title: "",
+    categoryId: categoriesData[0].id,
+    subCategory: "",
+    price: "",
+    city: "Bakı",
+    description: "",
+    contactName: user ? `${user.firstName} ${user.lastName}`.trim() : "",
+    contactPhone: user ? user.phone : ""
+  });
+  
+  const [dynamicDetails, setDynamicDetails] = useState<Record<string, string>>({});
+
   if (!user) {
     return (
       <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-20 flex flex-col items-center text-center">
@@ -32,20 +46,6 @@ export default function NewAdPage() {
       </div>
     );
   }
-  
-  const [isSuccess, setIsSuccess] = useState(false);
-  const [formData, setFormData] = useState({
-    title: "",
-    categoryId: categoriesData[0].id,
-    subCategory: "",
-    price: "",
-    city: "Bakı",
-    description: "",
-    contactName: user ? `${user.firstName} ${user.lastName}`.trim() : "",
-    contactPhone: user ? user.phone : ""
-  });
-  
-  const [dynamicDetails, setDynamicDetails] = useState<Record<string, string>>({});
 
   const selectedCategory = categoriesData.find(c => c.id === formData.categoryId) || categoriesData[0];
 

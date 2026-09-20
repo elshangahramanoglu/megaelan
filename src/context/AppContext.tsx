@@ -86,19 +86,23 @@ const generateMockAds = (): Ad[] => {
 };
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [ads, setAds] = useState<Ad[]>([]);
+  const [ads, setAds] = useState<Ad[]>(() => {
+    if (typeof window !== 'undefined') {
+      return generateMockAds();
+    }
+    return [];
+  });
   const [favorites, setFavorites] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
-    // Client-side initialization to avoid hydration errors with random data
-    setAds(generateMockAds());
-    
     // Check local storage for user and favorites
     const savedUser = localStorage.getItem("megaelan_user");
+    // eslint-disable-next-line
     if (savedUser) setUser(JSON.parse(savedUser));
     
     const savedFavs = localStorage.getItem("megaelan_favs");
+    // eslint-disable-next-line
     if (savedFavs) setFavorites(JSON.parse(savedFavs));
   }, []);
 

@@ -6,7 +6,7 @@ export default function IstifadePage() {
       <h1 className="text-4xl font-black text-black mb-8">İstifadəçi Razılaşması</h1>
       
       <div className="prose prose-blue max-w-none text-black font-medium leading-relaxed">
-        <p className="mb-8 text-lg text-gray-700">Bu İstifadəçi Razılaşması (bundan sonra "Razılaşma") MegaElan platforması (bundan sonra "Platforma") və istifadəçi arasında hüquqi müqaviləni təmsil edir.</p>
+        <p className="mb-8 text-lg text-gray-700">Bu İstifadəçi Razılaşması (bundan sonra &quot;Razılaşma&quot;) MegaElan platforması (bundan sonra &quot;Platforma&quot;) və istifadəçi arasında hüquqi müqaviləni təmsil edir.</p>
         
         <h2 className="text-2xl font-black text-blue-600 mt-10 mb-4 border-b-2 border-blue-100 pb-2">1. Ümumi Şərtlər</h2>
         <ul className="list-disc pl-5 mb-6 space-y-3">

@@ -25,7 +25,7 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
   }
 
   // Filter ads for this category
-  let categoryAds = ads.filter(ad => ad.categoryId === categoryId);
+  const categoryAds = ads.filter(ad => ad.categoryId === categoryId);
   
   // Sort ads
   if (sortOrder === "cheapest") {
@@ -92,7 +92,7 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
               <ArrowUpDown className="w-4 h-4 text-gray-500" />
               <select 
                 value={sortOrder}
-                onChange={(e) => setSortOrder(e.target.value as any)}
+                onChange={(e) => setSortOrder(e.target.value as 'newest' | 'cheapest' | 'expensive')}
                 className="bg-transparent border-none outline-none text-black font-bold cursor-pointer text-sm"
               >
                 <option value="newest">Ən yenilər</option>
