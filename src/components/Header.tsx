@@ -65,7 +65,7 @@ export default function Header() {
             </div>
 
             {/* Logo (Centered on Mobile, Left on Desktop) */}
-            <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none flex items-center justify-center lg:ml-4 lg:mr-4">
+            <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none flex items-center justify-center lg:ml-8 lg:mr-6">
               <Link 
                 href="/" 
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -77,16 +77,23 @@ export default function Header() {
                   alt="MegaElan" 
                   width={150} 
                   height={45} 
-                  className="hidden lg:block object-contain w-auto h-12"
+                  className="hidden lg:block object-contain w-auto h-11"
                   priority
                 />
-                {/* Mobile Text Logo */}
-                <span className="lg:hidden text-2xl font-black text-black tracking-tight">MegaElan</span>
+                {/* Mobile Logo */}
+                <Image 
+                  src="/logo.png" 
+                  alt="MegaElan" 
+                  width={120} 
+                  height={35} 
+                  className="lg:hidden object-contain w-auto h-8"
+                  priority
+                />
               </Link>
             </div>
 
             {/* Search Bar */}
-            <form onSubmit={handleSearchSubmit} className="flex-1 hidden md:flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative">
+            <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl hidden md:flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative">
               <input 
                 type="text" 
                 value={searchQuery}
