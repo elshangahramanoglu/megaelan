@@ -6,6 +6,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Crown, Star, ArrowUpCircle, CheckCircle, Loader2, CreditCard, ShieldCheck } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 
+type Tariff = { id: string, name: string, price: number, type: 'vip' | 'premium', days: number };
+
+const TARIFFS: Tariff[] = [
+  { id: 'v1', name: '1 günlük', price: 0.50, days: 1, type: 'vip' },
+  { id: 'v3', name: '3 günlük', price: 1.30, days: 3, type: 'vip' },
+  { id: 'v7', name: '7 günlük', price: 3.00, days: 7, type: 'vip' },
+  { id: 'p1', name: '1 günlük', price: 1.00, days: 1, type: 'premium' },
+  { id: 'p7', name: '1 həftəlik', price: 5.00, days: 7, type: 'premium' },
+  { id: 'p30', name: '1 aylıq', price: 20.00, days: 30, type: 'premium' },
+];
+
 function ReklamContent() {
   const { user, ads } = useAppContext();
   const router = useRouter();
@@ -14,7 +25,7 @@ function ReklamContent() {
 
   const [selectedAdId, setSelectedAdId] = useState<string | null>(preselectedAdId);
   const [step, setStep] = useState<1 | 2 | 3>(preselectedAdId ? 2 : 1);
-  const [paymentPlan, setPaymentPlan] = useState<'vip' | 'premium' | 'bump' | null>(null);
+  const [selectedTariff, setSelectedTariff] = useState<Tariff | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   
   const myAds = ads.filter(a => a.user_id === user?.id && a.status === 'active');
@@ -34,11 +45,11 @@ function ReklamContent() {
     
     setTimeout(async () => {
       try {
-        if (!selectedAdId) throw new Error("No ad selected");
+        if (!selectedAdId || !selectedTariff) throw new Error("Məlumat tam deyil");
         
         const updateData: any = {};
-        if (paymentPlan === 'premium') updateData.is_premium = true;
-        if (paymentPlan === 'vip') updateData.is_vip = true;
+        if (selectedTariff.type === 'premium') updateData.is_premium = true;
+        if (selectedTariff.type === 'vip') updateData.is_vip = true;
         
         const { error } = await supabase.from('ads').update(updateData).eq('id', selectedAdId);
         if (error) throw error;
@@ -54,17 +65,17 @@ function ReklamContent() {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto px-4 py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
+    <div className="w-full max-w-5xl mx-auto px-4 py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <h1 className="text-3xl md:text-4xl font-black text-center text-gray-900 mb-2">Reklam Xidmətləri</h1>
-      <p className="text-center text-gray-500 mb-10 font-medium">Daha çox alıcı tapmaq üçün elanınızı önə çəkin və ya VIP edin.</p>
+      <p className="text-center text-gray-500 mb-10 font-medium">Daha çox alıcı tapmaq üçün elanınızı önə çəkin və ya Premium edin.</p>
 
       {/* STEP INDICATORS */}
-      <div className="flex items-center justify-center gap-4 mb-12">
+      <div className="flex items-center justify-center gap-2 md:gap-4 mb-12">
         <div className={`flex items-center gap-2 ${step >= 1 ? 'text-blue-600' : 'text-gray-400'}`}>
           <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${step >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>1</div>
           <span className="font-bold hidden md:inline">Elan seçimi</span>
         </div>
-        <div className={`w-16 h-1 rounded-full ${step >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`}></div>
+        <div className={`w-12 md:w-16 h-1 rounded-full ${step >= 2 ? 'bg-blue-600' : 'bg-gray-200'}`}></div>
         <div className={`flex items-center gap-2 ${step >= 2 ? 'text-blue-600' : 'text-gray-400'}`}>
           <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${step >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-200'}`}>2</div>
           <span className="font-bold hidden md:inline">Xidmət və Ödəniş</span>
@@ -102,60 +113,71 @@ function ReklamContent() {
       {step === 2 && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* TARIFFS */}
-          <div className="flex flex-col gap-4">
-            <h2 className="text-xl font-bold mb-2">Xidmət seçin</h2>
+          <div className="flex flex-col gap-6">
+            <h2 className="text-xl font-bold">Xidmət seçin</h2>
             
-            <div 
-              onClick={() => setPaymentPlan('bump')} 
-              className={`p-6 rounded-3xl border-2 cursor-pointer transition-all active:scale-95 ${paymentPlan === 'bump' ? 'border-blue-500 bg-blue-50 shadow-md transform scale-[1.02]' : 'border-gray-100 bg-white hover:border-blue-300'}`}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center gap-2 text-blue-600 font-bold text-xl"><ArrowUpCircle className="w-6 h-6" /> İrəli çək</div>
-                <div className="text-2xl font-black">2.00 ₼</div>
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">
+              <div className="bg-blue-50 p-4 border-b border-gray-100 flex items-center gap-3">
+                <ArrowUpCircle className="w-6 h-6 text-blue-600" />
+                <div>
+                  <h3 className="font-bold text-lg text-blue-900">İrəli Çək (VIP)</h3>
+                  <p className="text-xs text-blue-700">Elanın axtarışda yuxarı qalxması üçün</p>
+                </div>
               </div>
-              <p className="text-gray-500 text-sm font-medium">Elanınız axtarış nəticələrində ən yuxarı qalxaraq yenidən tarixini təzələyəcək.</p>
+              <div className="p-4 flex flex-col gap-2">
+                {TARIFFS.filter(t => t.type === 'vip').map(t => (
+                  <div 
+                    key={t.id} 
+                    onClick={() => setSelectedTariff(t)}
+                    className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedTariff?.id === t.id ? 'border-blue-500 bg-blue-50' : 'border-gray-100 hover:border-blue-200'}`}
+                  >
+                    <span className="font-bold text-gray-800">{t.name}</span>
+                    <span className="font-black text-lg text-blue-600">{t.price.toFixed(2)} ₼</span>
+                  </div>
+                ))}
+              </div>
             </div>
             
-            <div 
-              onClick={() => setPaymentPlan('premium')} 
-              className={`p-6 rounded-3xl border-2 cursor-pointer transition-all active:scale-95 ${paymentPlan === 'premium' ? 'border-orange-500 bg-orange-50 shadow-md transform scale-[1.02]' : 'border-gray-100 bg-white hover:border-orange-300'}`}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center gap-2 text-orange-500 font-bold text-xl"><Crown className="w-6 h-6" /> Premium</div>
-                <div className="text-2xl font-black">5.00 ₼</div>
+            <div className="bg-white rounded-3xl border border-gray-100 shadow-md overflow-hidden">
+              <div className="bg-orange-50 p-4 border-b border-gray-100 flex items-center gap-3">
+                <Crown className="w-6 h-6 text-orange-500" />
+                <div>
+                  <h3 className="font-bold text-lg text-orange-900">Premium Elanlar</h3>
+                  <p className="text-xs text-orange-700">Ana səhifədə xüsusi rənglə göstərilməsi üçün</p>
+                </div>
               </div>
-              <p className="text-gray-500 text-sm font-medium">Elanınız xüsusi rənglə vurğulanacaq və axtarışlarda premium blokunda görünəcək.</p>
+              <div className="p-4 flex flex-col gap-2">
+                {TARIFFS.filter(t => t.type === 'premium').map(t => (
+                  <div 
+                    key={t.id} 
+                    onClick={() => setSelectedTariff(t)}
+                    className={`flex items-center justify-between p-4 rounded-xl border-2 cursor-pointer transition-all ${selectedTariff?.id === t.id ? 'border-orange-500 bg-orange-50' : 'border-gray-100 hover:border-orange-200'}`}
+                  >
+                    <span className="font-bold text-gray-800">{t.name}</span>
+                    <span className="font-black text-lg text-orange-600">{t.price.toFixed(2)} ₼</span>
+                  </div>
+                ))}
+              </div>
             </div>
 
-            <div 
-              onClick={() => setPaymentPlan('vip')} 
-              className={`p-6 rounded-3xl border-2 cursor-pointer transition-all active:scale-95 ${paymentPlan === 'vip' ? 'border-purple-500 bg-purple-50 shadow-md transform scale-[1.02]' : 'border-gray-100 bg-white hover:border-purple-300'}`}
-            >
-              <div className="flex justify-between items-center mb-2">
-                <div className="flex items-center gap-2 text-purple-600 font-bold text-xl"><Star className="w-6 h-6" /> VIP Elan</div>
-                <div className="text-2xl font-black">15.00 ₼</div>
-              </div>
-              <p className="text-gray-500 text-sm font-medium">Sizin elanınız ana səhifədə günlərlə VIP karuselində ən diqqətçəkən yerdə qalacaq.</p>
-            </div>
-            
-            <button onClick={() => setStep(1)} className="text-gray-500 font-bold hover:text-black mt-2 self-start transition-colors">← Başqa elan seç</button>
+            <button onClick={() => setStep(1)} className="text-gray-500 font-bold hover:text-black self-start transition-colors">← Başqa elan seç</button>
           </div>
 
           {/* PAYMENT FORM */}
           <div>
-            <div className={`bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-xl transition-all duration-500 ${!paymentPlan ? 'opacity-50 pointer-events-none filter grayscale' : ''}`}>
+            <div className={`bg-white p-6 md:p-8 rounded-3xl border border-gray-100 shadow-xl transition-all duration-500 ${!selectedTariff ? 'opacity-50 pointer-events-none filter grayscale' : ''}`}>
               <div className="flex items-center gap-3 mb-6 border-b border-gray-100 pb-4">
                 <CreditCard className="w-8 h-8 text-green-600" />
                 <div>
                   <h3 className="font-bold text-xl">Kartla ödəniş</h3>
-                  <p className="text-sm text-gray-500 font-medium">Tam təhlükəsiz SSL bağlantısı</p>
+                  <p className="text-sm text-gray-500 font-medium">{selectedTariff ? `${selectedTariff.name} ${selectedTariff.type === 'vip' ? 'İrəli çək' : 'Premium'}` : 'Xidmət seçilməyib'}</p>
                 </div>
               </div>
               
               <form onSubmit={handlePayment} className="flex flex-col gap-4">
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Kartın üzərindəki ad və soyad</label>
-                  <input type="text" placeholder="ELSHAN GAHRAMANOGLU" className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 focus:ring-green-500 outline-none transition-colors uppercase font-medium" required />
+                  <input type="text" placeholder="ELSHAN GAHRAMANOGLU" className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 focus:border-green-500 outline-none transition-colors uppercase font-medium" required />
                 </div>
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Kartın nömrəsi</label>
@@ -174,12 +196,12 @@ function ReklamContent() {
                 
                 <div className="mt-6 flex items-center justify-between text-sm font-medium text-gray-500 mb-2">
                   <span className="flex items-center gap-1"><ShieldCheck className="w-4 h-4 text-green-500"/> Təhlükəsiz ödəniş</span>
-                  <span>Məbləğ: <span className="font-black text-xl text-black">{paymentPlan === 'vip' ? '15.00' : paymentPlan === 'premium' ? '5.00' : '2.00'} ₼</span></span>
+                  <span>Məbləğ: <span className="font-black text-xl text-black">{selectedTariff?.price.toFixed(2)} ₼</span></span>
                 </div>
 
                 <button 
                   type="submit" 
-                  disabled={isProcessing || !paymentPlan}
+                  disabled={isProcessing || !selectedTariff}
                   className="w-full bg-green-600 hover:bg-green-700 active:scale-95 text-white font-black text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all"
                 >
                   {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : "Ödənişi Təsdiqlə"}

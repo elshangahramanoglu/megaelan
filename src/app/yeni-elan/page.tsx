@@ -91,6 +91,11 @@ export default function NewAdPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdAdId, setCreatedAdId] = useState<string | null>(null);
   
+  // Limit tracking
+  const [categoryAdCount, setCategoryAdCount] = useState<number>(0);
+  const [showAdPayment, setShowAdPayment] = useState(false);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  
   
   
 
