@@ -52,22 +52,28 @@ export default function Header() {
     <>
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
         <div className="w-full px-4 md:px-8 py-3">
-          <div className="flex items-center gap-4 lg:gap-8">
-            {/* Left: Mobile Menu & Logo */}
-            <div className="flex items-center gap-3">
+          <div className="flex items-center justify-between lg:justify-start gap-4 lg:gap-8 relative">
+            
+            {/* Mobile Menu Toggle (Left on Mobile) */}
+            <div className="flex lg:hidden items-center">
               <button 
                 onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden text-black hover:text-blue-600"
+                className="text-black hover:text-blue-600"
               >
                 <Menu className="w-7 h-7" />
               </button>
-              <Link href="/" className="inline-block mix-blend-multiply flex-shrink-0">
+            </div>
+
+            {/* Logo (Centered on Mobile, Left on Desktop) */}
+            <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none flex items-center justify-center">
+              <Link href="/" className="inline-block flex-shrink-0">
                 <Image 
                   src="/logo.png" 
                   alt="MegaElan" 
-                  width={140} 
-                  height={40} 
-                  className="object-contain w-auto h-8 md:h-12"
+                  width={200} 
+                  height={60} 
+                  className="object-contain w-auto h-12 md:h-16 lg:h-20"
+                  priority
                 />
               </Link>
             </div>
@@ -207,7 +213,7 @@ export default function Header() {
               className="fixed inset-0 bg-white z-50 flex flex-col h-[100dvh] overflow-hidden lg:hidden"
             >
               <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                <Image src="/logo.png" alt="MegaElan" width={120} height={35} className="object-contain mix-blend-multiply" />
+                <Image src="/logo.png" alt="MegaElan" width={180} height={50} className="object-contain" priority />
                 <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-black bg-gray-100 rounded-full">
                   <X className="w-6 h-6" />
                 </button>
