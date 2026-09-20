@@ -14,6 +14,7 @@ export interface Ad {
   subCategory?: string;
   isPremium: boolean;
   imagePlaceholder: string;
+  images?: string[];
   description: string;
   contactName: string;
   contactPhone: string;

@@ -1,23 +1,27 @@
-"use client";
+import re
 
-import React, { useState, useEffect } from "react";
+with open("src/app/kabinet/page.tsx", "r") as f:
+    content = f.read()
+
+# 1. Add new imports
+new_imports = """import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
-import Link from "next/link";
+import Link from "next/link";"""
+content = content.replace('import React, { useState } from "react";\nimport { useAppContext } from "@/context/AppContext";\nimport { User, LogOut, CheckCircle } from "lucide-react";\nimport { useRouter } from "next/navigation";', new_imports)
 
-export default function KabinetPage() {
-  const { user, updateUser, logout } = useAppContext();
-  const router = useRouter();
-  
-  const [name, setName] = useState(user?.name || "");
-  const [isSaved, setIsSaved] = useState(false);
+# 2. Add state for tabs and ads
+state_find = '  const [isSaved, setIsSaved] = useState(false);'
+state_replace = """  const [isSaved, setIsSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<'profil' | 'elanlar'>('profil');
   const [myAds, setMyAds] = useState<any[]>([]);
-  const [isLoadingAds, setIsLoadingAds] = useState(false);
+  const [isLoadingAds, setIsLoadingAds] = useState(false);"""
+content = content.replace(state_find, state_replace)
 
-  const fetchMyAds = async () => {
+# 3. Add fetch logic and delete logic
+fetch_logic = """  const fetchMyAds = async () => {
     if (!user) return;
     setIsLoadingAds(true);
     try {
@@ -53,52 +57,18 @@ export default function KabinetPage() {
       console.error('Error deleting ad:', err);
       alert('Xəta baş verdi');
     }
-  };
+  };"""
+content = content.replace('  React.useEffect(() => {', fetch_logic + '\n\n  React.useEffect(() => {')
 
-  React.useEffect(() => {
-    if (!user) {
-      router.push("/");
-    }
-  }, [user, router]);
-
-  if (!user) {
-    return null;
-  }
-
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateUser({ name });
-    setIsSaved(true);
-    setTimeout(() => setIsSaved(false), 3000);
-  };
-
-  const handleLogout = () => {
-    logout();
-    router.push("/");
-  };
-
-  return (
-    <div className="w-full max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
-      <div className="flex items-center gap-4 mb-8">
-        <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-          <User className="w-8 h-8" />
-        </div>
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Şəxsi Kabinet</h1>
-          <p className="text-gray-500">Məlumatlarınızı buradan idarə edə bilərsiniz.</p>
-        </div>
-      </div>
-
-      <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden flex flex-col md:flex-row">
-        
-        {/* Sidebar menu */}
-        <div className="w-full md:w-1/3 bg-slate-50 border-r border-gray-100 p-6">
-          <div className="mb-8">
-            <p className="text-sm text-gray-500 mb-1">Qeydiyyat nömrəsi</p>
-            <p className="font-bold text-gray-900">+994 {user.phone}</p>
-          </div>
-          
-          <nav className="flex flex-col gap-2">
+# 4. Fix sidebar tabs
+sidebar_find = """          <nav className="flex flex-col gap-2">
+            <button className="text-left px-4 py-3 bg-blue-50 text-blue-600 rounded-xl font-medium transition-colors">
+              Şəxsi məlumatlar
+            </button>
+            <button className="text-left px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-xl font-medium transition-colors">
+              Mənim elanlarım
+            </button>"""
+sidebar_replace = """          <nav className="flex flex-col gap-2">
             <button 
               onClick={() => setActiveTab('profil')}
               className={`text-left px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'profil' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
@@ -110,21 +80,56 @@ export default function KabinetPage() {
               className={`text-left px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'elanlar' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
             >
               Mənim elanlarım
-            </button>
-            <button className="text-left px-4 py-3 text-gray-600 hover:bg-gray-100 rounded-xl font-medium transition-colors">
-              Balansım (0.00 AZN)
-            </button>
-            <div className="h-px bg-gray-200 my-2"></div>
-            <button 
-              onClick={handleLogout}
-              className="text-left px-4 py-3 text-red-500 hover:bg-red-50 rounded-xl font-medium transition-colors flex items-center gap-2"
-            >
-              <LogOut className="w-5 h-5" /> Çıxış et
-            </button>
-          </nav>
-        </div>
+            </button>"""
+content = content.replace(sidebar_find, sidebar_replace)
 
-        {/* Form area */}
+# 5. Conditional render for form vs ads
+form_area_find = """        {/* Form area */}
+        <div className="w-full md:w-2/3 p-6 md:p-8">
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Şəxsi məlumatlar</h2>
+          
+          {isSaved && (
+            <div className="mb-6 p-4 bg-green-50 border border-green-200 text-green-700 rounded-xl flex items-center gap-2">
+              <CheckCircle className="w-5 h-5" /> Məlumatlarınız uğurla yadda saxlanıldı!
+            </div>
+          )}
+
+          <form onSubmit={handleSave} className="flex flex-col gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Ad və Soyad</label>
+                <input 
+                  type="text" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Adınızı daxil edin"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Mobil nömrə (Dəyişdirilə bilməz)</label>
+              <input 
+                type="text" 
+                value={`+994 ${user.phone}`}
+                disabled
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-500 outline-none"
+              />
+            </div>
+
+            <div className="pt-4 border-t border-gray-100 flex justify-end">
+              <button 
+                type="submit" 
+                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-8 rounded-xl transition-colors"
+              >
+                Yadda saxla
+              </button>
+            </div>
+          </form>
+        </div>"""
+
+form_area_replace = """        {/* Form area */}
         <div className="w-full md:w-2/3 p-6 md:p-8">
           {activeTab === 'profil' ? (
             <>
@@ -218,9 +223,9 @@ export default function KabinetPage() {
               )}
             </>
           )}
-        </div>
+        </div>"""
 
-      </div>
-    </div>
-  );
-}
+content = content.replace(form_area_find, form_area_replace)
+
+with open("src/app/kabinet/page.tsx", "w") as f:
+    f.write(content)

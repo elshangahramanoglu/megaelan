@@ -51,8 +51,15 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
         {/* Main Content */}
         <div className="w-full lg:w-2/3 flex flex-col gap-8">
           {/* Image Gallery (Placeholder) */}
-          <div className="bg-gray-100 rounded-3xl aspect-[4/3] flex items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group">
-            {ad.imagePlaceholder.startsWith('http') ? (
+          {/* Image Gallery */}
+          <div className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group">
+            {(ad.images && ad.images.length > 0) ? (
+              <div className="w-full h-full relative flex overflow-x-auto snap-x snap-mandatory hide-scrollbar">
+                {ad.images.map((img, idx) => (
+                  <img key={idx} src={img} alt={`${ad.title} - ${idx+1}`} className="w-full h-full object-cover shrink-0 snap-center" />
+                ))}
+              </div>
+            ) : ad.imagePlaceholder.startsWith('http') ? (
               <img src={ad.imagePlaceholder} alt={ad.title} className="w-full h-full object-cover" />
             ) : (
               ad.imagePlaceholder
@@ -62,8 +69,8 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 <Crown className="w-4 h-4" /> Premium
               </div>
             )}
-            <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm">
-              1 / 5
+            <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm z-10 pointer-events-none">
+              {(ad.images && ad.images.length > 0) ? `${ad.images.length} şəkil` : "1 / 1"}
             </div>
           </div>
 
@@ -120,9 +127,9 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
         </div>
 
         {/* Sidebar */}
-        <div className="w-full lg:w-1/3 flex flex-col gap-6">
+        <div className="w-full lg:w-1/3 flex flex-col gap-6 relative">
           {/* Contact Box */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm sticky top-[100px]">
+          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm sticky top-[100px] z-10">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black">
                 {ad.contactName.charAt(0)}
