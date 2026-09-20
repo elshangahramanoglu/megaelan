@@ -88,26 +88,38 @@ const generateMockAds = (): Ad[] => {
 };
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [ads, setAds] = useState<Ad[]>(() => {
-    if (typeof window !== 'undefined') {
-      return generateMockAds();
-    }
-    return [];
-  });
+  const [ads, setAds] = useState<Ad[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [isLoginOpen, setLoginOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+    // Initialize mock data safely on client to avoid hydration mismatch
+    const timer = setTimeout(() => {
+      setAds(generateMockAds());
+    }, 0);
+    
     // Check local storage for user and favorites
     const savedUser = localStorage.getItem("megaelan_user");
     // eslint-disable-next-line
-    if (savedUser) setUser(JSON.parse(savedUser));
+    if (savedUser) {
+      setTimeout(() => setUser(JSON.parse(savedUser)), 0);
+    }
     
     const savedFavs = localStorage.getItem("megaelan_favs");
     // eslint-disable-next-line
-    if (savedFavs) setFavorites(JSON.parse(savedFavs));
+    if (savedFavs) {
+      setTimeout(() => setFavorites(JSON.parse(savedFavs)), 0);
+    }
+
+    return () => clearTimeout(timer);
   }, []);
+
+  // Prevent rendering children until mounted to avoid hydration mismatches 
+  // on any component that uses context data immediately
+  
 
   const toggleFavorite = (id: string) => {
     setFavorites(prev => {
