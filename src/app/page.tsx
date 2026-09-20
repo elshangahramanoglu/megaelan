@@ -1,123 +1,125 @@
+import React from "react";
 import Link from "next/link";
-import { 
-  Home, 
-  Car, 
-  Tv, 
-  Settings, 
-  Building2, 
-  Briefcase, 
-  Shirt, 
-  Palette, 
-  WashingMachine, 
-  Smartphone, 
-  Baby, 
-  UserPlus, 
-  Dog, 
-  Backpack, 
-  Store,
-  Search,
-  MapPin,
-  ChevronDown
-} from "lucide-react";
-import Image from "next/image";
-
-const categories = [
-  { id: 1, name: "Ev və Bağ üçün", icon: <Home className="w-6 h-6" /> },
-  { id: 2, name: "Nəqliyyat", icon: <Car className="w-6 h-6" /> },
-  { id: 3, name: "Elektronika", icon: <Tv className="w-6 h-6" /> },
-  { id: 4, name: "Ehtiyat Hissələri və aksessuarlar", icon: <Settings className="w-6 h-6" /> },
-  { id: 5, name: "Daşınmaz əmlak", icon: <Building2 className="w-6 h-6" /> },
-  { id: 6, name: "Xidmətlər və biznes", icon: <Briefcase className="w-6 h-6" /> },
-  { id: 7, name: "Şəxsi əşyalar", icon: <Shirt className="w-6 h-6" /> },
-  { id: 8, name: "Hobbi asudə", icon: <Palette className="w-6 h-6" /> },
-  { id: 9, name: "Məişət texnikası", icon: <WashingMachine className="w-6 h-6" /> },
-  { id: 10, name: "Telefonlar", icon: <Smartphone className="w-6 h-6" /> },
-  { id: 11, name: "Uşaq aləmi", icon: <Baby className="w-6 h-6" /> },
-  { id: 12, name: "İş elanları", icon: <UserPlus className="w-6 h-6" /> },
-  { id: 13, name: "Heyvanlar", icon: <Dog className="w-6 h-6" /> },
-  { id: 14, name: "Məktəblilər üçün", icon: <Backpack className="w-6 h-6" /> },
-  { id: 15, name: "Mağazalar", icon: <Store className="w-6 h-6" /> },
-];
+import { Crown } from "lucide-react";
+import MarqueeCategories from "@/components/MarqueeCategories";
 
 export default function Home_Page() {
   return (
-    <div className="flex flex-col gap-12 pb-12">
-      {/* Search Section */}
-      <section className="bg-slate-50 py-10 border-b border-gray-100">
-        <div className="container mx-auto px-4 md:px-8">
-          <div className="max-w-4xl mx-auto bg-white rounded-full shadow-sm border border-gray-200 flex flex-col md:flex-row items-center p-2">
-            <div className="flex-1 flex items-center w-full px-4 py-2 border-b md:border-b-0 md:border-r border-gray-200">
-              <Search className="text-gray-400 w-5 h-5 mr-3" />
-              <input 
-                type="text" 
-                placeholder="Əşya, xidmət və ya iş axtar..." 
-                className="w-full outline-none text-gray-700 bg-transparent placeholder-gray-400"
-              />
-            </div>
-            <div className="w-full md:w-auto flex items-center px-4 py-2">
-              <button className="flex items-center gap-2 text-gray-600 hover:text-blue-600 w-full md:w-auto justify-between md:justify-start">
-                <div className="flex items-center gap-2">
-                  <MapPin className="text-blue-500 w-5 h-5" />
-                  <span>Bütün Azərbaycan</span>
-                </div>
-                <ChevronDown className="w-4 h-4 ml-2" />
-              </button>
-            </div>
-            <div className="w-full md:w-auto mt-2 md:mt-0 md:ml-2">
-              <button className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-full px-8 py-3 font-medium transition-colors">
-                Tap
-              </button>
-            </div>
-          </div>
-        </div>
+    <div className="flex flex-col gap-0 pb-20 bg-white">
+      {/* Marquee Animated Categories */}
+      <section className="border-b border-gray-100">
+        <MarqueeCategories />
       </section>
 
-      {/* Categories */}
-      <section className="container mx-auto px-4 md:px-8">
-        <h2 className="text-2xl font-bold mb-8 text-gray-800">Kataloq</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-          {categories.map((cat) => (
-            <Link 
-              key={cat.id} 
-              href={`/kateqoriya/${cat.id}`}
-              className="group flex flex-col items-center text-center p-6 bg-white border border-gray-100 rounded-2xl hover:border-blue-500 hover:shadow-md transition-all duration-300"
-            >
-              <div className="w-14 h-14 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mb-4 group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                {cat.icon}
+      {/* Premium Ads Section */}
+      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-16">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
+            Premium elanlar
+          </h2>
+          <Link href="/premium" className="text-blue-600 font-medium hover:underline text-sm md:text-base">
+            Hamısına bax
+          </Link>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+          {/* Promote Box */}
+          <div className="group cursor-pointer bg-blue-50 rounded-2xl flex flex-col items-center justify-center p-6 border border-blue-100 hover:border-blue-400 transition-colors h-[320px]">
+            <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-sm mb-4">
+              <Crown className="w-8 h-8 text-orange-500" />
+            </div>
+            <h3 className="font-bold text-gray-900 mb-4 text-center">Elanı Premium et!</h3>
+            <button className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-6 rounded-lg transition-colors w-full">
+              Premium et
+            </button>
+          </div>
+
+          {/* Premium Ad Card Skeletons */}
+          {[1, 2, 3, 4].map((item) => (
+            <div key={item} className="group cursor-pointer bg-white rounded-2xl flex flex-col hover:shadow-lg transition-shadow border border-gray-100 h-[320px] overflow-hidden">
+              <div className="h-44 bg-gray-100 relative w-full">
+                <div className="absolute inset-0 flex items-center justify-center text-gray-300 group-hover:scale-105 transition-transform duration-500">
+                  Şəkil
+                </div>
+                <div className="absolute top-2 left-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded">
+                  Mağaza
+                </div>
+                <div className="absolute top-2 right-2 p-1.5 bg-black/20 rounded-full hover:bg-black/40 transition-colors">
+                  <HeartIcon className="w-4 h-4 text-white" />
+                </div>
               </div>
-              <span className="text-sm font-medium text-gray-700 group-hover:text-blue-600 line-clamp-2">
-                {cat.name}
-              </span>
-            </Link>
+              <div className="p-4 flex flex-col flex-1 justify-between">
+                <div>
+                  <h3 className="font-bold text-xl text-gray-900 mb-1">{(Math.random() * 1000 + 100).toFixed()} <span className="text-sm font-normal">AZN</span></h3>
+                  <p className="text-gray-700 text-sm mb-2 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
+                    Nümunə Premium Elan Başlığı - Çox əla vəziyyətdədir
+                  </p>
+                </div>
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-gray-400 text-xs truncate max-w-[80%]">Bakı, bu gün 14:32</p>
+                  <Crown className="w-4 h-4 text-orange-500 flex-shrink-0" />
+                </div>
+              </div>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* Latest Ads Section (Placeholder) */}
-      <section className="container mx-auto px-4 md:px-8 mt-4">
+      {/* All Ads Section */}
+      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-16">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl font-bold text-gray-800">Son elanlar</h2>
-          <Link href="/elanlar" className="text-blue-600 font-medium hover:underline flex items-center gap-1">
-            Hamısına bax <span aria-hidden="true">→</span>
+          <h2 className="text-2xl font-bold text-gray-900">Son elanlar</h2>
+          <Link href="/elanlar" className="text-blue-600 font-medium hover:underline text-sm md:text-base">
+            Hamısına bax
           </Link>
         </div>
         
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-          {/* Ad Card Skeleton/Placeholder */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+          {/* Normal Ad Card Skeletons */}
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item) => (
-            <div key={item} className="group cursor-pointer">
-              <div className="aspect-[4/3] bg-gray-100 rounded-xl mb-3 overflow-hidden relative border border-gray-200">
+            <div key={item} className="group cursor-pointer bg-white rounded-2xl flex flex-col hover:shadow-lg transition-shadow border border-gray-100 h-[320px] overflow-hidden">
+              <div className="h-44 bg-gray-100 relative w-full">
                 <div className="absolute inset-0 flex items-center justify-center text-gray-300 group-hover:scale-105 transition-transform duration-500">
                   Şəkil
                 </div>
+                <div className="absolute top-2 right-2 p-1.5 bg-black/20 rounded-full hover:bg-black/40 transition-colors">
+                  <HeartIcon className="w-4 h-4 text-white" />
+                </div>
               </div>
-              <h3 className="font-semibold text-lg text-gray-900 mb-1">{(Math.random() * 1000).toFixed()} AZN</h3>
-              <p className="text-gray-600 text-sm mb-2 line-clamp-2 hover:text-blue-600 transition-colors">Nümunə elan başlığı - Çox yaxşı vəziyyətdə</p>
-              <p className="text-gray-400 text-xs">Bakı, bu gün 14:32</p>
+              <div className="p-4 flex flex-col flex-1 justify-between">
+                <div>
+                  <h3 className="font-bold text-xl text-gray-900 mb-1">{(Math.random() * 500 + 50).toFixed()} <span className="text-sm font-normal">AZN</span></h3>
+                  <p className="text-gray-700 text-sm mb-2 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
+                    Nümunə Adi Elan Başlığı - Yaxşı vəziyyətdə
+                  </p>
+                </div>
+                <div className="mt-2">
+                  <p className="text-gray-400 text-xs">Bakı, dünən 09:15</p>
+                </div>
+              </div>
             </div>
           ))}
         </div>
       </section>
     </div>
+  );
+}
+
+function HeartIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+    </svg>
   );
 }
