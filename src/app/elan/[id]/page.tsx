@@ -52,7 +52,11 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
         <div className="w-full lg:w-2/3 flex flex-col gap-8">
           {/* Image Gallery (Placeholder) */}
           <div className="bg-gray-100 rounded-3xl aspect-[4/3] flex items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group">
-            {ad.imagePlaceholder}
+            {ad.imagePlaceholder.startsWith('http') ? (
+              <img src={ad.imagePlaceholder} alt={ad.title} className="w-full h-full object-cover" />
+            ) : (
+              ad.imagePlaceholder
+            )}
             {ad.isPremium && (
               <div className="absolute top-4 left-4 bg-orange-500 text-white text-sm font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
                 <Crown className="w-4 h-4" /> Premium

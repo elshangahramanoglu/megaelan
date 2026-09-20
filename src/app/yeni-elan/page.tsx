@@ -6,6 +6,9 @@ import { useAppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
 import { UploadCloud, CheckCircle, Info, Plus, ArrowRight } from "lucide-react";
 import { AZERBAIJAN_CITIES } from "@/data/cities";
+import { uploadImageToImgBB } from "@/lib/imgbb";
+import { supabase } from "@/lib/supabase";
+import { Loader2 } from "lucide-react";
 
 export default function NewAdPage() {
   const { user, addAd, setLoginOpen } = useAppContext();
@@ -24,6 +27,8 @@ export default function NewAdPage() {
   });
   
   const [dynamicDetails, setDynamicDetails] = useState<Record<string, string>>({});
+  const [files, setFiles] = useState<File[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (!user) {
     return (
@@ -62,32 +67,75 @@ export default function NewAdPage() {
     setDynamicDetails(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
     
-    const newAd = {
-      id: `new-${Date.now()}`,
-      title: formData.title,
-      price: Number(formData.price) || 0,
-      currency: "AZN",
-      city: formData.city,
-      date: "İndi",
-      categoryId: formData.categoryId,
-      subCategory: formData.subCategory,
-      isPremium: false,
-      imagePlaceholder: "Yeni Şəkil",
-      description: formData.description,
-      contactName: formData.contactName,
-      contactPhone: formData.contactPhone || (user ? user.phone : ""),
-      details: dynamicDetails
-    };
+    setIsSubmitting(true);
     
-    addAd(newAd);
-    setIsSuccess(true);
-    
-    setTimeout(() => {
-      router.push(`/elan/${newAd.id}`);
-    }, 2000);
+    try {
+      // 1. Upload images
+      const imageUrls: string[] = [];
+      for (const file of files) {
+        const url = await uploadImageToImgBB(file);
+        if (url) imageUrls.push(url);
+      }
+      
+      // 2. Insert into Supabase
+      const { data: insertedAd, error } = await supabase
+        .from('ads')
+        .insert({
+          user_id: user.id,
+          title: formData.title,
+          description: formData.description,
+          price: Number(formData.price) || 0,
+          currency: 'AZN',
+          city: formData.city,
+          category_id: formData.categoryId,
+          sub_category: formData.subCategory,
+          images: imageUrls,
+          details: dynamicDetails,
+          contact_name: formData.contactName,
+          contact_phone: formData.contactPhone || user.phone,
+          status: 'active'
+        })
+        .select()
+        .single();
+        
+      if (error) throw error;
+      
+      // 3. Update Global Context to show it immediately
+      const newAd = {
+        id: insertedAd.id,
+        title: insertedAd.title,
+        price: insertedAd.price,
+        currency: insertedAd.currency,
+        city: insertedAd.city,
+        date: "İndi",
+        categoryId: insertedAd.category_id,
+        subCategory: insertedAd.sub_category,
+        isPremium: false,
+        imagePlaceholder: imageUrls.length > 0 ? imageUrls[0] : "Yeni Şəkil", // fallback or use the real image
+        images: imageUrls,
+        description: insertedAd.description,
+        contactName: insertedAd.contact_name,
+        contactPhone: insertedAd.contact_phone,
+        details: insertedAd.details
+      };
+      
+      addAd(newAd as any);
+      setIsSuccess(true);
+      
+      setTimeout(() => {
+        router.push(`/elan/${newAd.id}`);
+      }, 2000);
+      
+    } catch (err) {
+      console.error("Ad creation error:", err);
+      alert("Elan yerləşdirilərkən xəta baş verdi.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   if (isSuccess) {
@@ -200,12 +248,34 @@ export default function NewAdPage() {
 
         {/* Images */}
         <div>
-          <label className="block text-base font-bold text-black mb-2">Şəkillər (Min 1, Maks 10 şəkil) *</label>
-          <div className="w-full border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-gray-50 transition-colors">
+          <label className="block text-base font-bold text-black mb-2">Şəkillər (Maks 10 şəkil) *</label>
+          <label className="w-full border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-gray-50 transition-colors relative">
+            <input 
+              type="file" 
+              multiple 
+              accept="image/*" 
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+              onChange={(e) => {
+                if (e.target.files) {
+                  const selectedFiles = Array.from(e.target.files).slice(0, 10);
+                  setFiles(selectedFiles);
+                }
+              }}
+            />
             <UploadCloud className="w-10 h-10 text-gray-500 mb-4" />
-            <p className="text-black font-bold mb-1 text-lg">Şəkil yükləmək üçün klikləyin və ya sürüşdürüb buraxın</p>
-            <p className="text-gray-600 text-sm font-medium">Hər şəkil üçün maksimum ölçü: 15MB. (Məsləhətlidir: üfüqi şəkillər)</p>
-          </div>
+            <p className="text-black font-bold mb-1 text-lg">Şəkil yükləmək üçün bura klikləyin</p>
+            <p className="text-gray-600 text-sm font-medium mb-4">Maksimum 10 şəkil icazə verilir.</p>
+            
+            {files.length > 0 && (
+              <div className="flex flex-wrap gap-2 justify-center mt-4">
+                {files.map((f, i) => (
+                  <span key={i} className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-md font-medium border border-blue-200">
+                    {f.name.length > 15 ? f.name.substring(0,15) + '...' : f.name}
+                  </span>
+                ))}
+              </div>
+            )}
+          </label>
         </div>
 
         {/* Price & City */}
