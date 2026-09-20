@@ -64,18 +64,24 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Logo and Text (Centered on Mobile, Left on Desktop) */}
-            <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none flex items-center justify-center">
-              <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            {/* Logo (Centered on Mobile, Left on Desktop) */}
+            <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none flex items-center justify-center lg:ml-4 lg:mr-4">
+              <Link 
+                href="/" 
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="flex items-center gap-2 flex-shrink-0"
+              >
+                {/* Desktop Logo */}
                 <Image 
                   src="/logo.png" 
                   alt="MegaElan" 
                   width={150} 
                   height={45} 
-                  className="object-contain w-auto h-9 md:h-12"
+                  className="hidden lg:block object-contain w-auto h-12"
                   priority
                 />
-                <span className="text-xl md:text-2xl font-black text-black hidden sm:block tracking-tight">MegaElan</span>
+                {/* Mobile Text Logo */}
+                <span className="lg:hidden text-2xl font-black text-black tracking-tight">MegaElan</span>
               </Link>
             </div>
 
@@ -205,7 +211,15 @@ export default function Header() {
               className="fixed inset-0 bg-white z-50 flex flex-col h-[100dvh] overflow-hidden lg:hidden"
             >
               <div className="flex items-center justify-center p-4 border-b border-gray-100 relative">
-                <span className="text-2xl font-black text-black tracking-tight">MegaElan</span>
+                <button 
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }} 
+                  className="text-2xl font-black text-black tracking-tight"
+                >
+                  MegaElan
+                </button>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="absolute right-4 p-2 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <X className="w-6 h-6" />
                 </button>

@@ -43,21 +43,21 @@ export default function RootLayout({
             {children}
           </main>
 
-          {/* Footer - No borders above it, pure clean layout */}
-          <footer className="bg-white py-8 mt-12">
-            <div className="w-full px-4 xl:px-12 mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8 md:gap-12">
+          {/* Footer */}
+          <footer className="bg-white py-10 mt-12">
+            <div className="w-full px-4 md:px-8 max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center md:items-start gap-12 text-center md:text-left">
               {/* Left Side: Logo, Slogan, Socials */}
-              <div className="flex flex-col items-start gap-4">
+              <div className="flex flex-col items-center md:items-start gap-4">
                 <Link href="/" className="inline-block">
                   <Image 
                     src="/logo.png" 
                     alt="MegaElan" 
-                    width={110} 
-                    height={35} 
+                    width={90} 
+                    height={30} 
                     className="object-contain"
                   />
                 </Link>
-                <p className="text-gray-600 font-medium leading-relaxed">
+                <p className="text-gray-600 font-medium leading-relaxed max-w-[250px]">
                   Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!
                 </p>
                 <div className="flex items-center gap-4 mt-2">
@@ -71,28 +71,28 @@ export default function RootLayout({
               </div>
 
               {/* Right Side: Links */}
-              <div className="flex gap-16 md:gap-32 w-full md:w-auto md:justify-end flex-wrap">
+              <div className="flex flex-col md:flex-row gap-10 md:gap-24 w-full md:w-auto md:justify-end">
                 <div>
                   <h3 className="font-bold text-lg text-black mb-4">MegaElan</h3>
                   <ul className="space-y-3 text-gray-600 font-medium">
-                    <li><Link href="/haqqimizda" className="hover:text-blue-600 transition-colors">Haqqımızda</Link></li>
-                    <li><Link href="/elaqe" className="hover:text-blue-600 transition-colors">Əlaqə</Link></li>
+                    <li><Link href="/haqqimizda" className="hover:text-blue-600 transition-colors inline-block">Haqqımızda</Link></li>
+                    <li><Link href="/elaqe" className="hover:text-blue-600 transition-colors inline-block">Əlaqə</Link></li>
                   </ul>
                 </div>
                 <div>
                   <h3 className="font-bold text-lg text-black mb-4">Qaydalar & Hüquqi</h3>
                   <ul className="space-y-3 text-gray-600 font-medium">
-                    <li><Link href="/qaydalar" className="hover:text-blue-600 transition-colors">Qaydalar və Tariflər</Link></li>
-                    <li><Link href="/suallar" className="hover:text-blue-600 transition-colors">Tez-tez verilən suallar</Link></li>
-                    <li><Link href="/mexfilik" className="hover:text-blue-600 transition-colors">Məxfilik siyasəti</Link></li>
-                    <li><Link href="/istifade" className="hover:text-blue-600 transition-colors">İstifadəçi razılaşması</Link></li>
+                    <li><Link href="/qaydalar" className="hover:text-blue-600 transition-colors inline-block">Qaydalar və Tariflər</Link></li>
+                    <li><Link href="/suallar" className="hover:text-blue-600 transition-colors inline-block">Tez-tez verilən suallar</Link></li>
+                    <li><Link href="/mexfilik" className="hover:text-blue-600 transition-colors inline-block">Məxfilik siyasəti</Link></li>
+                    <li><Link href="/istifade" className="hover:text-blue-600 transition-colors inline-block">İstifadəçi razılaşması</Link></li>
                   </ul>
                 </div>
               </div>
             </div>
             
-            <div className="w-full px-4 xl:px-12 mt-8 pt-4">
-              <p className="text-gray-500 font-medium text-sm text-center md:text-left">
+            <div className="w-full max-w-6xl mx-auto px-4 md:px-8 mt-12 pt-6 border-t border-gray-100">
+              <p className="text-gray-400 font-medium text-sm text-center md:text-left">
                 Copyright © {new Date().getFullYear()} MegaElan. Bütün hüquqlar qorunur.
               </p>
             </div>
