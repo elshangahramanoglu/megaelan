@@ -71,22 +71,12 @@ export default function Header() {
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
                 className="flex items-center gap-2 flex-shrink-0"
               >
-                {/* Desktop Logo */}
                 <Image 
                   src="/logo.png" 
                   alt="MegaElan" 
                   width={150} 
                   height={45} 
-                  className="hidden lg:block object-contain w-auto h-11"
-                  priority
-                />
-                {/* Mobile Logo */}
-                <Image 
-                  src="/logo.png" 
-                  alt="MegaElan" 
-                  width={120} 
-                  height={35} 
-                  className="lg:hidden object-contain w-auto h-8"
+                  className="object-contain w-auto h-8 md:h-10 lg:h-11"
                   priority
                 />
               </Link>
