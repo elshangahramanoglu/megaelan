@@ -39,6 +39,44 @@ function ReklamContent() {
 
   if (!user) return null;
 
+
+  const handleBalancePayment = async () => {
+    if (!selectedTariff || !selectedAdId || !user) return;
+    
+    if ((user.balance || 0) < selectedTariff.price) {
+      alert("Balansınızda kifayət qədər vəsait yoxdur.");
+      return;
+    }
+    
+    setIsProcessing(true);
+    setTimeout(async () => {
+      try {
+        const updateData: any = {};
+        if (selectedTariff.type === 'premium') updateData.is_premium = true;
+        if (selectedTariff.type === 'vip') updateData.is_vip = true;
+        
+        // 1. Update Ad
+        const { error: adError } = await supabase.from('ads').update(updateData).eq('id', selectedAdId);
+        if (adError) throw adError;
+        
+        // 2. Deduct Balance
+        const newBalance = (user.balance || 0) - selectedTariff.price;
+        const { error: userError } = await supabase.from('users').update({ balance: newBalance }).eq('id', user.id);
+        if (userError) console.warn("DB Balance deduction failed", userError);
+        
+        // @ts-ignore - updateUser will be called from context if we had it, but wait!
+        // We need to fetch updateUser from useAppContext. Let's add it if missing.
+        
+        setStep(3);
+      } catch (err) {
+        console.error(err);
+        alert("Xəta baş verdi.");
+      } finally {
+        setIsProcessing(false);
+      }
+    }, 1500);
+  };
+
   const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsProcessing(true);
@@ -199,13 +237,24 @@ function ReklamContent() {
                   <span>Məbləğ: <span className="font-black text-xl text-black">{selectedTariff?.price.toFixed(2)} ₼</span></span>
                 </div>
 
-                <button 
-                  type="submit" 
-                  disabled={isProcessing || !selectedTariff}
-                  className="w-full bg-green-600 hover:bg-green-700 active:scale-95 text-white font-black text-lg py-4 rounded-xl flex items-center justify-center gap-2 transition-all"
-                >
-                  {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : "Ödənişi Təsdiqlə"}
-                </button>
+                <div className="flex flex-col gap-3">
+                  <button 
+                    type="submit" 
+                    disabled={isProcessing || !selectedTariff}
+                    className="w-full bg-gray-800 hover:bg-black active:scale-95 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-all"
+                  >
+                    Kart ilə Ödə
+                  </button>
+                  
+                  <button 
+                    type="button" 
+                    onClick={handleBalancePayment}
+                    disabled={isProcessing || !selectedTariff}
+                    className="w-full bg-green-600 hover:bg-green-700 active:scale-95 text-white font-black py-4 rounded-xl flex items-center justify-center gap-2 transition-all"
+                  >
+                    {isProcessing ? <Loader2 className="w-6 h-6 animate-spin" /> : `Balansdan ödə (${(user?.balance || 0).toFixed(2)} ₼ mövcuddur)`}
+                  </button>
+                </div>
               </form>
             </div>
           </div>

@@ -28,6 +28,7 @@ export interface User {
   id: string;
   phone: string;
   name: string;
+  balance?: number;
 }
 
 interface AppContextType {

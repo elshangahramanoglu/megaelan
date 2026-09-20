@@ -71,7 +71,7 @@ const addWatermark = (file: File): Promise<File> => {
 };
 
 export default function NewAdPage() {
-  const { user, addAd, setLoginOpen } = useAppContext();
+  const { user, addAd, setLoginOpen, updateUser } = useAppContext();
   const router = useRouter();
 
   const [isSuccess, setIsSuccess] = useState(false);
