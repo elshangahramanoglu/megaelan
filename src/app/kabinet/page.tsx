@@ -9,8 +9,7 @@ export default function KabinetPage() {
   const { user, updateUser, logout } = useAppContext();
   const router = useRouter();
   
-  const [firstName, setFirstName] = useState(user?.firstName || "");
-  const [lastName, setLastName] = useState(user?.lastName || "");
+  const [name, setName] = useState(user?.name || "");
   const [isSaved, setIsSaved] = useState(false);
 
   React.useEffect(() => {
@@ -25,7 +24,7 @@ export default function KabinetPage() {
 
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
-    updateUser({ firstName, lastName });
+    updateUser({ name });
     setIsSaved(true);
     setTimeout(() => setIsSaved(false), 3000);
   };
@@ -88,24 +87,14 @@ export default function KabinetPage() {
 
           <form onSubmit={handleSave} className="flex flex-col gap-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Ad</label>
+              <div className="col-span-1 sm:col-span-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Ad və Soyad</label>
                 <input 
                   type="text" 
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
                   placeholder="Adınızı daxil edin"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Soyad</label>
-                <input 
-                  type="text" 
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                  placeholder="Soyadınızı daxil edin"
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
                 />
               </div>
             </div>

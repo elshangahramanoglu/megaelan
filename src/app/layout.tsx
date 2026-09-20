@@ -6,6 +6,7 @@ import Header from "@/components/Header";
 import { AppProvider } from "@/context/AppContext";
 import Image from "next/image";
 import { Share2, Mail } from "lucide-react";
+import LoginModal from "@/components/LoginModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -45,6 +46,7 @@ export default function RootLayout({
           <main className="flex-1 w-full bg-white flex flex-col">
             {children}
           </main>
+          <LoginModal />
 
           {/* Footer */}
           <footer className="bg-white py-10 mt-12">

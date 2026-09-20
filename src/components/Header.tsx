@@ -25,19 +25,19 @@ export default function Header() {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeMobileCategory, setActiveMobileCategory] = useState<string | null>(null);
-  const [isLoginOpen, setIsLoginOpen] = useState(false);
+  
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]);
   
-  const { user } = useAppContext();
+  const { user, setLoginOpen } = useAppContext();
   const router = useRouter();
 
   const handleProfileClick = () => {
     if (user) {
       router.push("/kabinet");
     } else {
-      setIsLoginOpen(true);
+      setLoginOpen(true);
     }
   };
 
@@ -353,7 +353,7 @@ export default function Header() {
         )}
       </AnimatePresence>
       
-      <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
+      
     </>
   );
 }

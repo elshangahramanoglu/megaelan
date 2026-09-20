@@ -20,18 +20,20 @@ export interface Ad {
   details?: Record<string, string>;
 }
 
-interface User {
+export interface User {
+  id: string;
   phone: string;
-  firstName: string;
-  lastName: string;
+  name: string;
 }
 
 interface AppContextType {
   ads: Ad[];
   favorites: string[];
-  toggleFavorite: (id: string) => void;
+  toggleFavorite: (adId: string) => void;
   user: User | null;
-  login: (phone: string) => void;
+  isLoginOpen: boolean;
+  setLoginOpen: (val: boolean) => void;
+  loginUser: (user: User) => void;
   logout: () => void;
   updateUser: (data: Partial<User>) => void;
   addAd: (ad: Ad) => void;
@@ -94,6 +96,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   });
   const [favorites, setFavorites] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [isLoginOpen, setLoginOpen] = useState(false);
 
   useEffect(() => {
     // Check local storage for user and favorites
@@ -113,11 +116,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       return newFavs;
     });
   };
-
-  const login = (phone: string) => {
-    const newUser = { phone, firstName: "", lastName: "" };
-    setUser(newUser);
-    localStorage.setItem("megaelan_user", JSON.stringify(newUser));
+  const loginUser = (userData: User) => {
+    setUser(userData);
+    localStorage.setItem("megaelan_user", JSON.stringify(userData));
   };
 
   const logout = () => {
@@ -139,7 +140,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AppContext.Provider value={{ ads, favorites, toggleFavorite, user, login, logout, updateUser, addAd }}>
+    <AppContext.Provider value={{ ads, favorites, toggleFavorite, user, isLoginOpen, setLoginOpen, loginUser, logout, updateUser, addAd }}>
       {children}
     </AppContext.Provider>
   );

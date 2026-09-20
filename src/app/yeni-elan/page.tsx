@@ -8,7 +8,7 @@ import { UploadCloud, CheckCircle, Info, Plus, ArrowRight } from "lucide-react";
 import { AZERBAIJAN_CITIES } from "@/data/cities";
 
 export default function NewAdPage() {
-  const { user, addAd, login } = useAppContext();
+  const { user, addAd, setLoginOpen } = useAppContext();
   const router = useRouter();
 
   const [isSuccess, setIsSuccess] = useState(false);
@@ -19,7 +19,7 @@ export default function NewAdPage() {
     price: "",
     city: "Bakı",
     description: "",
-    contactName: user ? `${user.firstName} ${user.lastName}`.trim() : "",
+    contactName: user ? user.name : "",
     contactPhone: user ? user.phone : ""
   });
   
@@ -37,7 +37,7 @@ export default function NewAdPage() {
             Elan yerləşdirmək üçün sistemə daxil olmalısınız. Qeydiyyat nömrə vasitəsilə çox sadə və pulsuzdur.
           </p>
           <button 
-            onClick={() => login("+994501234567")}
+            onClick={() => setLoginOpen(true)}
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors"
           >
             Daxil ol <ArrowRight className="w-5 h-5" />
