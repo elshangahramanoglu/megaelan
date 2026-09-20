@@ -48,15 +48,16 @@ export default function RootLayout({
             <div className="w-full px-4 lg:px-8 xl:px-12 mx-auto flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12">
               
               {/* Left Side: Logo, Slogan, Socials */}
-              <div className="flex flex-col items-start gap-4">
-                <Link href="/" className="inline-block">
+              <div className="flex flex-col items-start gap-5">
+                <Link href="/" className="flex items-center gap-3">
                   <Image 
                     src="/logo.png" 
                     alt="MegaElan" 
-                    width={160} 
-                    height={48} 
-                    className="object-contain w-auto h-12"
+                    width={130} 
+                    height={40} 
+                    className="object-contain w-auto h-10 lg:h-12"
                   />
+                  <span className="text-2xl lg:text-3xl font-black text-black tracking-tight">MegaElan</span>
                 </Link>
                 <p className="text-gray-600 font-medium leading-relaxed max-w-[250px] text-sm">
                   Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!

@@ -63,21 +63,22 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Logo (Centered on Mobile, Left on Desktop) */}
-          <div className="flex flex-1 md:flex-none md:w-[25%] justify-center md:justify-start lg:pl-4">
+          {/* Logo (Centered on Mobile, Left on Desktop with inward padding) */}
+          <div className="flex flex-1 md:flex-none md:w-[25%] justify-center md:justify-start md:pl-4 lg:pl-8 xl:pl-12">
             <Link 
               href="/" 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex items-center flex-shrink-0"
+              className="flex items-center gap-2 lg:gap-3 flex-shrink-0"
             >
               <Image 
                 src="/logo.png" 
                 alt="MegaElan" 
-                width={140} 
-                height={42} 
+                width={130} 
+                height={40} 
                 className="object-contain w-auto h-8 sm:h-9 md:h-10 lg:h-11"
                 priority
               />
+              <span className="text-xl lg:text-2xl font-black text-black hidden sm:block tracking-tight">MegaElan</span>
             </Link>
           </div>
 
