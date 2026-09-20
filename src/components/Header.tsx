@@ -51,58 +51,57 @@ export default function Header() {
   return (
     <>
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="w-full px-4 md:px-8 py-3">
-          <div className="flex items-center justify-between relative">
-            
-            {/* Mobile Menu Toggle (Left on Mobile) */}
-            <div className="flex lg:hidden items-center">
-              <button 
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="text-black hover:text-blue-600"
-              >
-                <Menu className="w-7 h-7" />
+        <div className="w-full px-4 md:px-8 py-3 flex items-center justify-between">
+          
+          {/* Mobile Menu Toggle (Left on Mobile) */}
+          <div className="flex md:hidden flex-1 justify-start">
+            <button 
+              onClick={() => setIsMobileMenuOpen(true)}
+              className="text-black hover:text-blue-600"
+            >
+              <Menu className="w-7 h-7" />
+            </button>
+          </div>
+
+          {/* Logo (Centered on Mobile, Left on Desktop) */}
+          <div className="flex flex-1 md:flex-none md:w-[25%] justify-center md:justify-start lg:pl-4">
+            <Link 
+              href="/" 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="flex items-center flex-shrink-0"
+            >
+              <Image 
+                src="/logo.png" 
+                alt="MegaElan" 
+                width={140} 
+                height={42} 
+                className="object-contain w-auto h-8 sm:h-9 md:h-10 lg:h-11"
+                priority
+              />
+            </Link>
+          </div>
+
+          {/* Search Bar (Centered on Desktop, Hidden on Mobile) */}
+          <div className="hidden md:flex flex-1 justify-center px-4 max-w-3xl">
+            <form onSubmit={handleSearchSubmit} className="w-full flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative">
+              <input 
+                type="text" 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Elanın başlığını yazın..." 
+                className="w-full pl-4 pr-32 py-3 bg-transparent outline-none text-black font-medium placeholder-gray-500"
+              />
+              <button type="button" onClick={() => setIsFilterOpen(true)} className="absolute right-14 text-gray-500 hover:text-blue-600 px-3 font-medium flex items-center gap-1 border-l border-gray-300">
+                <Filter className="w-4 h-4" /> Ətraflı
               </button>
-            </div>
+              <button type="submit" className="absolute right-0 top-0 bottom-0 px-4 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white transition-colors">
+                <Search className="w-5 h-5" />
+              </button>
+            </form>
+          </div>
 
-            {/* Logo (Centered on Mobile, Left side on Desktop with slight indent) */}
-            <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none flex items-center lg:w-[25%] lg:pl-6">
-              <Link 
-                href="/" 
-                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-                className="flex items-center gap-2 flex-shrink-0"
-              >
-                <Image 
-                  src="/logo.png" 
-                  alt="MegaElan" 
-                  width={150} 
-                  height={45} 
-                  className="object-contain w-auto h-8 md:h-10 lg:h-11"
-                  priority
-                />
-              </Link>
-            </div>
-
-            {/* Search Bar (Centered perfectly on Desktop) */}
-            <div className="hidden md:flex flex-1 justify-center lg:w-[50%]">
-              <form onSubmit={handleSearchSubmit} className="w-full max-w-2xl flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative">
-                <input 
-                  type="text" 
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Elanın başlığını yazın..." 
-                  className="w-full pl-4 pr-32 py-3 bg-transparent outline-none text-black font-medium placeholder-gray-500"
-                />
-                <button type="button" onClick={() => setIsFilterOpen(true)} className="absolute right-14 text-gray-500 hover:text-blue-600 px-3 font-medium flex items-center gap-1 border-l border-gray-300">
-                  <Filter className="w-4 h-4" /> Ətraflı
-                </button>
-                <button type="submit" className="absolute right-0 top-0 bottom-0 px-4 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white transition-colors">
-                  <Search className="w-5 h-5" />
-                </button>
-              </form>
-            </div>
-
-            {/* Right Icons (Right aligned on Desktop) */}
-            <div className="flex items-center justify-end gap-2 sm:gap-4 lg:w-[25%] ml-auto lg:ml-0">
+          {/* Right Icons (Right aligned on Mobile and Desktop) */}
+          <div className="flex flex-1 md:flex-none md:w-[25%] items-center justify-end gap-3 sm:gap-5">
               <Link href="/beyendiklerim" className="p-2 text-black hover:text-blue-600 transition-colors hidden sm:block">
                 <Heart className="w-6 h-6" />
               </Link>
@@ -124,7 +123,6 @@ export default function Header() {
                 </div>
               </button>
             </div>
-          </div>
         </div>
 
         {/* Mega Menu Dropdown (Desktop) */}
