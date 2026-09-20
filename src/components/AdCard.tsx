@@ -6,15 +6,22 @@ import { Heart, Crown } from "lucide-react";
 import { Ad, useAppContext } from "@/context/AppContext";
 
 export default function AdCard({ ad }: { ad: Ad }) {
-  const { favorites, toggleFavorite } = useAppContext();
+  const { favorites, toggleFavorite, user } = useAppContext();
   const isFav = favorites.includes(ad.id);
+
+  const isMine = user && ad.user_id === user.id;
 
   return (
     <Link 
       href={`/elan/${ad.id}`} 
-      className="group cursor-pointer bg-white rounded-2xl flex flex-col hover:shadow-lg transition-shadow border border-gray-100 h-[320px] overflow-hidden"
+      className="group cursor-pointer bg-white rounded-2xl flex flex-col hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-gray-100 h-[320px] overflow-hidden relative"
     >
-      <div className="h-44 bg-gray-100 relative w-full flex-shrink-0">
+      <div className="h-44 bg-gray-100 relative w-full flex-shrink-0 overflow-hidden">
+        {isMine && (
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-black px-3 py-1 rounded-full z-20 shadow-md flex items-center gap-1">
+             Mənim elanım
+          </div>
+        )}
         {ad.imagePlaceholder.startsWith('http') ? (
           <img src={ad.imagePlaceholder} alt={ad.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (

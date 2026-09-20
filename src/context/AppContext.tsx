@@ -20,6 +20,8 @@ export interface Ad {
   contactName: string;
   contactPhone: string;
   details?: Record<string, string>;
+  user_id?: string;
+  status?: string;
 }
 
 export interface User {
