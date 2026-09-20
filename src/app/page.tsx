@@ -7,8 +7,7 @@ import MarqueeCategories from "@/components/MarqueeCategories";
 import AdCard from "@/components/AdCard";
 import { useAppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
-
-const CITIES = ["Bütün şəhərlər", "Bakı", "Sumqayıt", "Gəncə", "Xırdalan", "Mingəçevir", "Şirvan", "Quba", "Lənkəran"];
+import { AZERBAIJAN_CITIES } from "@/data/cities";
 
 export default function Home_Page({ searchParams }: { searchParams: Promise<{ search?: string }> }) {
   const resolvedParams = use(searchParams);
@@ -46,7 +45,7 @@ export default function Home_Page({ searchParams }: { searchParams: Promise<{ se
             onChange={(e) => setSelectedCity(e.target.value)}
             className="bg-transparent border-none outline-none text-black font-bold cursor-pointer w-full"
           >
-            {CITIES.map(c => <option key={c} value={c}>{c}</option>)}
+            {AZERBAIJAN_CITIES.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
         </div>
         

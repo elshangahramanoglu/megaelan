@@ -43,18 +43,18 @@ export default function RootLayout({
             {children}
           </main>
 
-          {/* Footer */}
-          <footer className="bg-slate-50 py-8 mt-12 border-t border-gray-200">
-            <div className="w-full px-4 md:px-8 max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between gap-8 md:gap-12">
+          {/* Footer - No borders above it, pure clean layout */}
+          <footer className="bg-slate-50 py-8 mt-12">
+            <div className="w-full px-4 xl:px-12 mx-auto flex flex-col md:flex-row justify-between items-start md:items-center gap-8 md:gap-12">
               {/* Left Side: Logo, Slogan, Socials */}
-              <div className="flex flex-col items-start gap-4 md:max-w-sm">
+              <div className="flex flex-col items-start gap-4">
                 <Link href="/" className="inline-block">
                   <Image 
                     src="/logo.png" 
                     alt="MegaElan" 
-                    width={240} 
-                    height={80} 
-                    className="object-contain -ml-4"
+                    width={160} 
+                    height={50} 
+                    className="object-contain"
                   />
                 </Link>
                 <p className="text-gray-600 font-medium leading-relaxed">
@@ -71,17 +71,17 @@ export default function RootLayout({
               </div>
 
               {/* Right Side: Links */}
-              <div className="flex flex-wrap gap-12 md:gap-24 md:justify-end">
+              <div className="flex gap-16 md:gap-32 w-full md:w-auto md:justify-end flex-wrap">
                 <div>
-                  <h3 className="font-bold text-lg text-black mb-6">MegaElan</h3>
-                  <ul className="space-y-4 text-gray-600 font-medium">
+                  <h3 className="font-bold text-lg text-black mb-4">MegaElan</h3>
+                  <ul className="space-y-3 text-gray-600 font-medium">
                     <li><Link href="/haqqimizda" className="hover:text-blue-600 transition-colors">Haqqımızda</Link></li>
                     <li><Link href="/elaqe" className="hover:text-blue-600 transition-colors">Əlaqə</Link></li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-black mb-6">Qaydalar & Hüquqi</h3>
-                  <ul className="space-y-4 text-gray-600 font-medium">
+                  <h3 className="font-bold text-lg text-black mb-4">Qaydalar & Hüquqi</h3>
+                  <ul className="space-y-3 text-gray-600 font-medium">
                     <li><Link href="/qaydalar" className="hover:text-blue-600 transition-colors">Qaydalar və Tariflər</Link></li>
                     <li><Link href="/suallar" className="hover:text-blue-600 transition-colors">Tez-tez verilən suallar</Link></li>
                     <li><Link href="/mexfilik" className="hover:text-blue-600 transition-colors">Məxfilik siyasəti</Link></li>
@@ -91,7 +91,7 @@ export default function RootLayout({
               </div>
             </div>
             
-            <div className="w-full max-w-[1400px] mx-auto px-4 md:px-8 mt-8 pt-6 border-t border-gray-200">
+            <div className="w-full px-4 xl:px-12 mt-8 pt-4">
               <p className="text-gray-500 font-medium text-sm text-center md:text-left">
                 Copyright © {new Date().getFullYear()} MegaElan. Bütün hüquqlar qorunur.
               </p>

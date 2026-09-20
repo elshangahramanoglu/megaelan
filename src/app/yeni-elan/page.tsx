@@ -5,6 +5,7 @@ import { categoriesData } from "@/data/categories";
 import { useAppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
 import { UploadCloud, CheckCircle, Info } from "lucide-react";
+import { AZERBAIJAN_CITIES } from "@/data/cities";
 
 export default function NewAdPage() {
   const { user, addAd } = useAppContext();
@@ -210,7 +211,7 @@ export default function NewAdPage() {
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium text-lg"
               required
             >
-              {["Bakı", "Sumqayıt", "Gəncə", "Xırdalan", "Mingəçevir"].map(c => (
+              {AZERBAIJAN_CITIES.filter(c => c !== "Bütün şəhərlər").map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
             </select>
