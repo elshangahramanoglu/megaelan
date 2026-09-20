@@ -11,11 +11,13 @@ export interface Ad {
   city: string;
   date: string;
   categoryId: string;
+  subCategory?: string;
   isPremium: boolean;
   imagePlaceholder: string;
   description: string;
   contactName: string;
   contactPhone: string;
+  details?: Record<string, string>;
 }
 
 interface User {

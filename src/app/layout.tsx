@@ -4,6 +4,8 @@ import "./globals.css";
 import Link from "next/link";
 import Header from "@/components/Header";
 import { AppProvider } from "@/context/AppContext";
+import Image from "next/image";
+import { Share2, Mail } from "lucide-react";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,59 +29,72 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="az">
+      <head>
+        <link rel="icon" href="/logo.png" />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-slate-900 min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 min-h-screen flex flex-col`}
       >
         <AppProvider>
           <Header />
 
           {/* Main Content */}
-          <main className="flex-1 w-full bg-white">
+          <main className="flex-1 w-full bg-white flex flex-col">
             {children}
           </main>
 
-          {/* Footer */}
-          <footer className="bg-slate-50 mt-20 pb-8 pt-12">
-            <div className="w-full px-4 md:px-8 max-w-7xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div className="md:col-span-1">
-                  <Link href="/" className="text-2xl font-black text-blue-600 flex items-center gap-2 mb-4">
-                    MegaElan
-                  </Link>
-                  <p className="text-gray-500 text-sm mb-6">
-                    Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!
-                  </p>
+          {/* Footer - No borders above it, pure clean layout */}
+          <footer className="bg-slate-50 pt-16 pb-8 mt-20">
+            <div className="w-full px-4 md:px-8 max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-12">
+              {/* Left Side: Logo, Slogan, Socials */}
+              <div className="flex flex-col items-start gap-4 md:max-w-sm">
+                <Link href="/" className="inline-block mix-blend-multiply">
+                  <Image 
+                    src="/logo.png" 
+                    alt="MegaElan" 
+                    width={200} 
+                    height={200} 
+                    className="object-contain -ml-4"
+                  />
+                </Link>
+                <p className="text-gray-600 font-medium leading-relaxed">
+                  Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!
+                </p>
+                <div className="flex items-center gap-4 mt-2">
+                  <a href="#" className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-colors font-bold">
+                    FB
+                  </a>
+                  <a href="#" className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center text-pink-600 hover:bg-pink-600 hover:text-white transition-colors font-bold">
+                    IG
+                  </a>
                 </div>
+              </div>
+
+              {/* Right Side: Links */}
+              <div className="flex flex-wrap gap-12 md:gap-24 md:justify-end">
                 <div>
-                  <h3 className="font-semibold mb-4 text-gray-900">MegaElan</h3>
-                  <ul className="space-y-3 text-gray-500 text-sm">
-                    <li><Link href="/haqqimizda" className="hover:text-blue-600">Haqqımızda</Link></li>
-                    <li><Link href="/elaqe" className="hover:text-blue-600">Əlaqə</Link></li>
+                  <h3 className="font-bold text-lg text-black mb-6">MegaElan</h3>
+                  <ul className="space-y-4 text-gray-600 font-medium">
+                    <li><Link href="/haqqimizda" className="hover:text-blue-600 transition-colors">Haqqımızda</Link></li>
+                    <li><Link href="/elaqe" className="hover:text-blue-600 transition-colors">Əlaqə</Link></li>
                   </ul>
                 </div>
                 <div>
-                  <h3 className="font-semibold mb-4 text-gray-900">Kömək</h3>
-                  <ul className="space-y-3 text-gray-500 text-sm">
-                    <li><Link href="/qaydalar" className="hover:text-blue-600">Qaydalar</Link></li>
-                    <li><Link href="/suallar" className="hover:text-blue-600">Tez-tez verilən suallar</Link></li>
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="font-semibold mb-4 text-gray-900">Hüquqi</h3>
-                  <ul className="space-y-3 text-gray-500 text-sm">
-                    <li><Link href="/mexfilik" className="hover:text-blue-600">Məxfilik siyasəti</Link></li>
-                    <li><Link href="/istifade" className="hover:text-blue-600">İstifadəçi razılaşması</Link></li>
+                  <h3 className="font-bold text-lg text-black mb-6">Qaydalar & Hüquqi</h3>
+                  <ul className="space-y-4 text-gray-600 font-medium">
+                    <li><Link href="/qaydalar" className="hover:text-blue-600 transition-colors">Qaydalar və Tariflər</Link></li>
+                    <li><Link href="/suallar" className="hover:text-blue-600 transition-colors">Tez-tez verilən suallar</Link></li>
+                    <li><Link href="/mexfilik" className="hover:text-blue-600 transition-colors">Məxfilik siyasəti</Link></li>
+                    <li><Link href="/istifade" className="hover:text-blue-600 transition-colors">İstifadəçi razılaşması</Link></li>
                   </ul>
                 </div>
               </div>
-              <div className="mt-12 pt-8 flex flex-col md:flex-row items-start md:items-center justify-between text-sm text-gray-500 border-t border-gray-200">
-                <div className="flex flex-col md:flex-row gap-4 md:gap-8 mb-4 md:mb-0 text-xs md:text-sm">
-                  <p><strong>Tel:</strong> 0703484901</p>
-                  <p><strong>E-poçt:</strong> destek@megaelan.com</p>
-                  <p><strong>Ünvan:</strong> Saatlı şəhəri., H.Əliyev prospekti</p>
-                </div>
-                <p>Copyright © {new Date().getFullYear()} MegaElan. Bütün hüquqlar qorunur.</p>
-              </div>
+            </div>
+            
+            <div className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-16 pt-8 border-t border-gray-200">
+              <p className="text-gray-500 font-medium text-sm text-center md:text-left">
+                Copyright © {new Date().getFullYear()} MegaElan. Bütün hüquqlar qorunur.
+              </p>
             </div>
           </footer>
         </AppProvider>
