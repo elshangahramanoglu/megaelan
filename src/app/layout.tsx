@@ -51,7 +51,7 @@ export default function RootLayout({
             <div className="w-full px-4 lg:px-8 xl:px-12 mx-auto flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12">
               
               {/* Left Side: Logo, Slogan, Socials */}
-              <div className="flex flex-col items-start gap-5">
+              <div className="flex flex-col items-start gap-5 lg:pl-8 xl:pl-16">
                 <Link href="/" className="flex items-center gap-3">
                   <Image 
                     src="/logo.png" 
