@@ -71,6 +71,16 @@ export default function NewAdPage() {
     e.preventDefault();
     if (!user) return;
     
+    if (!formData.title || !formData.price || !formData.city || !formData.description || !formData.contactName || !formData.contactPhone) {
+      alert("Zəhmət olmasa bütün vacib xanaları (*) doldurun.");
+      return;
+    }
+
+    if (files.length === 0) {
+      alert("Ən azı 1 şəkil yükləməyiniz mütləqdir!");
+      return;
+    }
+    
     setIsSubmitting(true);
     
     try {
@@ -176,8 +186,7 @@ export default function NewAdPage() {
                 value={formData.categoryId}
                 onChange={handleChange}
                 className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium"
-                required
-              >
+                              >
                 {categoriesData.map(cat => (
                   <option key={cat.id} value={cat.id}>{cat.name}</option>
                 ))}
@@ -241,8 +250,7 @@ export default function NewAdPage() {
               onChange={handleChange}
               placeholder="Məsələn: iPhone 13 Pro Max, 256GB"
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-medium"
-              required
-            />
+                          />
           </div>
         </div>
 
@@ -290,8 +298,7 @@ export default function NewAdPage() {
               placeholder="0"
               min="0"
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-bold text-lg"
-              required
-            />
+                          />
             <p className="text-sm text-gray-600 mt-2 font-medium">Müvəqqəti pulsuz elan üçün <span className="text-black font-bold">0</span> yaza bilərsiniz.</p>
           </div>
           <div>
@@ -301,8 +308,7 @@ export default function NewAdPage() {
               value={formData.city}
               onChange={handleChange}
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium text-lg"
-              required
-            >
+                          >
               {AZERBAIJAN_CITIES.filter(c => c !== "Bütün şəhərlər").map(c => (
                 <option key={c} value={c}>{c}</option>
               ))}
@@ -320,8 +326,7 @@ export default function NewAdPage() {
             placeholder="Məhsul haqqında ətraflı məlumat yazın..."
             rows={6}
             className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none resize-y text-black font-medium leading-relaxed"
-            required
-          />
+                      />
         </div>
 
         {/* Contact */}
@@ -335,8 +340,7 @@ export default function NewAdPage() {
               onChange={handleChange}
               placeholder="Adınız"
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-medium"
-              required
-            />
+                          />
           </div>
           <div>
             <label className="block text-base font-bold text-black mb-2">Əlaqə nömrəsi *</label>
@@ -347,8 +351,7 @@ export default function NewAdPage() {
               onChange={handleChange}
               placeholder="050 123 45 67"
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-bold"
-              required
-            />
+                          />
           </div>
         </div>
 
