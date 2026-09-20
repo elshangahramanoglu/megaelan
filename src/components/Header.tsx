@@ -75,10 +75,10 @@ export default function Header() {
                 alt="MegaElan" 
                 width={130} 
                 height={40} 
-                className="object-contain w-auto h-8 sm:h-9 md:h-10 lg:h-11"
+                className="object-contain w-auto h-7 sm:h-8 md:h-10 lg:h-11"
                 priority
               />
-              <span className="text-xl lg:text-2xl font-black text-black hidden sm:block tracking-tight">MegaElan</span>
+              <span className="text-xl lg:text-2xl font-black text-black tracking-tight">MegaElan</span>
             </Link>
           </div>
 

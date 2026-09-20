@@ -18,8 +18,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "MegaElan - Pulsuz Elanlar Saytı",
-  description: "Azərbaycanda ən geniş elanlar şəbəkəsi.",
+  title: "MegaElan",
+  description: "Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!",
+  icons: {
+    icon: '/icon.png',
+  },
 };
 
 export default function RootLayout({
