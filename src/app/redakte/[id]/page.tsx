@@ -28,16 +28,29 @@ const addWatermark = (file: File): Promise<File> => {
         // Draw original image
         ctx.drawImage(img, 0, 0);
 
-        // Add Watermark
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; // 40% opacity white
-        ctx.font = `bold ${Math.floor(img.width * 0.1)}px sans-serif`; // 10% of image width
+        // Add Watermark (Highly visible, with shadow)
+        const fontSize = Math.floor(img.width * 0.15);
+        ctx.font = `bold ${fontSize}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
+        
+        // Add strong drop shadow for contrast on white/bright images
+        ctx.shadowColor = "rgba(0, 0, 0, 0.8)";
+        ctx.shadowBlur = 15;
+        ctx.shadowOffsetX = 5;
+        ctx.shadowOffsetY = 5;
+
+        // Semi-transparent white text
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
 
         // Rotate and draw in center
         ctx.translate(canvas.width / 2, canvas.height / 2);
-        ctx.rotate(-Math.PI / 6); // slight diagonal
-        ctx.fillText('MegaElan', 0, 0);
+        ctx.rotate(-Math.PI / 6);
+        ctx.fillText('MegaElan.az', 0, 0);
+        
+        // Add a smaller sub-watermark
+        ctx.font = `bold ${Math.floor(fontSize * 0.3)}px sans-serif`;
+        ctx.fillText('Ödənişsiz Elan Saytı', 0, fontSize);
 
         canvas.toBlob((blob) => {
           if (blob) {
@@ -46,6 +59,10 @@ const addWatermark = (file: File): Promise<File> => {
             resolve(file); // fallback to original if blob fails
           }
         }, file.type, 0.9);
+      };
+      img.onerror = () => {
+        console.warn("Şəkil oxuna bilmədi (ola bilsin HEIC və ya dəstəklənməyən formatdır). Orijinal yüklənir.");
+        resolve(file);
       };
       img.src = e.target?.result as string;
     };
