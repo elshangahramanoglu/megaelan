@@ -3,6 +3,8 @@
 import React, { useState } from "react";
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAppContext } from "@/context/AppContext";
+import { useRouter } from "next/navigation";
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -12,16 +14,20 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const [phone, setPhone] = useState("");
   const [step, setStep] = useState<"phone" | "otp">("phone");
+  const { login } = useAppContext();
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (step === "phone") {
       setStep("otp");
     } else {
-      // simulate login
+      // Login the user with the context
+      login(phone);
       onClose();
       setStep("phone");
       setPhone("");
+      router.push("/kabinet");
     }
   };
 

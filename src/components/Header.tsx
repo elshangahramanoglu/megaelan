@@ -14,11 +14,23 @@ import {
 import { categoriesData } from "@/data/categories";
 import LoginModal from "./LoginModal";
 import { motion, AnimatePresence } from "framer-motion";
+import { useAppContext } from "@/context/AppContext";
+import { useRouter } from "next/navigation";
 
 export default function Header() {
   const [isCatalogOpen, setIsCatalogOpen] = useState(false);
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]);
+  const { user } = useAppContext();
+  const router = useRouter();
+
+  const handleProfileClick = () => {
+    if (user) {
+      router.push("/kabinet");
+    } else {
+      setIsLoginOpen(true);
+    }
+  };
 
   return (
     <>
@@ -45,35 +57,36 @@ export default function Header() {
             </button>
 
             {/* Search Bar */}
-            <div className="flex-1 hidden md:flex items-center bg-gray-100 rounded-lg border border-transparent focus-within:border-blue-500 focus-within:bg-white transition-all overflow-hidden">
+            <div className="flex-1 hidden md:flex items-center bg-gray-100 rounded-lg border border-transparent focus-within:border-blue-500 focus-within:bg-white transition-all overflow-hidden relative">
               <input 
                 type="text" 
                 placeholder="Əşya və ya xidmət axtarışı" 
-                className="w-full px-4 py-2.5 bg-transparent outline-none text-gray-700"
+                className="w-full pl-4 pr-12 py-2.5 bg-transparent outline-none text-gray-700"
               />
-              <button className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 font-medium transition-colors">
-                Tap
+              <button className="absolute right-0 top-0 bottom-0 px-4 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white transition-colors rounded-r-lg">
+                <Search className="w-5 h-5" />
               </button>
             </div>
 
             {/* Right Icons */}
             <div className="flex items-center gap-2 sm:gap-4 ml-auto">
-              <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors hidden sm:block">
+              <Link href="/beyendiklerim" className="p-2 text-gray-600 hover:text-blue-600 transition-colors hidden sm:block">
                 <Heart className="w-6 h-6" />
-              </button>
-              <button className="p-2 text-gray-600 hover:text-blue-600 transition-colors hidden sm:block">
+              </Link>
+              <Link href="/mesajlar" className="p-2 text-gray-600 hover:text-blue-600 transition-colors hidden sm:block">
                 <MessageCircle className="w-6 h-6" />
-              </button>
+              </Link>
               
               <Link href="/yeni-elan" className="hidden sm:flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2.5 rounded-lg font-medium transition-colors">
                 <span className="text-xl leading-none">+</span> Yeni elan
               </Link>
 
               <button 
-                onClick={() => setIsLoginOpen(true)}
+                onClick={handleProfileClick}
                 className="flex items-center justify-center p-2 text-gray-600 hover:text-blue-600 transition-colors"
+                title={user ? "Şəxsi kabinet" : "Giriş"}
               >
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center">
+                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
                   <User className="w-5 h-5" />
                 </div>
               </button>
@@ -108,7 +121,11 @@ export default function Header() {
                         <button
                           key={cat.id}
                           onMouseEnter={() => setActiveCategory(cat)}
-                          onClick={() => setActiveCategory(cat)}
+                          onClick={() => {
+                            setActiveCategory(cat);
+                            router.push(`/kateqoriya/${cat.id}`);
+                            setIsCatalogOpen(false);
+                          }}
                           className={`w-full flex items-center justify-between px-8 py-3 transition-colors ${
                             isActive ? "bg-blue-50 text-blue-600" : "text-gray-700 hover:bg-gray-50"
                           }`}
@@ -126,13 +143,15 @@ export default function Header() {
                   <div className="w-2/3 p-8 overflow-y-auto bg-slate-50">
                     <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center gap-3">
                       <activeCategory.icon className="w-6 h-6 text-blue-600" />
-                      {activeCategory.name}
+                      <Link href={`/kateqoriya/${activeCategory.id}`} onClick={() => setIsCatalogOpen(false)} className="hover:underline">
+                        {activeCategory.name}
+                      </Link>
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       {activeCategory.subcategories.map((sub, idx) => (
                         <Link 
                           key={idx} 
-                          href="#"
+                          href={`/kateqoriya/${activeCategory.id}?sub=${encodeURIComponent(sub)}`}
                           onClick={() => setIsCatalogOpen(false)}
                           className="text-gray-600 hover:text-blue-600 hover:underline p-2"
                         >
