@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
-import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2 } from "lucide-react";
+import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
@@ -249,10 +249,13 @@ export default function KabinetPage() {
                         <p className="text-sm text-gray-500">{new Date(ad.created_at).toLocaleDateString()}</p>
                       </div>
                       <div className="flex flex-col gap-2">
-                        <Link href={`/elan/${ad.id}`} className="p-2 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors">
+                        <Link href={`/elan/${ad.id}`} className="p-2 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors" title="Elana bax">
                           <ExternalLink className="w-5 h-5" />
                         </Link>
-                        <button onClick={() => handleDeleteAd(ad.id)} className="p-2 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg transition-colors">
+                        <Link href={`/redakte/${ad.id}`} className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Redaktə et">
+                          <Edit3 className="w-5 h-5" />
+                        </Link>
+                        <button onClick={() => handleDeleteAd(ad.id)} className="p-2 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg transition-colors" title="Sil">
                           <Trash2 className="w-5 h-5" />
                         </button>
                       </div>

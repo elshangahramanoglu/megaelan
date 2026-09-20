@@ -52,7 +52,11 @@ const addWatermark = (file: File): Promise<File> => {
   });
 };
 
-export default function NewAdPage() {
+import { useParams } from 'next/navigation';
+
+export default function EditAdPage() {
+  const params = useParams();
+  const adId = params.id as string;
   const { user, addAd, setLoginOpen } = useAppContext();
   const router = useRouter();
 
@@ -70,6 +74,62 @@ export default function NewAdPage() {
   
   const [dynamicDetails, setDynamicDetails] = useState<Record<string, string>>({});
   const [files, setFiles] = useState<File[]>([]);
+  
+  const [isLoadingAd, setIsLoadingAd] = useState(true);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [editTimestamps, setEditTimestamps] = useState<number[]>([]);
+
+  React.useEffect(() => {
+    if (!user || !adId) return;
+    
+    const fetchAd = async () => {
+      try {
+        const { data, error } = await supabase.from('ads').select('*').eq('id', adId).single();
+        if (error) throw error;
+        
+        if (data.user_id !== user.id) {
+          alert("Siz yalnız öz elanınızı redaktə edə bilərsiniz!");
+          router.push('/kabinet');
+          return;
+        }
+
+        // Check edit limits
+        const details = data.details || {};
+        const timestamps: number[] = details.edit_timestamps || [];
+        const now = Date.now();
+        const last24h = timestamps.filter(t => (now - t) < 24 * 60 * 60 * 1000);
+        
+        if (last24h.length >= 2) {
+          alert("Siz son 24 saat ərzində artıq 2 dəfə redaktə etmisiniz. Lütfən daha sonra cəhd edin.");
+          router.push('/kabinet');
+          return;
+        }
+        
+        setEditTimestamps(last24h);
+
+        setFormData({
+          title: data.title,
+          description: data.description,
+          price: data.price.toString(),
+          city: data.city,
+          categoryId: data.category_id,
+          subCategory: data.sub_category,
+          contactName: data.contact_name,
+          contactPhone: data.contact_phone
+        });
+        
+        setDynamicDetails(details);
+        setExistingImages(data.images || []);
+        setIsLoadingAd(false);
+      } catch (err) {
+        console.error(err);
+        router.push('/kabinet');
+      }
+    };
+    
+    fetchAd();
+  }, [user, adId]);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [createdAdId, setCreatedAdId] = useState<string | null>(null);
   const [showPayment, setShowPayment] = useState(false);
@@ -147,7 +207,7 @@ export default function NewAdPage() {
       return;
     }
 
-    if (files.length === 0) {
+    if (files.length === 0 && existingImages.length === 0) {
       alert("Ən azı 1 şəkil yükləməyiniz mütləqdir!");
       return;
     }
@@ -175,24 +235,28 @@ export default function NewAdPage() {
         if (url) imageUrls.push(url);
       }
       
-      // 2. Insert into Supabase
+      // 2. Update Supabase
+      const finalImages = imageUrls.length > 0 ? imageUrls : existingImages;
+      
+      const newEditTimestamps = [...editTimestamps, Date.now()];
+      const updatedDetails = { ...dynamicDetails, edit_timestamps: newEditTimestamps };
+
       const { data: insertedAd, error } = await supabase
         .from('ads')
-        .insert({
-          user_id: user.id,
+        .update({
           title: formData.title,
           status: initialStatus,
           description: formData.description,
           price: Number(formData.price) || 0,
-          currency: 'AZN',
           city: formData.city,
           category_id: formData.categoryId,
           sub_category: formData.subCategory,
-          images: imageUrls,
-          details: dynamicDetails,
+          images: finalImages,
+          details: updatedDetails,
           contact_name: formData.contactName,
           contact_phone: formData.contactPhone || user.phone,
         })
+        .eq('id', adId)
         .select()
         .single();
         
@@ -297,8 +361,8 @@ export default function NewAdPage() {
         <div className="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-12 h-12" />
         </div>
-        <h1 className="text-3xl font-bold text-black mb-4">Elanınız uğurla əlavə edildi!</h1>
-        <p className="text-gray-700 mb-8 font-medium">Yeni elanınız artıq yoxlanışa göndərildi və qısa zamanda saytda görünəcək. Daha çox alıcı tapmaq üçün elanınızı önə çəkə bilərsiniz.</p>
+        <h1 className="text-3xl font-bold text-black mb-4">Elanınız uğurla yeniləndi!</h1>
+        <p className="text-gray-700 mb-8 font-medium">Yenilənmiş elanınız yoxlanışa göndərildi və qısa zamanda saytda görünəcək. Daha çox alıcı tapmaq üçün elanınızı önə çəkə bilərsiniz.</p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <button 
@@ -318,9 +382,11 @@ export default function NewAdPage() {
     );
   }
 
+  if (isLoadingAd) return <div className="py-20 text-center"><Loader2 className="w-10 h-10 animate-spin mx-auto text-blue-600"/></div>;
+
   return (
     <div className="w-full max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
-      <h1 className="text-3xl font-bold text-black mb-6">Yeni elan yerləşdir</h1>
+      <h1 className="text-3xl font-bold text-black mb-6">Elanı Redaktə Et</h1>
       
       <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl mb-8 flex items-start gap-3">
         <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
