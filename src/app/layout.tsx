@@ -72,7 +72,7 @@ export default function RootLayout({
               </div>
 
               {/* Right Side: Links (Side-by-side on mobile) */}
-              <div className="flex flex-row gap-8 sm:gap-24 w-full md:w-auto md:justify-end">
+              <div className="flex flex-row gap-8 sm:gap-24 w-full md:w-auto md:justify-end lg:pr-8 xl:pr-16">
                 <div className="flex-1 md:flex-none">
                   <h3 className="font-bold text-base md:text-lg text-black mb-3 md:mb-4">MegaElan</h3>
                   <ul className="space-y-2 md:space-y-3 text-sm md:text-base text-gray-600 font-medium">
