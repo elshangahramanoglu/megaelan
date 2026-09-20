@@ -4,7 +4,8 @@ import React, { useState } from "react";
 import { categoriesData } from "@/data/categories";
 import { useAppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
-import { UploadCloud, CheckCircle, Info, Plus, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { UploadCloud, CheckCircle, Info, Plus, ArrowRight, Crown, Star } from "lucide-react";
 import { AZERBAIJAN_CITIES } from "@/data/cities";
 import { uploadImageToImgBB } from "@/lib/imgbb";
 import { supabase } from "@/lib/supabase";
@@ -29,6 +30,10 @@ export default function NewAdPage() {
   const [dynamicDetails, setDynamicDetails] = useState<Record<string, string>>({});
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [createdAdId, setCreatedAdId] = useState<string | null>(null);
+  const [showPayment, setShowPayment] = useState(false);
+  const [paymentPlan, setPaymentPlan] = useState<'vip' | 'premium' | null>(null);
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
   if (!user) {
     return (
@@ -63,8 +68,28 @@ export default function NewAdPage() {
     }
   };
 
+
+  const handlePayment = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsProcessingPayment(true);
+    setTimeout(() => {
+      setIsProcessingPayment(false);
+      alert("Ödəniş uğurla qəbul edildi! Elanınız önə çəkildi.");
+      router.push(`/elan/${createdAdId}`);
+    }, 2000);
+  };
+
   const handleDetailChange = (name: string, value: string) => {
-    setDynamicDetails(prev => ({ ...prev, [name]: value }));
+    setDynamicDetails(prev => {
+      const newDetails = { ...prev, [name]: value };
+      // If a parent field like 'brand' changes, reset its dependent 'model' field
+      selectedCategory.fields.forEach(field => {
+        if (field.dependsOn === name) {
+          newDetails[field.name] = "";
+        }
+      });
+      return newDetails;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -73,6 +98,11 @@ export default function NewAdPage() {
     
     if (!formData.title || !formData.price || !formData.city || !formData.description || !formData.contactName || !formData.contactPhone) {
       alert("Zəhmət olmasa bütün vacib xanaları (*) doldurun.");
+      return;
+    }
+    
+    if (Number(formData.price) < 1) {
+      alert("Qiymət minimum 1 AZN olmalıdır.");
       return;
     }
 
@@ -135,10 +165,7 @@ export default function NewAdPage() {
       
       addAd(newAd as any);
       setIsSuccess(true);
-      
-      setTimeout(() => {
-        router.push(`/elan/${newAd.id}`);
-      }, 2000);
+      setCreatedAdId(newAd.id); // Save ID for manual navigation
       
     } catch (err) {
       console.error("Ad creation error:", err);
@@ -149,14 +176,90 @@ export default function NewAdPage() {
   };
 
   if (isSuccess) {
+    if (showPayment) {
+      return (
+        <div className="w-full max-w-3xl mx-auto px-4 py-12">
+          <h1 className="text-3xl font-bold text-black mb-6 text-center">Reklam xidmətləri</h1>
+          
+          {!paymentPlan ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+              <div className="border-2 border-orange-200 bg-orange-50 rounded-3xl p-6 text-center hover:shadow-lg cursor-pointer transition-all" onClick={() => setPaymentPlan('premium')}>
+                <div className="w-16 h-16 bg-orange-100 text-orange-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Crown className="w-8 h-8" />
+                </div>
+                <h3 className="font-bold text-2xl text-black mb-2">Premium Elan</h3>
+                <p className="text-gray-600 mb-4 font-medium">Elanınız axtarışda ilk sıralarda və xüsusi rənglə vurğulanır.</p>
+                <div className="text-3xl font-black text-orange-600 mb-6">5.00 <span className="text-xl">AZN</span></div>
+                <button className="w-full py-3 bg-orange-500 text-white font-bold rounded-xl">Seç</button>
+              </div>
+              <div className="border-2 border-purple-200 bg-purple-50 rounded-3xl p-6 text-center hover:shadow-lg cursor-pointer transition-all" onClick={() => setPaymentPlan('vip')}>
+                <div className="w-16 h-16 bg-purple-100 text-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Star className="w-8 h-8" />
+                </div>
+                <h3 className="font-bold text-2xl text-black mb-2">VIP Elan</h3>
+                <p className="text-gray-600 mb-4 font-medium">Ana səhifədə xüsusi VIP blokunda günlərlə görünür.</p>
+                <div className="text-3xl font-black text-purple-600 mb-6">15.00 <span className="text-xl">AZN</span></div>
+                <button className="w-full py-3 bg-purple-600 text-white font-bold rounded-xl">Seç</button>
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white p-8 rounded-3xl border border-gray-200 shadow-xl max-w-md mx-auto">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="font-bold text-xl text-black">Ödəniş ({paymentPlan === 'vip' ? '15.00' : '5.00'} AZN)</h3>
+                <button onClick={() => setPaymentPlan(null)} className="text-blue-600 font-medium text-sm">Geri qayıt</button>
+              </div>
+              
+              <form onSubmit={handlePayment} className="flex flex-col gap-4">
+                <div>
+                  <label className="block text-sm font-bold text-gray-700 mb-1">Kartın nömrəsi</label>
+                  <input type="text" placeholder="0000 0000 0000 0000" className="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none focus:border-blue-600 text-black font-medium" required />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">Bitmə tarixi</label>
+                    <input type="text" placeholder="AA/İİ" className="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none focus:border-blue-600 text-black font-medium" required />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-bold text-gray-700 mb-1">CVV</label>
+                    <input type="password" placeholder="123" className="w-full px-4 py-3 rounded-xl border border-gray-300 outline-none focus:border-blue-600 text-black font-medium" required />
+                  </div>
+                </div>
+                <button 
+                  type="submit" 
+                  disabled={isProcessingPayment}
+                  className="w-full mt-4 bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2"
+                >
+                  {isProcessingPayment ? <Loader2 className="w-6 h-6 animate-spin" /> : `Ödənişi təsdiqlə (${paymentPlan === 'vip' ? '15.00' : '5.00'} AZN)`}
+                </button>
+              </form>
+            </div>
+          )}
+        </div>
+      );
+    }
+
     return (
       <div className="w-full max-w-2xl mx-auto px-4 py-20 text-center">
         <div className="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-12 h-12" />
         </div>
         <h1 className="text-3xl font-bold text-black mb-4">Elanınız uğurla əlavə edildi!</h1>
-        <p className="text-gray-700 mb-8 font-medium">Yeni elanınız artıq yoxlanışa göndərildi və qısa zamanda saytda görünəcək.</p>
-        <p className="text-blue-600 font-bold">Elana yönləndirilirsiniz...</p>
+        <p className="text-gray-700 mb-8 font-medium">Yeni elanınız artıq yoxlanışa göndərildi və qısa zamanda saytda görünəcək. Daha çox alıcı tapmaq üçün elanınızı önə çəkə bilərsiniz.</p>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <button 
+            onClick={() => setShowPayment(true)}
+            className="px-8 py-4 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition-colors"
+          >
+            <Crown className="w-5 h-5" /> Reklam et
+          </button>
+          <Link 
+            href={`/elan/${createdAdId}`}
+            className="px-8 py-4 bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold rounded-xl transition-colors"
+          >
+            Elana bax
+          </Link>
+        </div>
       </div>
     );
   }
@@ -215,29 +318,44 @@ export default function NewAdPage() {
           {selectedCategory.fields.length > 0 && (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-50 p-6 rounded-2xl border border-gray-200">
               <h3 className="md:col-span-3 text-lg font-bold text-black mb-2 border-b border-gray-200 pb-2">Əlavə Məlumatlar</h3>
-              {selectedCategory.fields.map(field => (
-                <div key={field.name}>
-                  <label className="block text-sm font-bold text-black mb-1">{field.label}</label>
-                  {field.type === 'select' ? (
-                    <select
-                      value={dynamicDetails[field.name] || ""}
-                      onChange={(e) => handleDetailChange(field.name, e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium"
-                    >
-                      <option value="">Seçilməyib</option>
-                      {field.options?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
-                    </select>
-                  ) : (
-                    <input
-                      type={field.type}
-                      placeholder={field.placeholder || ""}
-                      value={dynamicDetails[field.name] || ""}
-                      onChange={(e) => handleDetailChange(field.name, e.target.value)}
-                      className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-medium"
-                    />
-                  )}
-                </div>
-              ))}
+              {selectedCategory.fields.map(field => {
+                // Dependency check: if it depends on another field, check if that field has a value
+                if (field.dependsOn) {
+                  const dependentValue = dynamicDetails[field.dependsOn];
+                  if (!dependentValue) return null; // Don't render until parent is selected
+                }
+                
+                // Get options either from standard options or dynamicOptions based on parent value
+                let currentOptions = field.options;
+                if (field.dependsOn && field.dynamicOptions) {
+                  const parentVal = dynamicDetails[field.dependsOn];
+                  currentOptions = field.dynamicOptions[parentVal] || ["Digər"];
+                }
+
+                return (
+                  <div key={field.name}>
+                    <label className="block text-sm font-bold text-black mb-1">{field.label}</label>
+                    {field.type === 'select' ? (
+                      <select
+                        value={dynamicDetails[field.name] || ""}
+                        onChange={(e) => handleDetailChange(field.name, e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium"
+                      >
+                        <option value="">Seçilməyib</option>
+                        {currentOptions?.map(opt => <option key={opt} value={opt}>{opt}</option>)}
+                      </select>
+                    ) : (
+                      <input
+                        type={field.type}
+                        placeholder={field.placeholder || ""}
+                        value={dynamicDetails[field.name] || ""}
+                        onChange={(e) => handleDetailChange(field.name, e.target.value)}
+                        className="w-full px-3 py-2.5 rounded-lg border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-medium"
+                      />
+                    )}
+                  </div>
+                );
+              })}
             </div>
           )}
           
@@ -295,11 +413,11 @@ export default function NewAdPage() {
               name="price"
               value={formData.price}
               onChange={handleChange}
-              placeholder="0"
-              min="0"
+              placeholder="1"
+              min="1"
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-bold text-lg"
                           />
-            <p className="text-sm text-gray-600 mt-2 font-medium">Müvəqqəti pulsuz elan üçün <span className="text-black font-bold">0</span> yaza bilərsiniz.</p>
+            
           </div>
           <div>
             <label className="block text-base font-bold text-black mb-2">Şəhər *</label>
