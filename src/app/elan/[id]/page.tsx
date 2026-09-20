@@ -129,7 +129,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
         {/* Sidebar */}
         <div className="w-full lg:w-1/3 flex flex-col gap-6 relative">
           {/* Contact Box */}
-          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm sticky top-[100px] z-10">
+          <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm z-10">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black">
                 {ad.contactName.charAt(0)}

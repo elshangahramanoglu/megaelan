@@ -15,9 +15,13 @@ export default function AdCard({ ad }: { ad: Ad }) {
       className="group cursor-pointer bg-white rounded-2xl flex flex-col hover:shadow-lg transition-shadow border border-gray-100 h-[320px] overflow-hidden"
     >
       <div className="h-44 bg-gray-100 relative w-full flex-shrink-0">
-        <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium group-hover:scale-105 transition-transform duration-500">
-          {ad.imagePlaceholder}
-        </div>
+        {ad.imagePlaceholder.startsWith('http') ? (
+          <img src={ad.imagePlaceholder} alt={ad.title} className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium group-hover:scale-105 transition-transform duration-500">
+            {ad.imagePlaceholder}
+          </div>
+        )}
         {ad.isPremium && (
           <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded flex items-center gap-1 shadow-sm">
             <Crown className="w-3 h-3" /> Premium
