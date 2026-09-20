@@ -64,9 +64,9 @@ export default function Header() {
               </button>
             </div>
 
-            {/* Logo (Centered on Mobile, Left on Desktop) */}
+            {/* Logo and Text (Centered on Mobile, Left on Desktop) */}
             <div className="absolute left-1/2 -translate-x-1/2 lg:static lg:transform-none flex items-center justify-center">
-              <Link href="/" className="inline-block flex-shrink-0">
+              <Link href="/" className="flex items-center gap-2 flex-shrink-0">
                 <Image 
                   src="/logo.png" 
                   alt="MegaElan" 
@@ -75,17 +75,9 @@ export default function Header() {
                   className="object-contain w-auto h-9 md:h-12"
                   priority
                 />
+                <span className="text-xl md:text-2xl font-black text-black hidden sm:block tracking-tight">MegaElan</span>
               </Link>
             </div>
-
-            {/* Catalog Button */}
-            <button 
-              onClick={() => setIsCatalogOpen(!isCatalogOpen)}
-              className="hidden lg:flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-5 py-3 rounded-xl font-bold transition-colors"
-            >
-              <LayoutGrid className="w-5 h-5" />
-              Kataloq
-            </button>
 
             {/* Search Bar */}
             <form onSubmit={handleSearchSubmit} className="flex-1 hidden md:flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative">
@@ -212,9 +204,9 @@ export default function Header() {
               transition={{ type: "tween", duration: 0.3 }}
               className="fixed inset-0 bg-white z-50 flex flex-col h-[100dvh] overflow-hidden lg:hidden"
             >
-              <div className="flex items-center justify-between p-4 border-b border-gray-100">
-                <Image src="/logo.png" alt="MegaElan" width={130} height={40} className="object-contain" priority />
-                <button onClick={() => setIsMobileMenuOpen(false)} className="p-2 text-black bg-gray-100 rounded-full">
+              <div className="flex items-center justify-center p-4 border-b border-gray-100 relative">
+                <span className="text-2xl font-black text-black tracking-tight">MegaElan</span>
+                <button onClick={() => setIsMobileMenuOpen(false)} className="absolute right-4 p-2 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <X className="w-6 h-6" />
                 </button>
               </div>
