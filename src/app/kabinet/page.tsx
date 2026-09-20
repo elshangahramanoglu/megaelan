@@ -8,7 +8,7 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 
 export default function KabinetPage() {
-  const { user, updateUser, logout } = useAppContext();
+  const { user, updateUser, logout, removeAd } = useAppContext();
   const router = useRouter();
   
   const [name, setName] = useState(user?.name || "");
@@ -43,15 +43,26 @@ export default function KabinetPage() {
   }, [activeTab]);
 
   const handleDeleteAd = async (adId: string) => {
+    const previousAds = [...myAds];
     // Optimistic UI update: instantly remove from screen
     setMyAds(prev => prev.filter(ad => ad.id !== adId));
     
     try {
       // Delete from database silently
-      await supabase.from('ads').delete().eq('id', adId);
+      const { error } = await supabase.from('ads').delete().eq('id', adId);
+      if (error) {
+        console.error('Supabase delete error:', error);
+        throw error;
+      }
+      
+      // Also remove from global context so it instantly disappears from home page
+      removeAd(adId);
+      
     } catch (err) {
       console.error('Error deleting ad:', err);
-      // Revert if failed (optional, but keeping it simple for now)
+      // Revert UI if RLS failed
+      setMyAds(previousAds);
+      alert("Xəta: Elanı silmək mümkün olmadı. (Böyük ehtimal Supabase icazəsi yoxdur)");
     }
   };
 
