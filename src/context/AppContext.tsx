@@ -42,29 +42,47 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 // Generate 100 mock ads
 const generateMockAds = (): Ad[] => {
   const cities = ["Bakı", "Sumqayıt", "Gəncə", "Xırdalan", "Mingəçevir", "Şirvan", "Quba", "Lənkəran"];
-  const generated: Ad[] = [];
   
-  for (let i = 1; i <= 100; i++) {
-    const isPremium = i <= 10;
-    const categoryId = (Math.floor(Math.random() * 15) + 1).toString();
-    const isFree = Math.random() > 0.85; // 15% chance of being 0 AZN
-    
-    generated.push({
-      id: i.toString(),
-      title: `Nümunəvi Elan Başlığı ${i} - Əla Vəziyyətdə`,
+  // 1. First, create exactly one ad for every category
+  const guaranteedAds: Ad[] = categoriesData.map((cat, i) => {
+    return {
+      id: (i + 1).toString(),
+      title: `${cat.name} üçün əla təklif`,
+      price: i % 5 === 0 ? 0 : Math.floor(Math.random() * 5000) + 10,
+      currency: "AZN",
+      city: cities[Math.floor(Math.random() * cities.length)],
+      date: `Bu gün, ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
+      categoryId: cat.id,
+      isPremium: i % 8 === 0,
+      imagePlaceholder: `Şəkil ${i + 1}`,
+      description: `Bu elan xüsusi olaraq ${cat.name} kateqoriyası üçün yaradılmışdır. Əla vəziyyətdədir.`,
+      contactName: "İstifadəçi " + (i + 1),
+      contactPhone: "+994 50 123 45 67"
+    };
+  });
+
+  // 2. Then fill the rest up to 100 ads
+  const randomAds: Ad[] = Array.from({ length: Math.max(0, 100 - categoriesData.length) }).map((_, i) => {
+    const cat = categoriesData[Math.floor(Math.random() * categoriesData.length)];
+    const actualIndex = categoriesData.length + i + 1;
+    const isFree = Math.random() > 0.85;
+    return {
+      id: actualIndex.toString(),
+      title: `${cat.name} - Əla vəziyyətdə ${actualIndex}`,
       price: isFree ? 0 : Math.floor(Math.random() * 1000) + 10,
       currency: "AZN",
       city: cities[Math.floor(Math.random() * cities.length)],
       date: `Bu gün, ${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')}`,
-      categoryId,
-      isPremium,
-      imagePlaceholder: `Şəkil ${i}`,
+      categoryId: cat.id,
+      isPremium: actualIndex % 12 === 0,
+      imagePlaceholder: `Şəkil ${actualIndex}`,
       description: "Bu elan yalnız test məqsədi ilə yaradılmışdır. Əslində belə bir məhsul yoxdur, ancaq MegaElan saytının görünüşünü və funksionallığını yoxlamaq üçün əlavə edilib.",
-      contactName: "İstifadəçi " + i,
+      contactName: "İstifadəçi " + actualIndex,
       contactPhone: "+994 50 123 45 67"
-    });
-  }
-  return generated;
+    };
+  });
+
+  return [...guaranteedAds, ...randomAds];
 };
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {

@@ -4,12 +4,34 @@ import React, { useState } from "react";
 import { categoriesData } from "@/data/categories";
 import { useAppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
-import { UploadCloud, CheckCircle, Info } from "lucide-react";
+import { UploadCloud, CheckCircle, Info, Plus, ArrowRight } from "lucide-react";
 import { AZERBAIJAN_CITIES } from "@/data/cities";
 
 export default function NewAdPage() {
-  const { user, addAd } = useAppContext();
+  const { user, addAd, login } = useAppContext();
   const router = useRouter();
+
+  if (!user) {
+    return (
+      <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-20 flex flex-col items-center text-center">
+        <div className="bg-white p-10 rounded-3xl border border-gray-200 shadow-sm max-w-lg w-full">
+          <div className="w-20 h-20 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+            <Plus className="w-10 h-10" />
+          </div>
+          <h1 className="text-3xl font-black text-black mb-4">Yeni Elan</h1>
+          <p className="text-gray-600 mb-8 font-medium leading-relaxed">
+            Elan yerləşdirmək üçün sistemə daxil olmalısınız. Qeydiyyat nömrə vasitəsilə çox sadə və pulsuzdur.
+          </p>
+          <button 
+            onClick={() => login("+994501234567")}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors"
+          >
+            Daxil ol <ArrowRight className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    );
+  }
   
   const [isSuccess, setIsSuccess] = useState(false);
   const [formData, setFormData] = useState({

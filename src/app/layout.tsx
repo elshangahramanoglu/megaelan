@@ -48,10 +48,10 @@ export default function RootLayout({
 
           {/* Footer */}
           <footer className="bg-white py-10 mt-12">
-            <div className="w-full px-4 lg:px-8 xl:px-12 mx-auto flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12">
+            <div className="max-w-[1400px] mx-auto w-full px-4 lg:px-8 xl:px-12 flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12">
               
               {/* Left Side: Logo, Slogan, Socials */}
-              <div className="flex flex-col items-start gap-5 lg:pl-8 xl:pl-16">
+              <div className="flex flex-col items-start gap-5">
                 <Link href="/" className="flex items-center gap-3">
                   <Image 
                     src="/logo.png" 
@@ -76,7 +76,7 @@ export default function RootLayout({
               </div>
 
               {/* Right Side: Links (Side-by-side on mobile) */}
-              <div className="flex flex-row gap-8 sm:gap-24 w-full md:w-auto md:justify-end lg:pr-8 xl:pr-16">
+              <div className="flex flex-row gap-8 sm:gap-24 w-full md:w-auto md:justify-end">
                 <div className="flex-1 md:flex-none">
                   <h3 className="font-bold text-base md:text-lg text-black mb-3 md:mb-4">MegaElan</h3>
                   <ul className="space-y-2 md:space-y-3 text-sm md:text-base text-gray-600 font-medium">
@@ -96,7 +96,7 @@ export default function RootLayout({
               </div>
             </div>
             
-            <div className="w-full px-4 lg:px-8 xl:px-12 mt-10 pt-6 border-t border-gray-100">
+            <div className="w-full max-w-[1400px] mx-auto px-4 lg:px-8 xl:px-12 mt-10 pt-6 border-t border-gray-100">
               <p className="text-gray-400 font-medium text-xs md:text-sm text-center md:text-left">
                 Copyright © {new Date().getFullYear()} MegaElan. Bütün hüquqlar qorunur.
               </p>

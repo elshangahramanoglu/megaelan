@@ -51,7 +51,7 @@ export default function Header() {
   return (
     <>
       <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
-        <div className="w-full px-4 md:px-8 py-3 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto w-full px-4 md:px-8 py-3 flex items-center justify-between">
           
           {/* Mobile Menu Toggle (Left on Mobile) */}
           <div className="flex md:hidden flex-1 justify-start">
@@ -63,8 +63,8 @@ export default function Header() {
             </button>
           </div>
 
-          {/* Logo (Centered on Mobile, Left on Desktop with inward padding) */}
-          <div className="flex flex-1 md:flex-none md:w-[25%] justify-center md:justify-start md:pl-4 lg:pl-8 xl:pl-12">
+          {/* Logo (Centered on Mobile, Left on Desktop) */}
+          <div className="flex flex-1 md:flex-none md:w-[25%] justify-center md:justify-start">
             <Link 
               href="/" 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
