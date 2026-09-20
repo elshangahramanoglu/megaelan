@@ -42,22 +42,37 @@ export default function LoginModal() {
 
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (phone.length < 12) {
+    const formattedPhone = phone.replace(/\s+/g, '');
+    
+    if (formattedPhone.length < 12) {
       setError('Zəhmət olmasa düzgün nömrə daxil edin');
       return;
     }
     
     setError('');
     setLoading(true);
+
+    // MOCK BYPASS (Development Only)
+    if (formattedPhone === '+994000000000') {
+      setTimeout(() => {
+        setStep(2);
+        setLoading(false);
+      }, 1000);
+      return;
+    }
     
     try {
       const appVerifier = (window as any).recaptchaVerifier;
-      const confirmation = await signInWithPhoneNumber(auth, phone, appVerifier);
+      const confirmation = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
       setConfirmationResult(confirmation);
       setStep(2);
     } catch (err: any) {
       console.error(err);
-      setError('Xəta baş verdi. Nömrəni yoxlayıb yenidən cəhd edin.');
+      if (err.code === 'auth/billing-not-enabled') {
+        setError('Sistemdə SMS xidməti hələ aktivləşdirilməyib (Blaze Plan). Test üçün +994 00 000 00 00 istifadə edin.');
+      } else {
+        setError('Xəta baş verdi. Nömrəni yoxlayıb yenidən cəhd edin.');
+      }
     } finally {
       setLoading(false);
     }
@@ -65,15 +80,27 @@ export default function LoginModal() {
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (otp.length < 6 || !confirmationResult) return;
+    const formattedPhone = phone.replace(/\s+/g, '');
+
+    if (otp.length < 6) return;
 
     setError('');
     setLoading(true);
 
     try {
-      // 1. Verify code with Firebase
-      const result = await confirmationResult.confirm(otp);
-      const userPhone = result.user.phoneNumber || phone;
+      let userPhone = formattedPhone;
+
+      // MOCK BYPASS (Development Only)
+      if (formattedPhone === '+994000000000') {
+        if (otp !== '000000') {
+          throw new Error('Yanlış test kodu');
+        }
+      } else {
+        if (!confirmationResult) return;
+        // 1. Verify code with Firebase
+        const result = await confirmationResult.confirm(otp);
+        userPhone = result.user.phoneNumber || formattedPhone;
+      }
 
       // 2. Sync with Supabase (Check if user exists, else create)
       let { data: existingUser, error: fetchError } = await supabase
