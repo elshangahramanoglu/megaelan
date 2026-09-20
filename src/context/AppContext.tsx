@@ -107,6 +107,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         const { data: realAds, error } = await supabase
           .from('ads')
           .select('*')
+          .eq('status', 'active')
           .order('created_at', { ascending: false });
           
         if (!error && realAds) {

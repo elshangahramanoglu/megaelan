@@ -11,6 +11,47 @@ import { uploadImageToImgBB } from "@/lib/imgbb";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 
+
+const addWatermark = (file: File): Promise<File> => {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(file);
+
+        // Draw original image
+        ctx.drawImage(img, 0, 0);
+
+        // Add Watermark
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)'; // 40% opacity white
+        ctx.font = `bold ${Math.floor(img.width * 0.1)}px sans-serif`; // 10% of image width
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+
+        // Rotate and draw in center
+        ctx.translate(canvas.width / 2, canvas.height / 2);
+        ctx.rotate(-Math.PI / 6); // slight diagonal
+        ctx.fillText('MegaElan', 0, 0);
+
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(new File([blob], file.name, { type: file.type }));
+          } else {
+            resolve(file); // fallback to original if blob fails
+          }
+        }, file.type, 0.9);
+      };
+      img.src = e.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  });
+};
+
 export default function NewAdPage() {
   const { user, addAd, setLoginOpen } = useAppContext();
   const router = useRouter();
@@ -111,7 +152,20 @@ export default function NewAdPage() {
       return;
     }
     
+
+    // Basic AI Moderation: Text checking
+    const badWords = ["söyüş", "pis söz", "porno", "scam", "saxta", "şiddət", "fuck", "bitch", "блядь", "сука", "qəhbə", "cındır"];
+    const textToCheck = `${formData.title} ${formData.description}`.toLowerCase();
+    
+    let initialStatus = 'pending';
+    if (badWords.some(word => textToCheck.includes(word))) {
+      initialStatus = 'rejected';
+      // In a real app we'd still let it insert but as rejected, 
+      // or we can reject it right here before uploading images.
+    }
+    
     setIsSubmitting(true);
+
     
     try {
       // 1. Upload images
@@ -127,6 +181,7 @@ export default function NewAdPage() {
         .insert({
           user_id: user.id,
           title: formData.title,
+          status: initialStatus,
           description: formData.description,
           price: Number(formData.price) || 0,
           currency: 'AZN',
@@ -137,7 +192,6 @@ export default function NewAdPage() {
           details: dynamicDetails,
           contact_name: formData.contactName,
           contact_phone: formData.contactPhone || user.phone,
-          status: 'active'
         })
         .select()
         .single();
