@@ -37,9 +37,9 @@ export async function POST(request: Request) {
     const message = `Sizin təsdiq kodunuz: ${otp}`;
     
     const payload = JSON.stringify({
-      phone: phone,
+      to: phone,
       text: message,
-      sender: 'MegaElan' // Assuming default sender or alphanumeric ID
+      senderName: 'MegaElan' // DİQQƏT: Əgər xəta versə, 1sms panelinizdə təsdiqlənmiş Adı bura yazın
     });
 
     // Generate HMAC signature
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
                             .update(payload)
                             .digest('hex');
 
-    const smsResponse = await fetch('https://api.1sms.az/api/v1/sms/send', {
+    const smsResponse = await fetch('https://1sms.az/api/v1/sms/otp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
