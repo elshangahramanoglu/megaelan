@@ -34,7 +34,7 @@ export async function POST(request: Request) {
     // Based on common HMAC SMS API implementations (like 1sms),
     // you might need to hash the payload or a specific string. 
     // We are implementing a standard JSON request structure.
-    const message = `Sizin təsdiq kodunuz: ${otp}`;
+    const message = `MegaElan Giriş Kodu : ${otp}`;
     
     const payload = JSON.stringify({
       to: phone,
