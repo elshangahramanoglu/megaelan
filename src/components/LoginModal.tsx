@@ -2,10 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Phone, ShieldCheck, ArrowRight, Loader2 } from 'lucide-react';
-import { auth } from '@/lib/firebase';
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
-import { supabase } from '@/lib/supabase';
+import { X, Phone, ShieldCheck, Loader2 } from 'lucide-react';
 import { useAppContext } from '@/context/AppContext';
 
 export default function LoginModal() {
@@ -15,7 +12,6 @@ export default function LoginModal() {
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
   // Close modal cleanup
   const handleClose = () => {
@@ -29,17 +25,6 @@ export default function LoginModal() {
     }, 300);
   };
 
-  useEffect(() => {
-    if (isLoginOpen && !(window as any).recaptchaVerifier) {
-      (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-        size: 'invisible',
-        callback: () => {
-          // reCAPTCHA solved
-        }
-      });
-    }
-  }, [isLoginOpen]);
-
   const handleSendOtp = async (e: React.FormEvent) => {
     e.preventDefault();
     const formattedPhone = phone.replace(/\s+/g, '');
@@ -51,28 +36,24 @@ export default function LoginModal() {
     
     setError('');
     setLoading(true);
-
-    // MOCK BYPASS (Development Only)
-    if (formattedPhone === '+994000000000') {
-      setTimeout(() => {
-        setStep(2);
-        setLoading(false);
-      }, 1000);
-      return;
-    }
     
     try {
-      const appVerifier = (window as any).recaptchaVerifier;
-      const confirmation = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-      setConfirmationResult(confirmation);
+      const response = await fetch('/api/auth/send-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formattedPhone })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Xəta baş verdi');
+      }
+      
       setStep(2);
     } catch (err: any) {
       console.error(err);
-      if (err.code === 'auth/billing-not-enabled') {
-        setError('Sistemdə SMS xidməti hələ aktivləşdirilməyib (Blaze Plan). Test üçün +994 00 000 00 00 istifadə edin.');
-      } else {
-        setError('Xəta baş verdi. Nömrəni yoxlayıb yenidən cəhd edin.');
-      }
+      setError(err.message || 'Xəta baş verdi. Nömrəni yoxlayıb yenidən cəhd edin.');
     } finally {
       setLoading(false);
     }
@@ -88,50 +69,25 @@ export default function LoginModal() {
     setLoading(true);
 
     try {
-      let userPhone = formattedPhone;
-
-      // MOCK BYPASS (Development Only)
-      if (formattedPhone === '+994000000000') {
-        if (otp !== '000000') {
-          throw new Error('Yanlış test kodu');
-        }
-      } else {
-        if (!confirmationResult) return;
-        // 1. Verify code with Firebase
-        const result = await confirmationResult.confirm(otp);
-        userPhone = result.user.phoneNumber || formattedPhone;
+      const response = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: formattedPhone, otp })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Kod yanlışdır');
       }
-
-      // 2. Sync with Supabase (Check if user exists, else create)
-      let { data: existingUser, error: fetchError } = await supabase
-        .from('users')
-        .select('*')
-        .eq('phone', userPhone)
-        .single();
-
-      if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 is "not found"
-        throw fetchError;
-      }
-
-      if (!existingUser) {
-        // Create new user in Supabase
-        const { data: newUser, error: insertError } = await supabase
-          .from('users')
-          .insert([{ phone: userPhone, name: 'İstifadəçi' }])
-          .select()
-          .single();
-
-        if (insertError) throw insertError;
-        existingUser = newUser;
-      }
-
-      // 3. Update global state
-      loginUser(existingUser);
+      
+      // Update global state
+      loginUser(data.user);
       handleClose();
 
     } catch (err: any) {
       console.error(err);
-      setError('Kod yanlışdır və ya müddəti bitib.');
+      setError(err.message || 'Kod yanlışdır və ya müddəti bitib.');
     } finally {
       setLoading(false);
     }
@@ -171,8 +127,6 @@ export default function LoginModal() {
 
           {/* Body */}
           <div className="p-6 md:p-8">
-            <div id="recaptcha-container"></div>
-            
             {error && (
               <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100">
                 {error}

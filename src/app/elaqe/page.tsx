@@ -5,12 +5,27 @@ import { Mail, Phone, MapPin, Send, CheckCircle } from "lucide-react";
 
 export default function ContactPage() {
   const [isSent, setIsSent] = useState(false);
+  const [name, setName] = useState("");
+  const [contact, setContact] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate sending email
+    
+    // Construct email body
+    const subject = encodeURIComponent(`${name} - MegaElan Əlaqə`);
+    const body = encodeURIComponent(`Ad və Soyad: ${name}\nƏlaqə vasitəsi: ${contact}\n\nMesaj:\n${message}`);
+    
+    // Open default mail client
+    window.location.href = `mailto:info@megaelan.com?subject=${subject}&body=${body}`;
+    
     setIsSent(true);
-    setTimeout(() => setIsSent(false), 5000);
+    setTimeout(() => {
+      setIsSent(false);
+      setName("");
+      setContact("");
+      setMessage("");
+    }, 5000);
   };
 
   return (
@@ -45,7 +60,7 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <p className="text-sm text-gray-500 font-bold mb-1">E-poçt ünvanı</p>
-                  <a href="mailto:destek@megaelan.com" className="text-xl font-black text-black hover:text-blue-600 transition-colors">destek@megaelan.com</a>
+                  <a href="mailto:info@megaelan.com" className="text-xl font-black text-black hover:text-blue-600 transition-colors">info@megaelan.com</a>
                 </div>
               </div>
               
@@ -70,24 +85,45 @@ export default function ContactPage() {
             {isSent ? (
               <div className="flex flex-col items-center justify-center py-12 text-center h-[350px]">
                 <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
-                <h3 className="text-2xl font-black text-black mb-2">Mesajınız göndərildi!</h3>
-                <p className="text-gray-500 font-medium">Ən qısa zamanda sizinlə əlaqə saxlayacağıq.</p>
+                <h3 className="text-2xl font-black text-black mb-2">Mesajınız göndərilməyə hazırdır!</h3>
+                <p className="text-gray-500 font-medium">E-poçt proqramınız açıldı.</p>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                 <div>
                   <label className="block text-sm font-bold text-black mb-2">Ad və Soyadınız</label>
-                  <input type="text" placeholder="Adınız" className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none text-black font-medium" required />
+                  <input 
+                    type="text" 
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Adınız" 
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none text-black font-medium" 
+                    required 
+                  />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-bold text-black mb-2">E-poçt və ya Nömrəniz</label>
-                  <input type="text" placeholder="Əlaqə vasitəsi" className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none text-black font-medium" required />
+                  <input 
+                    type="text" 
+                    value={contact}
+                    onChange={(e) => setContact(e.target.value)}
+                    placeholder="Əlaqə vasitəsi" 
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none text-black font-medium" 
+                    required 
+                  />
                 </div>
                 
                 <div>
                   <label className="block text-sm font-bold text-black mb-2">Mesajınız</label>
-                  <textarea rows={4} placeholder="Bizə nə demək istəyirsiniz?" className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none resize-y text-black font-medium leading-relaxed" required></textarea>
+                  <textarea 
+                    rows={4} 
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Bizə nə demək istəyirsiniz?" 
+                    className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none resize-y text-black font-medium leading-relaxed" 
+                    required
+                  ></textarea>
                 </div>
                 
                 <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-lg py-4 rounded-xl transition-colors mt-2 flex items-center justify-center gap-2 shadow-lg shadow-blue-600/30">
