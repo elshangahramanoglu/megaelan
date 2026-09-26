@@ -45,7 +45,7 @@ export async function POST(request: Request) {
     }
 
     if (!existingUser) {
-      const fullName = (ad && soyad) ? \`\${ad.trim()} \${soyad.trim()}\` : 'İstifadəçi';
+      const fullName = (ad && soyad) ? `${ad.trim()} ${soyad.trim()}` : 'İstifadəçi';
       const { data: newUser, error: insertError } = await supabase
         .from('users')
         .insert([{ phone, name: fullName }])
