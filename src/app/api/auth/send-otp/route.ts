@@ -39,20 +39,14 @@ export async function POST(request: Request) {
     const payload = JSON.stringify({
       to: phone,
       text: message,
-      senderName: 'MegaElan' // DİQQƏT: Əgər xəta versə, 1sms panelinizdə təsdiqlənmiş Adı bura yazın
+      senderName: '1sms.az' // Ekrandakı şəkildən göründüyü kimi default sender adı
     });
-
-    // Generate HMAC signature
-    const signature = crypto.createHmac('sha256', hmacSecret)
-                            .update(payload)
-                            .digest('hex');
 
     const smsResponse = await fetch('https://1sms.az/api/v1/sms/otp', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'X-API-Key': apiKey,
-        'X-Signature': signature
+        'X-API-Key': apiKey
       },
       body: payload
     });
