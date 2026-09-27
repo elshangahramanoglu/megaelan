@@ -2,6 +2,48 @@ export function applySmartFilters(fieldName: string, options: string[] | undefin
   if (!options) return [];
   let filtered = [...options];
 
+  
+  // 1. TELEFONLAR (Phones) - Color Logic
+  if (fieldName === 'color' && details.brand && details.model) {
+    const m = details.model;
+    
+    // Apple Colors
+    if (details.brand === 'Apple') {
+      if (m.includes('16 Pro') || m.includes('17 Pro') || m.includes('18 Pro')) {
+        filtered = ['Titan Qara', 'Titan Ağ', 'Təbii Titan', 'Çöl Titan', 'Digər'];
+      } else if (m.includes('15 Pro')) {
+        filtered = ['Titan Qara', 'Titan Ağ', 'Təbii Titan', 'Mavi Titan', 'Digər'];
+      } else if (m.includes('15') || m.includes('16') || m.includes('17') || m.includes('18')) {
+        filtered = ['Qara', 'Mavi', 'Çəhrayı', 'Sarı', 'Yaşıl', 'Ağ', 'Digər'];
+      } else if (m.includes('14 Pro') || m.includes('13 Pro') || m.includes('12 Pro')) {
+        filtered = ['Qara', 'Gümüşü', 'Qızılı', 'Bənövşəyi', 'Mavi', 'Qrafit', 'Digər'];
+      } else {
+        filtered = ['Qara', 'Ağ', 'Qırmızı', 'Mavi', 'Yaşıl', 'Sarı', 'Bənövşəyi', 'Çəhrayı', 'Digər'];
+      }
+    }
+    
+    // Samsung Colors
+    if (details.brand === 'Samsung') {
+      if (m.includes('S24 Ultra') || m.includes('S25 Ultra') || m.includes('S26 Ultra')) {
+        filtered = ['Titan Qara', 'Titan Ağ', 'Sarı', 'Bənövşəyi', 'Boz', 'Digər'];
+      } else if (m.includes('S23') || m.includes('S24')) {
+        filtered = ['Qara', 'Ağ', 'Bej', 'Yaşıl', 'Bənövşəyi', 'Sarı', 'Digər'];
+      } else {
+        filtered = ['Qara', 'Ağ', 'Göy', 'Boz', 'Yaşıl', 'Qırmızı', 'Digər'];
+      }
+    }
+  }
+
+  // 1.5 TELEFONLAR - Processor Logic
+  if (fieldName === 'processor' && details.brand) {
+    if (details.brand === 'Apple') {
+      filtered = filtered.filter(o => o.includes('Apple'));
+    } else {
+      filtered = filtered.filter(o => !o.includes('Apple'));
+    }
+  }
+
+
   // 1. TELEFONLAR (Phones) - Storage Logic
   if (fieldName === 'storage' && details.brand === 'Apple' && details.model) {
     const m = details.model;

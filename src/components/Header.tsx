@@ -332,16 +332,7 @@ export default function Header() {
                       {categoriesData.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                     </select>
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-black font-bold mb-2">Min Qiymət</label>
-                      <input type="number" placeholder="0" className="w-full p-4 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none text-black font-medium" />
-                    </div>
-                    <div>
-                      <label className="block text-black font-bold mb-2">Max Qiymət</label>
-                      <input type="number" placeholder="0" className="w-full p-4 rounded-xl border-2 border-gray-300 focus:border-blue-600 outline-none text-black font-medium" />
-                    </div>
-                  </div>
+
                   {/* Dynamic inputs simulation */}
                   <div className="p-4 bg-blue-50 rounded-xl border border-blue-100 text-blue-800 font-medium">
                     Kateqoriya seçdikdən sonra həmin kateqoriyaya uyğun əlavə filtrlər (Marka, Model, Vəziyyət və s.) burada avtomatik görünəcək.

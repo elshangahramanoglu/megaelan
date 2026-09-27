@@ -45,7 +45,7 @@ const CONDITION_FIELD: CategoryField = {
 
 // Avtomobil rəngləri (gerçək avtomobil rəngləri)
 const CAR_COLOR_FIELD: CategoryField = {
-  name: "color", label: "Rəng", type: "select",
+  name: "color", label: "Rəng", type: "select", dependsOn: "model",
   options: ["Qara", "Ağ", "Gümüşü", "Boz", "Tünd boz", "Göy (Mavi)", "Tünd göy", "Qırmızı", "Tünd qırmızı (Bordo)", "Yaşıl", "Tünd yaşıl", "Sarı", "Narıncı", "Qəhvəyi", "Bej", "Şampan", "Qızılı", "Sedef ağ"]
 };
 
@@ -278,13 +278,17 @@ export const categoriesData: Category[] = [
       },
       { name: "storage", label: "Yaddaş", type: "select", options: ["32 GB", "64 GB", "128 GB", "256 GB", "512 GB", "1 TB", "2 TB", "4 TB"] },
       { name: "ram", label: "RAM", type: "select", options: ["2 GB", "3 GB", "4 GB", "6 GB", "8 GB", "12 GB", "16 GB", "18 GB", "24 GB", "32 GB", "64 GB", "128 GB"] },
-      { name: "processor", label: "Prosessor", type: "select", options: [
+      { name: "processor", label: "Prosessor", type: "select", dependsOn: "brand", options: [
         "Intel Core i3", "Intel Core i5", "Intel Core i7", "Intel Core i9",
         "Intel Core Ultra 5", "Intel Core Ultra 7", "Intel Core Ultra 9",
         "AMD Ryzen 3", "AMD Ryzen 5", "AMD Ryzen 7", "AMD Ryzen 9", "AMD Ryzen AI 9",
         "Apple M1", "Apple M2", "Apple M3", "Apple M4", "Apple M5",
         "Apple A17 Pro", "Apple A18 Pro",
-        "Qualcomm Snapdragon", "MediaTek Dimensity",
+        "Snapdragon 8 Gen 5", "Snapdragon 8 Gen 4", "Snapdragon 8s Gen 3", "Snapdragon 7+ Gen 3", 
+        "Dimensity 9400", "Dimensity 9300", "Dimensity 8300",
+        "Exynos 2500", "Exynos 2400", 
+        "Google Tensor G5", "Google Tensor G4",
+        "Qualcomm Snapdragon (Digər)", "MediaTek Dimensity (Digər)",
         "Digər"
       ]},
       PHONE_COLOR_FIELD,

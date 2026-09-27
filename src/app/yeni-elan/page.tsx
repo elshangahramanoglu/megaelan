@@ -182,6 +182,25 @@ export default function NewAdPage() {
       alert("Zəhmət olmasa bütün vacib xanaları (*) doldurun.");
       return;
     }
+
+    // Check all dynamic fields
+    let missingField = false;
+    selectedCategory.fields.forEach(field => {
+      if (field.dependsOn) {
+        if (dynamicDetails[field.dependsOn] && !dynamicDetails[field.name]) {
+          missingField = true;
+        }
+      } else {
+        if (!dynamicDetails[field.name]) {
+          missingField = true;
+        }
+      }
+    });
+
+    if (missingField) {
+      alert("Zəhmət olmasa Əlavə Məlumatlar bölməsindəki bütün xüsusiyyətləri doldurun.");
+      return;
+    }
     
     if (Number(formData.price) < 1) {
       alert("Qiymət minimum 1 AZN olmalıdır.");
@@ -198,7 +217,7 @@ export default function NewAdPage() {
     const badWords = ["söyüş", "pis söz", "porno", "scam", "saxta", "şiddət", "fuck", "bitch", "блядь", "сука", "qəhbə", "cındır"];
     const textToCheck = `${formData.title} ${formData.description}`.toLowerCase();
     
-    let initialStatus = 'pending';
+    let initialStatus = showAdPayment ? 'payment_pending' : 'pending';
     if (badWords.some(word => textToCheck.includes(word))) {
       initialStatus = 'rejected';
       // In a real app we'd still let it insert but as rejected, 
@@ -260,8 +279,12 @@ export default function NewAdPage() {
       
       addAd(newAd as any);
       setIsSuccess(true);
-      setCreatedAdId(newAd.id); // Save ID for manual navigation
+      setCreatedAdId(newAd.id);
       
+      if (initialStatus === 'payment_pending') {
+        router.push(`/reklam?adId=${newAd.id}&payment=true`);
+        return;
+      }
     } catch (err) {
       console.error("Ad creation error:", err);
       alert("Elan yerləşdirilərkən xəta baş verdi.");
@@ -429,11 +452,23 @@ export default function NewAdPage() {
             <p className="text-gray-600 text-sm font-medium mb-4">Maksimum 10 şəkil icazə verilir.</p>
             
             {files.length > 0 && (
-              <div className="flex flex-wrap gap-2 justify-center mt-4">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-6 w-full" onClick={(e) => e.preventDefault()}>
                 {files.map((f, i) => (
-                  <span key={i} className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-md font-medium border border-blue-200">
-                    {f.name.length > 15 ? f.name.substring(0,15) + '...' : f.name}
-                  </span>
+                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden shadow-sm border border-gray-200 group">
+                    <img src={URL.createObjectURL(f)} alt="Preview" className="w-full h-full object-cover" />
+                    <button 
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setFiles(files.filter((_, index) => index !== i));
+                      }}
+                      className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-md transition-transform active:scale-95"
+                    >
+                      ✕
+                    </button>
+                    {i === 0 && <div className="absolute bottom-0 inset-x-0 bg-blue-600/80 text-white text-[10px] py-1 text-center font-bold">ƏSAS ŞƏKİL</div>}
+                  </div>
                 ))}
               </div>
             )}
@@ -523,11 +558,9 @@ export default function NewAdPage() {
 
         <button 
           type="submit" 
-          disabled={showAdPayment || isSubmitting}
+          disabled={isSubmitting}
           className={`w-full font-bold text-xl py-5 rounded-2xl transition-colors mt-4 shadow-lg ${
-            showAdPayment 
-              ? 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-none' 
-              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30'
+            showAdPayment ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-orange-500/30' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30'
           }`}
         >
           {isSubmitting ? (
