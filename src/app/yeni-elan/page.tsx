@@ -129,8 +129,35 @@ export default function NewAdPage() {
     if (e.target.name === 'categoryId') {
       setFormData(prev => ({ ...prev, subCategory: "", categoryId: e.target.value }));
       setDynamicDetails({});
+      // Check how many ads user already has in this category
+      checkCategoryAdCount(e.target.value);
     }
   };
+
+  const checkCategoryAdCount = async (catId: string) => {
+    if (!user) return;
+    try {
+      const { count, error } = await supabase
+        .from('ads')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', user.id)
+        .eq('category_id', catId);
+      
+      if (!error && count !== null) {
+        setCategoryAdCount(count);
+        setShowAdPayment(count >= 1);
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Check initial category on mount
+  React.useEffect(() => {
+    if (user) {
+      checkCategoryAdCount(formData.categoryId);
+    }
+  }, [user]);
 
 
 
@@ -277,7 +304,7 @@ export default function NewAdPage() {
       <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl mb-8 flex items-start gap-3">
         <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
         <p className="text-black font-medium text-sm leading-relaxed">
-          <span className="font-bold text-blue-700">Qayda:</span> Hər bir istifadəçi ay ərzində hər kateqoriya üzrə <span className="font-bold">3 pulsuz elan</span> yerləşdirə bilər. Əlavə elanlar və ya Premium xidmətlər üçün tariflərlə tanış olun: 
+          <span className="font-bold text-blue-700">Qayda:</span> Hər bir istifadəçi hər kateqoriya üzrə <span className="font-bold text-blue-600">1 pulsuz elan</span> yerləşdirə bilər. Eyni kateqoriyada 2-ci elan üçün ödəniş tələb olunacaq.
           <br/>• İrəli çək: 1 gün - 0.50 AZN, 3 gün - 1.30 AZN, 7 gün - 3 AZN
           <br/>• Premium: 1 gün - 1 AZN, 1 həftə - 5 AZN, 1 ay - 20 AZN
         </p>
@@ -482,8 +509,34 @@ export default function NewAdPage() {
           </div>
         </div>
 
-        <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-xl py-5 rounded-2xl transition-colors mt-4 shadow-lg shadow-blue-600/30">
-          Elanı yerləşdir
+        {showAdPayment && (
+          <div className="bg-orange-50 border-2 border-orange-300 p-6 rounded-2xl text-center">
+            <Crown className="w-10 h-10 text-orange-500 mx-auto mb-3" />
+            <h3 className="text-xl font-black text-orange-700 mb-2">Ödəniş tələb olunur!</h3>
+            <p className="text-orange-600 font-medium mb-4">
+              Bu kateqoriyada artıq <span className="font-black">{categoryAdCount} pulsuz elan</span> yerləşdirmisiniz. 
+              Əlavə elan üçün ödəniş tələb olunur. Ödəniş sistemi tezliklə aktivləşdiriləcək.
+            </p>
+            <p className="text-sm text-gray-500">Digər kateqoriyalarda hələ pulsuz elan haqqınız ola bilər.</p>
+          </div>
+        )}
+
+        <button 
+          type="submit" 
+          disabled={showAdPayment || isSubmitting}
+          className={`w-full font-bold text-xl py-5 rounded-2xl transition-colors mt-4 shadow-lg ${
+            showAdPayment 
+              ? 'bg-gray-400 text-gray-200 cursor-not-allowed shadow-none' 
+              : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30'
+          }`}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center justify-center gap-2"><Loader2 className="w-6 h-6 animate-spin" /> Yüklənir...</span>
+          ) : showAdPayment ? (
+            'Ödəniş tələb olunur'
+          ) : (
+            'Elanı yerləşdir'
+          )}
         </button>
       </form>
     </div>
