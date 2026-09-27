@@ -262,13 +262,29 @@ export default function KabinetPage() {
 
               <form onSubmit={handleSave} className="flex flex-col gap-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="col-span-1 sm:col-span-2">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Ad və Soyad</label>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Ad</label>
                     <input 
                       type="text" 
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                      value={name.split(' ')[0] || ''}
+                      onChange={(e) => {
+                        const [, ...rest] = name.split(' ');
+                        setName(`${e.target.value} ${rest.join(' ')}`.trim());
+                      }}
                       placeholder="Adınızı daxil edin"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Soyad</label>
+                    <input 
+                      type="text" 
+                      value={name.split(' ').slice(1).join(' ') || ''}
+                      onChange={(e) => {
+                        const [first] = name.split(' ');
+                        setName(`${first || ''} ${e.target.value}`.trim());
+                      }}
+                      placeholder="Soyadınızı daxil edin"
                       className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-blue-500 focus:border-blue-500 outline-none text-black"
                     />
                   </div>

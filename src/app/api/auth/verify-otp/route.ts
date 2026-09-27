@@ -3,7 +3,7 @@ import { supabase } from '@/lib/supabase';
 
 export async function POST(request: Request) {
   try {
-    const { phone, otp, ad, soyad } = await request.json();
+    const { phone, otp } = await request.json();
 
     if (!phone || !otp) {
       return NextResponse.json({ error: 'Məlumatlar tam deyil' }, { status: 400 });
@@ -45,10 +45,9 @@ export async function POST(request: Request) {
     }
 
     if (!existingUser) {
-      const fullName = (ad && soyad) ? `${ad.trim()} ${soyad.trim()}` : 'İstifadəçi';
       const { data: newUser, error: insertError } = await supabase
         .from('users')
-        .insert([{ phone, name: fullName }])
+        .insert([{ phone, name: '' }])
         .select()
         .single();
 

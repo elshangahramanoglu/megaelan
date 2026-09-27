@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Phone, ShieldCheck, Loader2, User } from 'lucide-react';
+import { X, Phone, ShieldCheck, Loader2 } from 'lucide-react';
 import { useAppContext } from '@/context/AppContext';
 
 export default function LoginModal() {
@@ -10,9 +10,6 @@ export default function LoginModal() {
   const [step, setStep] = useState<1 | 2>(1); // 1: Phone, 2: OTP
   const [phone, setPhone] = useState('+994');
   const [otp, setOtp] = useState('');
-  const [ad, setAd] = useState('');
-  const [soyad, setSoyad] = useState('');
-  const [isNewUser, setIsNewUser] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -23,9 +20,6 @@ export default function LoginModal() {
       setStep(1);
       setPhone('+994');
       setOtp('');
-      setAd('');
-      setSoyad('');
-      setIsNewUser(false);
       setError('');
       setLoading(false);
     }, 300);
@@ -56,7 +50,6 @@ export default function LoginModal() {
         throw new Error(data.error || 'Xəta baş verdi');
       }
       
-      setIsNewUser(data.isNewUser);
       setStep(2);
     } catch (err: any) {
       console.error(err);
@@ -71,10 +64,6 @@ export default function LoginModal() {
     const formattedPhone = phone.replace(/\s+/g, '');
 
     if (otp.length < 6) return;
-    if (isNewUser && (!ad.trim() || !soyad.trim())) {
-      setError('Zəhmət olmasa Ad və Soyadınızı daxil edin');
-      return;
-    }
 
     setError('');
     setLoading(true);
@@ -83,11 +72,7 @@ export default function LoginModal() {
       const response = await fetch('/api/auth/verify-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          phone: formattedPhone, 
-          otp,
-          ...(isNewUser && { ad, soyad })
-        })
+        body: JSON.stringify({ phone: formattedPhone, otp })
       });
       
       const data = await response.json();
@@ -195,58 +180,23 @@ export default function LoginModal() {
                       className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-black font-bold tracking-widest focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition-all text-center text-lg"
                     />
                   </div>
-                  <p className="mt-3 text-sm text-gray-500 text-center mb-6">
+                  <p className="mt-3 text-sm text-gray-500 text-center">
                     <span className="font-bold text-black">{phone}</span> nömrəsinə göndərilən kodu daxil edin.
                   </p>
                 </div>
 
-                {isNewUser && (
-                  <>
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Adınız</label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                          <User className="w-5 h-5" />
-                        </div>
-                        <input
-                          type="text"
-                          value={ad}
-                          onChange={(e) => setAd(e.target.value)}
-                          placeholder="Adınızı daxil edin"
-                          className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-black font-medium focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition-all"
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Soyadınız</label>
-                      <div className="relative">
-                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400">
-                          <User className="w-5 h-5" />
-                        </div>
-                        <input
-                          type="text"
-                          value={soyad}
-                          onChange={(e) => setSoyad(e.target.value)}
-                          placeholder="Soyadınızı daxil edin"
-                          className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-black font-medium focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition-all"
-                        />
-                      </div>
-                    </div>
-                  </>
-                )}
-
                 <button 
                   type="submit" 
-                  disabled={loading || otp.length < 6 || (isNewUser && (!ad.trim() || !soyad.trim()))}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors mt-4"
+                  disabled={loading || otp.length < 6}
+                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors"
                 >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : (isNewUser ? 'Qeydiyyatı Tamamla' : 'Təsdiqlə və Daxil Ol')}
+                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Təsdiqlə və Daxil Ol'}
                 </button>
 
                 <button 
                   type="button"
                   onClick={() => setStep(1)}
-                  className="w-full text-center text-sm font-bold text-blue-600 hover:underline mt-2"
+                  className="w-full text-center text-sm font-bold text-blue-600 hover:underline"
                 >
                   Nömrəni dəyiş
                 </button>

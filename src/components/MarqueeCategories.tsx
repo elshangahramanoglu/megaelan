@@ -32,8 +32,12 @@ export default function MarqueeCategories() {
               href={`/kateqoriya/${cat.id}`}
               className="flex-shrink-0 flex flex-col items-center justify-center p-4 md:p-6 bg-slate-50 border border-gray-100 rounded-3xl w-[120px] h-[120px] md:w-[180px] md:h-[180px] hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group"
             >
-              <div className="w-12 h-12 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center mb-2 md:mb-4 shadow-sm group-hover:scale-110 transition-transform">
-                <Icon className="w-6 h-6 md:w-10 md:h-10 text-blue-600" />
+              <div className="w-12 h-12 md:w-20 md:h-20 bg-white rounded-full flex items-center justify-center mb-2 md:mb-4 shadow-sm group-hover:scale-110 transition-transform overflow-hidden p-2">
+                {cat.image.includes('.png') ? (
+                  <img src={cat.image} alt={cat.name} className="w-full h-full object-contain" />
+                ) : (
+                  <Icon className="w-6 h-6 md:w-10 md:h-10 text-blue-600" />
+                )}
               </div>
               <span className="font-bold text-black text-center text-xs md:text-sm whitespace-normal leading-tight group-hover:text-blue-600 transition-colors">
                 {cat.name}

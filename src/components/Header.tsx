@@ -174,7 +174,11 @@ export default function Header() {
                   {/* Subcategories */}
                   <div className="w-2/3 p-8 overflow-y-auto bg-slate-50 custom-scrollbar">
                     <h3 className="text-2xl font-black text-black mb-6 flex items-center gap-3">
-                      <activeCategory.icon className="w-6 h-6 text-blue-600" />
+                      {activeCategory.image.includes('.png') ? (
+                          <img src={activeCategory.image} className="w-6 h-6 object-contain" />
+                        ) : (
+                          <activeCategory.icon className="w-6 h-6 text-blue-600" />
+                        )}
                       <Link href={`/kateqoriya/${activeCategory.id}`} onClick={() => setIsCatalogOpen(false)} className="hover:underline hover:text-blue-600">
                         {activeCategory.name}
                       </Link>
@@ -248,7 +252,11 @@ export default function Header() {
                           className="w-full p-4 flex items-center justify-between font-bold text-black"
                         >
                           <div className="flex items-center gap-3">
-                            <cat.icon className="w-5 h-5 text-blue-600" />
+                            {cat.image.includes('.png') ? (
+                              <img src={cat.image} className="w-5 h-5 object-contain" />
+                            ) : (
+                              <cat.icon className="w-5 h-5 text-blue-600" />
+                            )}
                             {cat.name}
                           </div>
                           <ChevronDown className={`w-5 h-5 transition-transform ${activeMobileCategory === cat.id ? 'rotate-180 text-blue-600' : 'text-gray-400'}`} />

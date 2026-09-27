@@ -57,18 +57,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'SMS göndərilə bilmədi' }, { status: 500 });
     }
 
-    // Check if user exists
-    const { data: existingUser } = await supabase
-      .from('users')
-      .select('id')
-      .eq('phone', phone)
-      .single();
-
-    return NextResponse.json({ 
-      success: true, 
-      message: 'SMS göndərildi',
-      isNewUser: !existingUser
-    });
+    return NextResponse.json({ success: true, message: 'SMS göndərildi' });
 
   } catch (error) {
     console.error('Send OTP Error:', error);

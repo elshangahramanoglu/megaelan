@@ -55,12 +55,12 @@ const COLOR_FIELD: CategoryField = {
 
 export const categoriesData: Category[] = [
   {
-    id: "1", name: "Ev və bağ üçün", icon: Home, image: "home",
+    id: "1", name: "Ev", icon: Home, image: "/ev.png",
     subcategories: ["Mebel", "Ev əşyaları", "Təmir və tikinti", "Qab-qacaq və mətbəx əşyaları", "Bitkilər", "Bağ və bostan"],
     fields: [CONDITION_FIELD]
   },
   {
-    id: "2", name: "Nəqliyyat", icon: Car, image: "car",
+    id: "2", name: "Nəqliyyat", icon: Car, image: "/neqliyyat.png",
     subcategories: ["Avtomobillər", "Avtobuslar və xüsusi texnika", "Motosikletlər və mopedlər", "Velosipedlər", "Su nəqliyyatı"],
     fields: [
       { name: "brand", label: "Marka", type: "select", options: ["Toyota", "Mercedes", "BMW", "Hyundai", "Kia", "LADA (VAZ)", "Nissan", "Chevrolet", "Ford", "Honda", "Lexus", "Mitsubishi", "Opel", "Volkswagen"] },
@@ -93,7 +93,7 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "3", name: "Elektronika", icon: Tv, image: "tv",
+    id: "3", name: "Elektronika", icon: Tv, image: "/elektronika.png",
     subcategories: ["Audio və video", "Kompüter aksesuarları", "Kompüterlər və noutbuklar", "Oyunlar, pultlar və proqramlar", "Planşetlər və elektron kitablar"],
     fields: [
       { name: "brand", label: "Marka", type: "select", options: ["Apple", "Samsung", "Asus", "Acer", "HP", "Lenovo", "Dell", "Sony", "LG"] },
@@ -103,12 +103,12 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "4", name: "Ehtiyat hissələri və aksesuarlar", icon: Settings, image: "settings",
+    id: "4", name: "Ehtiyat hissələri və aksesuarlar", icon: Settings, image: "/ehtiyat.png",
     subcategories: ["Avto ehtiyat hissələri", "Avto aksesuarlar", "Moto ehtiyat hissələri", "Şinlər və disklər", "GPS və naviqatorlar"],
     fields: [CONDITION_FIELD]
   },
   {
-    id: "5", name: "Daşınmaz əmlak", icon: Building2, image: "building",
+    id: "5", name: "Daşınmaz əmlak", icon: Building2, image: "/dasinmaz.png",
     subcategories: ["Mənzillər", "Villalar və bağ evləri", "Obyektlər və ofislər", "Torpaq", "Qarajlar"],
     fields: [
       { name: "type", label: "Növü", type: "select", options: ["Köhnə tikili", "Yeni tikili"] },
@@ -118,63 +118,25 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "6", name: "Xidmətlər və biznes", icon: Briefcase, image: "briefcase",
+    id: "6", name: "Xidmətlər və biznes", icon: Briefcase, image: "/xidmet.png",
     subcategories: ["Təmir və tikinti xidmətləri", "Gözəllik və sağlamlıq", "Nəqliyyat və logistika", "Təlim və repetitorlar", "IT və internet"],
     fields: []
   },
-  {
-    id: "7", name: "Şəxsi əşyalar", icon: Shirt, image: "shirt",
-    subcategories: ["Geyim", "Ayaqqabılar", "Aksesuarlar", "Saatlar", "Zərgərlik və bijuteriya"],
-    fields: [CONDITION_FIELD]
-  },
-  {
-    id: "8", name: "Hobbi və asudə", icon: Palette, image: "palette",
-    subcategories: ["İdman və əyləncə", "Musiqi alətləri", "Biletlər və səyahət", "Kitablar və jurnallar", "Kolleksiya"],
-    fields: [CONDITION_FIELD]
-  },
-  {
-    id: "9", name: "Məişət texnikası", icon: WashingMachine, image: "washing-machine",
+      {
+    id: "9", name: "Məişət texnikası", icon: WashingMachine, image: "/meishet.png",
     subcategories: ["Soyuducular", "Paltaryuyan maşınlar", "Kondisionerlər", "Sobalar və mikrodalğalı sobalar", "Xırda məişət texnikası"],
     fields: [
       { name: "brand", label: "Marka", type: "select", options: ["Beko", "Bosch", "Samsung", "LG", "Gorenje", "Hoffmann"] },
       CONDITION_FIELD
     ]
   },
-  {
-    id: "10", name: "Telefonlar", icon: Smartphone, image: "smartphone",
-    subcategories: ["Mobil telefonlar", "Smartfonlar", "Nömrələr", "Telefon aksesuarları", "Telefon təmiri"],
-    fields: [
-      { name: "brand", label: "Marka", type: "select", options: ["Apple", "Samsung", "Xiaomi", "Honor", "Realme", "Huawei", "OnePlus", "Google", "Nokia"] },
-      { 
-        name: "model", 
-        label: "Model", 
-        type: "select", 
-        dependsOn: "brand",
-        dynamicOptions: {
-          "Apple": ["iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro Max", "iPhone 14 Pro", "iPhone 14", "iPhone 13 Pro Max", "iPhone 13 Pro", "iPhone 13", "iPhone 12 Pro Max", "iPhone 12 Pro", "iPhone 12", "iPhone 11 Pro Max", "iPhone 11 Pro", "iPhone 11", "Digər"],
-          "Samsung": ["Galaxy S24 Ultra", "Galaxy S24+", "Galaxy S24", "Galaxy S23 Ultra", "Galaxy S23", "Galaxy A55", "Galaxy A54", "Galaxy Z Fold 5", "Galaxy Z Flip 5", "Digər"],
-          "Xiaomi": ["14 Ultra", "14 Pro", "14", "13T Pro", "13T", "Redmi Note 13 Pro+", "Redmi Note 13 Pro", "Poco X6 Pro", "Digər"],
-          "Honor": ["Magic6 Pro", "Magic V2", "90", "X9b", "X8b", "Digər"],
-          "Realme": ["12 Pro+", "12 Pro", "11 Pro", "C67", "C55", "Digər"],
-          "Huawei": ["Pura 70 Ultra", "Pura 70 Pro", "Mate 60 Pro", "Nova 12", "Digər"],
-          "OnePlus": ["12", "12R", "11", "Nord 3", "Digər"],
-          "Google": ["Pixel 8 Pro", "Pixel 8", "Pixel 7 Pro", "Pixel 7a", "Digər"],
-          "Nokia": ["XR21", "X30", "G42", "C32", "Digər"]
-        }
-      },
-      { name: "storage", label: "Yaddaş", type: "select", options: ["32 GB", "64 GB", "128 GB", "256 GB", "512 GB", "1 TB"] },
-      { name: "ram", label: "RAM", type: "select", options: ["2 GB", "3 GB", "4 GB", "6 GB", "8 GB", "12 GB", "16 GB"] },
-      COLOR_FIELD,
-      CONDITION_FIELD
-    ]
-  },
-  {
-    id: "11", name: "Uşaq aləmi", icon: Baby, image: "baby",
+    {
+    id: "11", name: "Uşaq aləmi", icon: Baby, image: "/ushaq.png",
     subcategories: ["Uşaq geyimləri", "Oyuncaqlar", "Mebel və uşaq arabaları", "Məktəb ləvazimatları", "Uşaq qidası"],
     fields: [CONDITION_FIELD]
   },
   {
-    id: "12", name: "İş elanları", icon: UserPlus, image: "user-plus",
+    id: "12", name: "İş elanları", icon: UserPlus, image: "/ish.png",
     subcategories: ["Vakansiyalar", "CV-lər", "Təcrübə proqramları", "Freelance", "Müvəqqəti işlər"],
     fields: [
       { name: "experience", label: "Təcrübə", type: "select", options: ["Təcrübəsiz", "1 ildən aşağı", "1 ildən 3 ilə qədər", "3 ildən 5 ilə qədər", "5 ildən çox"] },
@@ -182,17 +144,17 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "13", name: "Heyvanlar", icon: Dog, image: "dog",
+    id: "13", name: "Heyvanlar", icon: Dog, image: "/heyvanlar.png",
     subcategories: ["İtlər", "Pişiklər", "Quşlar", "Akvarium və balıqlar", "Heyvanlar üçün məhsullar"],
     fields: []
   },
   {
-    id: "14", name: "Məktəblilər üçün", icon: Backpack, image: "backpack",
+    id: "14", name: "Məktəblilər üçün", icon: Backpack, image: "/mektebli.png",
     subcategories: ["Məktəb formaları", "Dərsliklər", "Dəftərxana ləvazimatları", "Çantalar", "Tədris kursları"],
     fields: [CONDITION_FIELD]
   },
   {
-    id: "15", name: "Mağazalar", icon: Store, image: "store",
+    id: "15", name: "Mağazalar", icon: Store, image: "/magazalar.png",
     subcategories: ["Geyim mağazaları", "Texnika mağazaları", "Mebel mağazaları", "Avtosalonlar", "Digər mağazalar"],
     fields: []
   }
