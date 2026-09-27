@@ -87,6 +87,11 @@ export default function KabinetPage() {
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+    
+    if (file.size > 15 * 1024 * 1024) {
+      alert("Şəkilin həcmi 15 MB-dan böyük ola bilməz!");
+      return;
+    }
 
     setIsUploading(true);
     const formData = new FormData();
@@ -117,6 +122,18 @@ export default function KabinetPage() {
     }
   };
 
+    const handleDeleteAvatar = async () => {
+    if (!user || !avatar) return;
+    setAvatar("");
+    try {
+      const { error } = await supabase.from('users').update({ avatar: null }).eq('id', user.id);
+      if (error) console.error("Avatar delete db error:", error);
+      updateUser({ avatar: undefined });
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -183,7 +200,7 @@ export default function KabinetPage() {
         <div className="w-full md:w-1/3 bg-slate-50 border-r border-gray-100 p-6">
           <div className="mb-8">
             <p className="text-sm text-gray-500 mb-1">Qeydiyyat nömrəsi</p>
-            <p className="font-bold text-gray-900">+994 {user.phone}</p>
+            <p className="font-bold text-gray-900">{user.phone.startsWith("+994") ? user.phone : user.phone.startsWith("994") ? "+" + user.phone : "+994 " + user.phone}</p>
           </div>
           
           <nav className="flex flex-row md:flex-col gap-3 mt-4 md:mt-0 w-full md:w-auto">
@@ -288,7 +305,12 @@ export default function KabinetPage() {
                       <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploading} />
                     </label>
                   </div>
-                  <p className="text-sm text-gray-500 font-medium">Profil şəklinizi dəyişin</p>
+                  <p className="text-sm text-gray-500 font-medium mb-1">Profil şəklinizi dəyişin</p>
+                  {avatar && (
+                    <button type="button" onClick={handleDeleteAvatar} className="text-xs text-red-500 hover:text-red-700 font-bold bg-red-50 px-3 py-1 rounded-full transition-colors mt-1">
+                      Şəkli sil
+                    </button>
+                  )}
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
@@ -323,7 +345,7 @@ export default function KabinetPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-2">Mobil nömrə (Dəyişdirilə bilməz)</label>
                   <input 
                     type="text" 
-                    value={`+994 ${user.phone}`}
+                    value={user.phone.startsWith("+994") ? user.phone : user.phone.startsWith("994") ? "+" + user.phone : "+994 " + user.phone}
                     disabled
                     className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-500 outline-none"
                   />

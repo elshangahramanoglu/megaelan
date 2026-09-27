@@ -42,7 +42,7 @@ export interface Category {
 // Reusable fields
 const YEAR_FIELD: CategoryField = {
   name: "year", label: "Buraxılış ili", type: "select",
-  options: Array.from({ length: 40 }, (_, i) => (2025 - i).toString())
+  options: Array.from({ length: 45 }, (_, i) => (2026 - i).toString())
 };
 const CONDITION_FIELD: CategoryField = {
   name: "condition", label: "Vəziyyəti", type: "select",
@@ -103,9 +103,9 @@ export const categoriesData: Category[] = [
         type: "select", 
         dependsOn: "brand",
         dynamicOptions: {
-          "Apple": ["iPhone 16 Pro Max", "iPhone 16 Pro", "iPhone 16", "iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro Max", "iPhone 14 Pro", "iPhone 14", "iPhone 13 Pro Max", "iPhone 13 Pro", "iPhone 13", "iPhone 12 Pro Max", "iPhone 12 Pro", "iPhone 12", "iPhone 11 Pro Max", "iPhone 11 Pro", "iPhone 11", "Digər"],
-          "Samsung": ["Galaxy S24 Ultra", "Galaxy S24+", "Galaxy S24", "Galaxy S23 Ultra", "Galaxy S23", "Galaxy A55", "Galaxy A54", "Galaxy Z Fold 5", "Galaxy Z Flip 5", "Digər"],
-          "Xiaomi": ["14 Ultra", "14 Pro", "14", "13T Pro", "13T", "Redmi Note 13 Pro+", "Redmi Note 13 Pro", "Poco X6 Pro", "Digər"],
+          "Apple": ["iPhone 18 Pro Max", "iPhone 18 Pro", "iPhone 18", "iPhone 17 Pro Max", "iPhone 17 Pro", "iPhone 17", "iPhone 16 Pro Max", "iPhone 16 Pro", "iPhone 16", "iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro Max", "iPhone 14 Pro", "iPhone 14", "iPhone 13 Pro Max", "iPhone 13", "iPhone 12", "iPhone 11", "Digər"],
+          "Samsung": ["Galaxy S26 Ultra", "Galaxy S26", "Galaxy S25 Ultra", "Galaxy S25", "Galaxy S24 Ultra", "Galaxy S24+", "Galaxy S24", "Galaxy S23 Ultra", "Galaxy S23", "Galaxy A55", "Galaxy A54", "Galaxy Z Fold 6", "Galaxy Z Flip 6", "Digər"],
+          "Xiaomi": ["16 Ultra", "16 Pro", "16", "15 Ultra", "15 Pro", "15", "14 Ultra", "14 Pro", "14", "13T Pro", "13T", "Redmi Note 14 Pro+", "Redmi Note 14 Pro", "Poco X7 Pro", "Digər"],
           "Honor": ["Magic6 Pro", "Magic V2", "90", "X9b", "X8b", "Digər"],
           "Realme": ["12 Pro+", "12 Pro", "11 Pro", "C67", "C55", "Digər"],
           "Huawei": ["Pura 70 Ultra", "Pura 70 Pro", "Mate 60 Pro", "Nova 12", "Digər"],
