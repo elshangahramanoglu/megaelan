@@ -442,37 +442,41 @@ export default function NewAdPage() {
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               onChange={(e) => {
                 if (e.target.files) {
-                  const selectedFiles = Array.from(e.target.files).slice(0, 10);
-                  setFiles(selectedFiles);
+                  // If they select multiple times, append up to 10
+                  const newFiles = Array.from(e.target.files);
+                  setFiles(prev => {
+                    const combined = [...prev, ...newFiles];
+                    return combined.slice(0, 10);
+                  });
                 }
               }}
             />
             <UploadCloud className="w-10 h-10 text-gray-500 mb-4" />
             <p className="text-black font-bold mb-1 text-lg">Şəkil yükləmək üçün bura klikləyin</p>
             <p className="text-gray-600 text-sm font-medium mb-4">Maksimum 10 şəkil icazə verilir.</p>
-            
-            {files.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-6 w-full" onClick={(e) => e.preventDefault()}>
-                {files.map((f, i) => (
-                  <div key={i} className="relative aspect-square rounded-xl overflow-hidden shadow-sm border border-gray-200 group">
-                    <img src={URL.createObjectURL(f)} alt="Preview" className="w-full h-full object-cover" />
-                    <button 
-                      type="button"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setFiles(files.filter((_, index) => index !== i));
-                      }}
-                      className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-md transition-transform active:scale-95"
-                    >
-                      ✕
-                    </button>
-                    {i === 0 && <div className="absolute bottom-0 inset-x-0 bg-blue-600/80 text-white text-[10px] py-1 text-center font-bold">ƏSAS ŞƏKİL</div>}
-                  </div>
-                ))}
-              </div>
-            )}
           </label>
+          
+          {files.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 mt-4 w-full">
+              {files.map((f, i) => (
+                <div key={i} className="relative aspect-square rounded-xl overflow-hidden shadow-sm border border-gray-200 group">
+                  <img src={URL.createObjectURL(f)} alt="Preview" className="w-full h-full object-cover" />
+                  <button 
+                    type="button"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      setFiles(files.filter((_, index) => index !== i));
+                    }}
+                    className="absolute top-1 right-1 bg-red-500 hover:bg-red-600 text-white w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold shadow-md transition-transform active:scale-95 z-10 cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                  {i === 0 && <div className="absolute bottom-0 inset-x-0 bg-blue-600/80 text-white text-[10px] py-1 text-center font-bold z-10">ƏSAS ŞƏKİL</div>}
+                </div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Price & City */}

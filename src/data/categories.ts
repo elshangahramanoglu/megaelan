@@ -276,8 +276,8 @@ export const categoriesData: Category[] = [
           ]
         }
       },
-      { name: "storage", label: "Yaddaş", type: "select", options: ["32 GB", "64 GB", "128 GB", "256 GB", "512 GB", "1 TB", "2 TB", "4 TB"] },
-      { name: "ram", label: "RAM", type: "select", options: ["2 GB", "3 GB", "4 GB", "6 GB", "8 GB", "12 GB", "16 GB", "18 GB", "24 GB", "32 GB", "64 GB", "128 GB"] },
+      { name: "storage", label: "Yaddaş", type: "select", dependsOn: "model", options: ["32 GB", "64 GB", "128 GB", "256 GB", "512 GB", "1 TB", "2 TB", "4 TB"] },
+      { name: "ram", label: "RAM", type: "select", dependsOn: "model", options: ["2 GB", "3 GB", "4 GB", "6 GB", "8 GB", "12 GB", "16 GB", "18 GB", "24 GB", "32 GB", "64 GB", "128 GB"] },
       { name: "processor", label: "Prosessor", type: "select", dependsOn: "brand", options: [
         "Intel Core i3", "Intel Core i5", "Intel Core i7", "Intel Core i9",
         "Intel Core Ultra 5", "Intel Core Ultra 7", "Intel Core Ultra 9",

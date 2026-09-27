@@ -36,6 +36,38 @@ export function applySmartFilters(fieldName: string, options: string[] | undefin
     }
   }
 
+  
+  // 1.8 TELEFONLAR - RAM Logic
+  if (fieldName === 'ram' && details.brand === 'Apple' && details.model) {
+    const m = details.model;
+    if (m.includes('MacBook') || m.includes('iMac')) {
+        filtered = filtered.filter(o => !['2 GB', '3 GB', '4 GB', '6 GB'].includes(o));
+    } else {
+        if (m.includes('18 Pro') || m.includes('17 Pro')) {
+          filtered = ['12 GB', 'Digər']; // 12GB is standard for 17/18 Pro
+        } else if (m.includes('16 Pro') || m.includes('15 Pro') || m.includes('16') || m.includes('17') || m.includes('18')) {
+          filtered = ['8 GB', 'Digər'];
+        } else if (m.includes('14 Pro') || m.includes('13 Pro') || m.includes('14') || m.includes('13') || m.includes('12 Pro')) {
+          filtered = ['6 GB', 'Digər'];
+        } else if (m.includes('12') || m.includes('11')) {
+          filtered = ['4 GB', 'Digər'];
+        } else {
+          filtered = ['3 GB', '4 GB', '6 GB', '8 GB', 'Digər'];
+        }
+    }
+  } else if (fieldName === 'ram' && details.brand === 'Samsung' && details.model) {
+    const m = details.model;
+    if (m.includes('Ultra')) {
+      filtered = ['12 GB', '16 GB', 'Digər'];
+    } else if (m.includes('S25') || m.includes('S26') || m.includes('S24')) {
+      filtered = ['8 GB', '12 GB', 'Digər'];
+    } else if (m.includes('S23')) {
+      filtered = ['8 GB', 'Digər'];
+    } else {
+      filtered = ['4 GB', '6 GB', '8 GB', '12 GB', 'Digər'];
+    }
+  }
+
   // 1.5 TELEFONLAR - Processor Logic
   if (fieldName === 'processor' && details.brand) {
     if (details.brand === 'Apple') {
