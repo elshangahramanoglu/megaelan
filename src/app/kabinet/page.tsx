@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
-import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard } from "lucide-react";
+import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard, Camera } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
@@ -12,6 +12,8 @@ export default function KabinetPage() {
   const router = useRouter();
   
   const [name, setName] = useState(user?.name || "");
+  const [avatar, setAvatar] = useState(user?.avatar || "");
+  const [isUploading, setIsUploading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<'profil' | 'elanlar' | 'balans'>('profil');
   const [balanceAmount, setBalanceAmount] = useState<string>('');
@@ -82,6 +84,39 @@ export default function KabinetPage() {
     return null;
   }
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setIsUploading(true);
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await fetch(`https://api.imgbb.com/1/upload?key=${process.env.NEXT_PUBLIC_IMGBB_API_KEY}`, {
+        method: "POST",
+        body: formData,
+      });
+      const data = await res.json();
+      if (data.success) {
+        const imageUrl = data.data.url;
+        setAvatar(imageUrl);
+        if (user) {
+          const { error } = await supabase.from('users').update({ avatar: imageUrl }).eq('id', user.id);
+          if (error) console.error("Avatar db error:", error);
+          updateUser({ avatar: imageUrl });
+        }
+      } else {
+        alert("Şəkil yüklənmədi. Yenidən cəhd edin.");
+      }
+    } catch (err) {
+      console.error("Upload error:", err);
+      alert("Xəta baş verdi");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
@@ -134,7 +169,7 @@ export default function KabinetPage() {
     <div className="w-full max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
       <div className="flex items-center gap-4 mb-8">
         <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center">
-          <User className="w-8 h-8" />
+          {user?.avatar ? <img src={user.avatar} className="w-full h-full rounded-full object-cover" /> : <User className="w-8 h-8" />}
         </div>
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Şəxsi Kabinet</h1>
@@ -239,6 +274,22 @@ export default function KabinetPage() {
               )}
 
               <form onSubmit={handleSave} className="flex flex-col gap-6">
+                <div className="flex flex-col items-center mb-4">
+                  <div className="relative w-32 h-32 rounded-full border-4 border-gray-100 shadow-md bg-gray-50 flex items-center justify-center overflow-hidden mb-3">
+                    {isUploading ? (
+                      <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+                    ) : avatar ? (
+                      <img src={avatar} alt="Profil" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-12 h-12 text-gray-300" />
+                    )}
+                    <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity">
+                      <Camera className="w-8 h-8 text-white" />
+                      <input type="file" accept="image/*" className="hidden" onChange={handleAvatarUpload} disabled={isUploading} />
+                    </label>
+                  </div>
+                  <p className="text-sm text-gray-500 font-medium">Profil şəklinizi dəyişin</p>
+                </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">Ad</label>

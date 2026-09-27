@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 const FAQ_ITEMS = [
   {
     q: "Saytda elan yerləşdirmək pulludur?",
-    a: "Xeyr, saytda adi elan yerləşdirmək tamamilə pulsuzdur. Siz hər ay hər kateqoriya üzrə 3 dəfə pulsuz elan yerləşdirə bilərsiniz. Bu limiti (3 elanı) keçdikdən sonra 4-cü və əlavə hər elan üçün 3.00 AZN xidmət haqqı tələb olunur."
+    a: "Xeyr, saytda adi elan yerləşdirmək tamamilə pulsuzdur. Siz hər kateqoriya üzrə 1 pulsuz elan yerləşdirə bilərsiniz. Bu limiti keçdikdən sonra eyni kateqoriyada əlavə hər elan üçün xidmət haqqı tələb olunur."
   },
   {
     q: "Elanım nə vaxt saytda görünəcək?",

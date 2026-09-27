@@ -94,11 +94,29 @@ export const categoriesData: Category[] = [
   },
   {
     id: "3", name: "Elektronika", icon: Tv, image: "/elektronika.png",
-    subcategories: ["Audio və video", "Kompüter aksesuarları", "Kompüterlər və noutbuklar", "Oyunlar, pultlar və proqramlar", "Planşetlər və elektron kitablar"],
+    subcategories: ["Telefonlar və Smartfonlar", "Planşetlər və elektron kitablar", "Nömrələr", "Telefon aksesuarları", "Telefon təmiri", "Audio və video", "Kompüter aksesuarları", "Kompüterlər və noutbuklar", "Oyunlar, pultlar və proqramlar"],
     fields: [
-      { name: "brand", label: "Marka", type: "select", options: ["Apple", "Samsung", "Asus", "Acer", "HP", "Lenovo", "Dell", "Sony", "LG"] },
-      { name: "ram", label: "RAM", type: "select", options: ["2 GB", "4 GB", "8 GB", "16 GB", "32 GB", "64 GB"] },
-      { name: "storage", label: "Yaddaş", type: "select", options: ["128 GB", "256 GB", "512 GB", "1 TB", "2 TB"] },
+      { name: "brand", label: "Marka", type: "select", options: ["Apple", "Samsung", "Xiaomi", "Honor", "Realme", "Huawei", "OnePlus", "Google", "Nokia", "Asus", "Acer", "HP", "Lenovo", "Dell", "Sony", "LG"] },
+      { 
+        name: "model", 
+        label: "Model (Əgər telefondursa)", 
+        type: "select", 
+        dependsOn: "brand",
+        dynamicOptions: {
+          "Apple": ["iPhone 16 Pro Max", "iPhone 16 Pro", "iPhone 16", "iPhone 15 Pro Max", "iPhone 15 Pro", "iPhone 15", "iPhone 14 Pro Max", "iPhone 14 Pro", "iPhone 14", "iPhone 13 Pro Max", "iPhone 13 Pro", "iPhone 13", "iPhone 12 Pro Max", "iPhone 12 Pro", "iPhone 12", "iPhone 11 Pro Max", "iPhone 11 Pro", "iPhone 11", "Digər"],
+          "Samsung": ["Galaxy S24 Ultra", "Galaxy S24+", "Galaxy S24", "Galaxy S23 Ultra", "Galaxy S23", "Galaxy A55", "Galaxy A54", "Galaxy Z Fold 5", "Galaxy Z Flip 5", "Digər"],
+          "Xiaomi": ["14 Ultra", "14 Pro", "14", "13T Pro", "13T", "Redmi Note 13 Pro+", "Redmi Note 13 Pro", "Poco X6 Pro", "Digər"],
+          "Honor": ["Magic6 Pro", "Magic V2", "90", "X9b", "X8b", "Digər"],
+          "Realme": ["12 Pro+", "12 Pro", "11 Pro", "C67", "C55", "Digər"],
+          "Huawei": ["Pura 70 Ultra", "Pura 70 Pro", "Mate 60 Pro", "Nova 12", "Digər"],
+          "OnePlus": ["12", "12R", "11", "Nord 3", "Digər"],
+          "Google": ["Pixel 8 Pro", "Pixel 8", "Pixel 7 Pro", "Pixel 7a", "Digər"],
+          "Nokia": ["XR21", "X30", "G42", "C32", "Digər"]
+        }
+      },
+      { name: "storage", label: "Yaddaş", type: "select", options: ["32 GB", "64 GB", "128 GB", "256 GB", "512 GB", "1 TB", "2 TB"] },
+      { name: "ram", label: "RAM", type: "select", options: ["2 GB", "3 GB", "4 GB", "6 GB", "8 GB", "12 GB", "16 GB", "32 GB", "64 GB"] },
+      COLOR_FIELD,
       CONDITION_FIELD
     ]
   },
