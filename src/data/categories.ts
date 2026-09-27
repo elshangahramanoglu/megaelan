@@ -52,7 +52,7 @@ const CAR_COLOR_FIELD: CategoryField = {
 // Telefon rəngləri (istehsalçıların istifadə etdiyi real rənglər)
 const PHONE_COLOR_FIELD: CategoryField = {
   name: "color", label: "Rəng", type: "select",
-  options: ["Qara", "Ağ", "Titan Qara", "Titan Ağ", "Təbii Titan", "Çöl Titan", "Mavi Titan", "Göy", "Mavi", "Bənövşəyi", "Yaşıl", "Tünd yaşıl", "Qırmızı", "Çəhrayı", "Sarı", "Narıncı", "Gümüşü", "Qızılı", "Bej", "Lavanda", "Koral", "Boz", "Gecə (Midnight)"]
+  options: ["Qara", "Ağ", "Titan Qara", "Titan Ağ", "Təbii Titan", "Çöl Titan", "Mavi Titan", "Tunc Titan", "Göy", "Mavi", "Bənövşəyi", "Yaşıl", "Tünd yaşıl", "Qırmızı", "Çəhrayı", "Sarı", "Narıncı", "Gümüşü", "Qızılı", "Bej", "Lavanda", "Koral", "Boz", "Gecə (Midnight)"]
 };
 
 export const categoriesData: Category[] = [
@@ -283,7 +283,7 @@ export const categoriesData: Category[] = [
         "Intel Core Ultra 5", "Intel Core Ultra 7", "Intel Core Ultra 9",
         "AMD Ryzen 3", "AMD Ryzen 5", "AMD Ryzen 7", "AMD Ryzen 9", "AMD Ryzen AI 9",
         "Apple M1", "Apple M2", "Apple M3", "Apple M4", "Apple M5",
-        "Apple A17 Pro", "Apple A18 Pro",
+        "Apple A17 Pro", "Apple A18 Pro", "Apple A19 Pro", "Apple A20 Pro",
         "Snapdragon 8 Gen 5", "Snapdragon 8 Gen 4", "Snapdragon 8s Gen 3", "Snapdragon 7+ Gen 3", 
         "Dimensity 9400", "Dimensity 9300", "Dimensity 8300",
         "Exynos 2500", "Exynos 2400", 

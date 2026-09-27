@@ -9,7 +9,9 @@ export function applySmartFilters(fieldName: string, options: string[] | undefin
     
     // Apple Colors
     if (details.brand === 'Apple') {
-      if (m.includes('16 Pro') || m.includes('17 Pro') || m.includes('18 Pro')) {
+      if (m.includes('18 Pro')) {
+        filtered = ['Titan Qara', 'Titan Ağ', 'Təbii Titan', 'Tunc Titan', 'Digər'];
+      } else if (m.includes('16 Pro') || m.includes('17 Pro')) {
         filtered = ['Titan Qara', 'Titan Ağ', 'Təbii Titan', 'Çöl Titan', 'Digər'];
       } else if (m.includes('15 Pro')) {
         filtered = ['Titan Qara', 'Titan Ağ', 'Təbii Titan', 'Mavi Titan', 'Digər'];
@@ -38,6 +40,19 @@ export function applySmartFilters(fieldName: string, options: string[] | undefin
   if (fieldName === 'processor' && details.brand) {
     if (details.brand === 'Apple') {
       filtered = filtered.filter(o => o.includes('Apple'));
+      // More accurate mapping
+      if (details.model) {
+        const m = details.model;
+        if (m.includes('18 Pro')) filtered = ['Apple A20 Pro', 'Digər'];
+        else if (m.includes('18')) filtered = ['Apple A19 Pro', 'Digər']; // base 18 uses A19 Pro usually or A19
+        else if (m.includes('17 Pro')) filtered = ['Apple A19 Pro', 'Digər'];
+        else if (m.includes('17')) filtered = ['Apple A18 Pro', 'Digər'];
+        else if (m.includes('16 Pro')) filtered = ['Apple A18 Pro', 'Digər'];
+        else if (m.includes('15 Pro')) filtered = ['Apple A17 Pro', 'Digər'];
+        else if (m.includes('MacBook') || m.includes('iPad')) {
+          filtered = filtered.filter(o => o.includes('M')); // M1, M2, M3, M4, M5
+        }
+      }
     } else {
       filtered = filtered.filter(o => !o.includes('Apple'));
     }

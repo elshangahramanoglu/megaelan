@@ -282,7 +282,7 @@ export default function NewAdPage() {
       setCreatedAdId(newAd.id);
       
       if (initialStatus === 'payment_pending') {
-        router.push(`/reklam?adId=${newAd.id}&payment=true`);
+        router.push(`/elan-odenisi?adId=${newAd.id}`);
         return;
       }
     } catch (err) {

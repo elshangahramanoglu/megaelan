@@ -15,6 +15,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
   
   const ad = ads.find(a => a.id === adId);
   const isFav = favorites.includes(adId);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   
   
   
@@ -60,26 +61,39 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
         <div className="w-full lg:w-2/3 flex flex-col gap-8">
           {/* Image Gallery (Placeholder) */}
           {/* Image Gallery */}
-          <div className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group">
-            {(ad.images && ad.images.length > 0) ? (
-              <div className="w-full h-full relative flex overflow-x-auto snap-x snap-mandatory hide-scrollbar">
+          <div className="flex flex-col gap-4">
+            <div className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group">
+              {(ad.images && ad.images.length > 0) ? (
+                <img src={ad.images[currentImageIndex]} alt={ad.title} className="w-full h-full object-cover" />
+              ) : ad.imagePlaceholder.startsWith('http') ? (
+                <img src={ad.imagePlaceholder} alt={ad.title} className="w-full h-full object-cover" />
+              ) : (
+                ad.imagePlaceholder
+              )}
+              {ad.isPremium && (
+                <div className="absolute top-4 left-4 bg-orange-500 text-white text-sm font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
+                  <Crown className="w-4 h-4" /> Premium
+                </div>
+              )}
+              <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm z-10 pointer-events-none">
+                {(ad.images && ad.images.length > 0) ? `${currentImageIndex + 1} / ${ad.images.length}` : "1 / 1"}
+              </div>
+            </div>
+            
+            {/* Thumbnails */}
+            {(ad.images && ad.images.length > 1) && (
+              <div className="flex overflow-x-auto gap-3 pb-2 hide-scrollbar snap-x">
                 {ad.images.map((img, idx) => (
-                  <img key={idx} src={img} alt={`${ad.title} - ${idx+1}`} className="w-full h-full object-cover shrink-0 snap-center" />
+                  <button 
+                    key={idx} 
+                    onClick={() => setCurrentImageIndex(idx)}
+                    className={`relative shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 transition-all snap-center ${currentImageIndex === idx ? 'border-blue-600 shadow-md scale-100' : 'border-transparent hover:border-gray-300 scale-95 opacity-80 hover:opacity-100'}`}
+                  >
+                    <img src={img} className="w-full h-full object-cover" alt="Thumb" />
+                  </button>
                 ))}
               </div>
-            ) : ad.imagePlaceholder.startsWith('http') ? (
-              <img src={ad.imagePlaceholder} alt={ad.title} className="w-full h-full object-cover" />
-            ) : (
-              ad.imagePlaceholder
             )}
-            {ad.isPremium && (
-              <div className="absolute top-4 left-4 bg-orange-500 text-white text-sm font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 shadow-md">
-                <Crown className="w-4 h-4" /> Premium
-              </div>
-            )}
-            <div className="absolute bottom-4 right-4 bg-black/50 text-white px-3 py-1 rounded-lg text-sm font-medium backdrop-blur-sm z-10 pointer-events-none">
-              {(ad.images && ad.images.length > 0) ? `${ad.images.length} şəkil` : "1 / 1"}
-            </div>
           </div>
 
           {/* Title and Details */}
