@@ -117,25 +117,7 @@ export const categoriesData: Category[] = [
       { name: "floor", label: "Mərtəbə", type: "text", placeholder: "Məs: 5/16" }
     ]
   },
-  {
-    id: "6", name: "Xidmətlər və biznes", icon: Briefcase, image: "/xidmet.png",
-    subcategories: ["Təmir və tikinti xidmətləri", "Gözəllik və sağlamlıq", "Nəqliyyat və logistika", "Təlim və repetitorlar", "IT və internet"],
-    fields: []
-  },
-      {
-    id: "9", name: "Məişət texnikası", icon: WashingMachine, image: "/meishet.png",
-    subcategories: ["Soyuducular", "Paltaryuyan maşınlar", "Kondisionerlər", "Sobalar və mikrodalğalı sobalar", "Xırda məişət texnikası"],
-    fields: [
-      { name: "brand", label: "Marka", type: "select", options: ["Beko", "Bosch", "Samsung", "LG", "Gorenje", "Hoffmann"] },
-      CONDITION_FIELD
-    ]
-  },
-    {
-    id: "11", name: "Uşaq aləmi", icon: Baby, image: "/ushaq.png",
-    subcategories: ["Uşaq geyimləri", "Oyuncaqlar", "Mebel və uşaq arabaları", "Məktəb ləvazimatları", "Uşaq qidası"],
-    fields: [CONDITION_FIELD]
-  },
-  {
+              {
     id: "12", name: "İş elanları", icon: UserPlus, image: "/ish.png",
     subcategories: ["Vakansiyalar", "CV-lər", "Təcrübə proqramları", "Freelance", "Müvəqqəti işlər"],
     fields: [

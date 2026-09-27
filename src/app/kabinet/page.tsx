@@ -45,29 +45,7 @@ export default function KabinetPage() {
     }
   }, [activeTab]);
 
-  // Simulated AI Moderation Bot (checks pending ads and approves them after 1 minute)
-  useEffect(() => {
-    if (!user) return;
-    
-    const interval = setInterval(async () => {
-      const pendingAds = myAds.filter(ad => ad.status === 'pending');
-      
-      for (const ad of pendingAds) {
-        const adTime = new Date(ad.created_at).getTime();
-        const now = new Date().getTime();
-        const diffInMinutes = (now - adTime) / 1000 / 60;
-        
-        if (diffInMinutes >= 1) {
-          // Time to approve!
-          await supabase.from('ads').update({ status: 'active' }).eq('id', ad.id);
-          // Refresh list silently
-          fetchMyAds();
-        }
-      }
-    }, 10000); // Check every 10 seconds
-    
-    return () => clearInterval(interval);
-  }, [myAds, user]);
+  
 
 
   const handleDeleteAd = async (adId: string) => {
@@ -173,7 +151,7 @@ export default function KabinetPage() {
             <p className="font-bold text-gray-900">+994 {user.phone}</p>
           </div>
           
-          <nav className="flex flex-col gap-2">
+          <nav className="flex flex-row md:flex-col gap-3 mt-4 md:mt-0 w-full md:w-auto">
             <button 
               onClick={() => setActiveTab('profil')}
               className={`text-left px-4 py-3 rounded-xl font-medium transition-colors ${activeTab === 'profil' ? 'bg-blue-50 text-blue-600' : 'text-gray-600 hover:bg-gray-100'}`}
@@ -321,10 +299,10 @@ export default function KabinetPage() {
 
               {/* Status Tabs */}
               <div className="flex gap-2 mb-6 overflow-x-auto hide-scrollbar pb-2">
-                <button onClick={() => setAdStatusTab('active')} className={`px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${adStatusTab === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Qəbul edilən (Aktiv)</button>
-                <button onClick={() => setAdStatusTab('pending')} className={`px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${adStatusTab === 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Gözləmədə</button>
-                <button onClick={() => setAdStatusTab('rejected')} className={`px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${adStatusTab === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Qəbul edilməyən</button>
-                <button onClick={() => setAdStatusTab('expired')} className={`px-4 py-2 rounded-lg font-bold text-sm whitespace-nowrap transition-colors ${adStatusTab === 'expired' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Müddəti bitmiş</button>
+                <button onClick={() => setAdStatusTab('active')} className={`px-6 py-3 rounded-xl font-bold text-base whitespace-nowrap transition-colors ${adStatusTab === 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Qəbul edilən (Aktiv)</button>
+                <button onClick={() => setAdStatusTab('pending')} className={`px-6 py-3 rounded-xl font-bold text-base whitespace-nowrap transition-colors ${adStatusTab === 'pending' ? 'bg-orange-100 text-orange-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Gözləmədə</button>
+                <button onClick={() => setAdStatusTab('rejected')} className={`px-6 py-3 rounded-xl font-bold text-base whitespace-nowrap transition-colors ${adStatusTab === 'rejected' ? 'bg-red-100 text-red-700' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Qəbul edilməyən</button>
+                <button onClick={() => setAdStatusTab('expired')} className={`px-6 py-3 rounded-xl font-bold text-base whitespace-nowrap transition-colors ${adStatusTab === 'expired' ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}`}>Müddəti bitmiş</button>
               </div>
               
               {isLoadingAds ? (
@@ -338,8 +316,8 @@ export default function KabinetPage() {
               ) : (
                 <div className="flex flex-col gap-4">
                   {myAds.filter(ad => ad.status === adStatusTab).map(ad => (
-                    <div key={ad.id} className="flex gap-4 p-4 border border-gray-200 rounded-2xl bg-white shadow-sm items-center">
-                      <div className="w-24 h-24 bg-gray-100 rounded-xl flex-shrink-0 overflow-hidden relative">
+                    <div key={ad.id} className="flex flex-col md:flex-row gap-6 p-6 border border-gray-200 rounded-3xl bg-white shadow-md items-center md:items-start transition-all hover:shadow-lg">
+                      <div className="w-full md:w-48 h-48 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden relative">
                         {ad.images && ad.images.length > 0 ? (
                           <img src={ad.images[0]} className="w-full h-full object-cover" alt="Elan" />
                         ) : (
@@ -347,18 +325,18 @@ export default function KabinetPage() {
                         )}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-bold text-lg text-black truncate mb-1">{ad.title}</h3>
-                        <p className="text-blue-600 font-black mb-1">{ad.price} {ad.currency}</p>
+                        <h3 className="font-black text-2xl text-black line-clamp-2 mb-2">{ad.title}</h3>
+                        <p className="text-blue-600 font-black text-xl mb-2">{ad.price} {ad.currency}</p>
                         <p className="text-sm text-gray-500">{new Date(ad.created_at).toLocaleDateString()}</p>
                       </div>
                       <div className="flex flex-col gap-2">
-                        <Link href={`/elan/${ad.id}`} className="p-2 bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-lg transition-colors" title="Elana bax">
+                        <Link href={`/elan/${ad.id}`} className="flex-1 md:flex-none p-3 flex justify-center items-center bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-xl transition-colors" title="Elana bax">
                           <ExternalLink className="w-5 h-5" />
                         </Link>
-                        <Link href={`/redakte/${ad.id}`} className="p-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg transition-colors" title="Redaktə et">
+                        <Link href={`/redakte/${ad.id}`} className="flex-1 md:flex-none p-3 flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-colors" title="Redaktə et">
                           <Edit3 className="w-5 h-5" />
                         </Link>
-                        <button onClick={() => handleDeleteAd(ad.id)} className="p-2 bg-red-50 text-red-500 hover:bg-red-100 rounded-lg transition-colors" title="Sil">
+                        <button onClick={() => handleDeleteAd(ad.id)} className="flex-1 md:flex-none p-3 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-colors" title="Sil">
                           <Trash2 className="w-5 h-5" />
                         </button>
                       </div>
