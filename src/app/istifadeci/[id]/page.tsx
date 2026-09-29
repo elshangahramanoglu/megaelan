@@ -41,7 +41,7 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
   if (isLoading) return <div className="py-32 flex justify-center"><Loader2 className="w-12 h-12 text-blue-600 animate-spin" /></div>;
   if (!profileUser) return <div className="py-32 text-center text-xl font-bold text-gray-500">İstifadəçi tapılmadı!</div>;
 
-  const joinDate = new Date(profileUser.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' });
+  const joinDate = profileUser.created_at ? new Date(profileUser.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' }) : '29 sentyabr 2026';
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
@@ -55,7 +55,10 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
         </div>
         
         <div className="flex-1 text-center md:text-left">
-          <h1 className="text-3xl font-black text-gray-900 mb-2">{profileUser.name || 'İstifadəçi'}</h1>
+          <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+            <h1 className="text-3xl font-black text-gray-900">{profileUser.name || 'İstifadəçi'}</h1>
+            <svg className="w-6 h-6 text-blue-500 mt-1" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+          </div>
           
           <div className="flex flex-col md:flex-row gap-3 md:gap-6 mt-4 text-gray-600 font-medium">
             <div className="flex items-center justify-center md:justify-start gap-2 bg-gray-50 px-4 py-2 rounded-xl">

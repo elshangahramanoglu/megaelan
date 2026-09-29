@@ -211,32 +211,6 @@ export default function KabinetPage() {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-14">
-      {/* Page Header */}
-      <motion.div 
-        initial={{ opacity: 0, y: -16 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        transition={{ duration: 0.4 }}
-        className="flex items-center gap-5 mb-10"
-      >
-        <div className="relative w-20 h-20 rounded-full overflow-hidden bg-blue-50 border-4 border-white shadow-lg flex-shrink-0">
-          {avatar 
-            ? <img src={avatar} className="w-full h-full object-cover" alt="Profil" />
-            : <User className="w-9 h-9 text-blue-400 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />}
-        </div>
-        <div>
-          <h1 className="text-3xl md:text-4xl font-black text-black">
-            {user.name ? user.name : 'Şəxsi Kabinet'}
-          </h1>
-          <div className="flex items-center gap-3 mt-1">
-            <p className="text-gray-500 font-medium">{formattedPhone}</p>
-            <span className="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
-            <p className="text-gray-500 font-medium text-sm">
-              Qeydiyyat: {user.created_at ? new Date(user.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' }) : 'Bilinmir'}
-            </p>
-          </div>
-        </div>
-      </motion.div>
-
       <div className="bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden flex flex-col md:flex-row min-h-[600px]">
         {/* Sidebar */}
         <div className="w-full md:w-[280px] bg-gradient-to-b from-slate-50 to-gray-50 border-r border-gray-100 p-6 flex flex-col gap-2 flex-shrink-0">
@@ -250,6 +224,10 @@ export default function KabinetPage() {
             <div className="min-w-0">
               <p className="font-black text-black text-sm truncate">{user.name || 'İstifadəçi'}</p>
               <p className="text-gray-400 text-xs font-medium">{formattedPhone}</p>
+              <div className="flex items-center gap-1 mt-1">
+                <p className="text-gray-400 text-[10px] font-bold">Qeydiyyat: {user.created_at ? new Date(user.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' }) : '29 sentyabr 2026'}</p>
+                <svg className="w-3 h-3 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
+              </div>
             </div>
           </div>
 
@@ -460,6 +438,7 @@ export default function KabinetPage() {
                             <div className="flex gap-3 mt-2">
                               <span className="text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600 font-bold">👁 {ad.views || 0} baxış</span>
                               <span className="text-xs bg-blue-50 px-2 py-1 rounded-md text-blue-600 font-bold">📞 {ad.contacts_count || 0} əlaqə</span>
+                              <span className="text-xs bg-orange-50 px-2 py-1 rounded-md text-orange-600 font-bold">⏱ {Math.max(0, 30 - Math.floor((Date.now() - new Date(ad.created_at).getTime()) / (1000 * 60 * 60 * 24)))} gün qaldı</span>
                             </div>
                           </div>
                         </div>

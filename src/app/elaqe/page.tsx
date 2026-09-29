@@ -75,6 +75,11 @@ export default function ContactPage() {
               </div>
             </div>
           </div>
+
+          <div className="mt-6 bg-green-50 p-6 rounded-3xl border border-green-200">
+            <h3 className="text-lg font-black text-green-800 mb-2">Mağazanız var?</h3>
+            <p className="text-green-700 font-medium text-sm">Saytımızda mağaza kimi qeydiyyatdan keçmək üçün zəhmət olmasa WhatsApp nömrəmizlə əlaqə saxlayın.</p>
+          </div>
         </div>
 
         {/* Contact Form */}

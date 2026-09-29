@@ -30,6 +30,7 @@ function MessagesContent() {
   const [chats, setChats] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [refreshChatsTrigger, setRefreshChatsTrigger] = useState(0);
   
   const messagesContainerRef = useRef<HTMLDivElement>(null);
@@ -254,7 +255,6 @@ function MessagesContent() {
 
   
   const deleteChat = async () => {
-    if (!confirm("Söhbəti tamamilə silmək istədiyinizə əminsiniz?")) return;
     try {
       const { error } = await supabase.from('messages').delete()
         .or(`and(sender_id.eq.${user?.id},receiver_id.eq.${activeChat}),and(sender_id.eq.${activeChat},receiver_id.eq.${user?.id})`);
@@ -263,6 +263,7 @@ function MessagesContent() {
       setMessages([]);
       setChats(prev => prev.filter(c => c.otherUser.id !== activeChat));
       setActiveChat(null);
+      setShowDeleteModal(false);
     } catch(err) {
       alert("Silinmədi: Xəta baş verdi");
     }
@@ -362,7 +363,7 @@ function MessagesContent() {
                 <div className="flex-1">
                   <Link href={`/istifadeci/${activeChat}`} className="font-bold text-gray-900 text-lg leading-tight hover:text-blue-600 transition-colors inline-block">{currentChatDetails?.name || currentChatDetails?.phone || 'İstifadəçi'}</Link>
                 </div>
-                <button onClick={deleteChat} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors" title="Söhbəti sil">
+                <button onClick={() => setShowDeleteModal(true)} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors" title="Söhbəti sil">
                   <Trash2 className="w-5 h-5" />
                 </button>
               </div>
@@ -437,6 +438,19 @@ function MessagesContent() {
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
       `}} />
+
+      {showDeleteModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
+          <div className="bg-white rounded-3xl p-6 md:p-8 max-w-sm w-full shadow-2xl">
+            <h3 className="text-xl font-black text-gray-900 mb-2">Söhbəti sil</h3>
+            <p className="text-gray-500 font-medium mb-6">Bu söhbəti tamamilə silmək istədiyinizə əminsiniz? Bu əməliyyat geri qaytarıla bilməz.</p>
+            <div className="flex gap-3">
+              <button onClick={() => setShowDeleteModal(false)} className="flex-1 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors">Ləğv et</button>
+              <button onClick={deleteChat} className="flex-1 py-3 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-colors shadow-md shadow-red-500/20">Sil</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

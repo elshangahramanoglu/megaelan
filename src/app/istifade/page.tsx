@@ -17,7 +17,7 @@ export default function IstifadePage() {
 
         <h2 className="text-2xl font-black text-blue-600 mt-10 mb-4 border-b-2 border-blue-100 pb-2">2. Ödənişli Xidmətlər (Tariflər)</h2>
         <ul className="list-disc pl-5 mb-6 space-y-3">
-          <li>Platformada ayda 3 pulsuz elan yerləşdirmək hüququnuz var. Bu limit keçildikdən sonra elan yerləşdirmək üçün platformanın təyin etdiyi ödəniş edilməlidir.</li>
+          <li>Platformada hər kateqoriya üzrə 2 pulsuz elan yerləşdirmək hüququnuz var. Bu limit keçildikdən sonra əlavə elanlar üçün platformanın təyin etdiyi ödəniş edilməlidir.</li>
           <li>Premium və İrəli Çək xidmətləri istifadəçinin öz istəyi ilə aktivləşdirilir. Bu xidmətlər elanın müddətini deyil, sadəcə görünürlüyünü artırır.</li>
           <li>Xidmət aktivləşdirildikdən sonra (elan dərc olunduqdan sonra) edilən ödənişlər geri qaytarılmır.</li>
         </ul>
