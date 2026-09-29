@@ -34,7 +34,9 @@ export default function RootLayout({
   return (
     <html lang="az">
       <head>
-        <link rel="icon" href="/LogoMegaElan.png" />
+        <link rel="icon" href="/LogoMegaElan.png" sizes="any" />
+        <link rel="icon" href="/LogoMegaElan.png" type="image/png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/LogoMegaElan.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 min-h-screen flex flex-col`}
@@ -58,9 +60,7 @@ export default function RootLayout({
                   <Image 
                     src="/LogoMegaElan.png" 
                     alt="MegaElan" 
-                    width={240} 
-                    height={68} 
-                    className="object-contain w-auto h-14 lg:h-16"
+                    width={350} height={100} className="object-contain w-auto h-20 lg:h-[100px] scale-125 origin-left"
                   />
                 </Link>
                 <p className="text-gray-600 font-medium leading-relaxed max-w-[250px] text-sm">
