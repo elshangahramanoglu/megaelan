@@ -16,6 +16,11 @@ function MessagesContent() {
   
   const targetUserId = searchParams.get('user_id');
   const targetAdId = searchParams.get('ad_id');
+  useEffect(() => {
+    if (targetUserId) {
+      setActiveChat(targetUserId);
+    }
+  }, [targetUserId]);
 
   const [activeChat, setActiveChat] = useState<string | null>(targetUserId);
   const [messages, setMessages] = useState<any[]>([]);
@@ -164,14 +169,20 @@ function MessagesContent() {
     setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
 
     try {
-      await supabase.from('messages').insert([{
+      const { error: insertError } = await supabase.from('messages').insert([{
         sender_id: user.id,
         receiver_id: activeChat,
         content: msgContent,
         ad_id: targetAdId || null
       }]);
-    } catch (err) {
-      console.error("Send error:", err);
+      if (insertError) {
+        alert("Mesaj göndərilərkən xəta: " + insertError.message);
+        // Rollback optimistic update
+        setMessages(prev => prev.filter(m => m.id !== tempMsg.id));
+      }
+    } catch (err: any) {
+      alert("Mesaj xətası: " + err.message);
+      setMessages(prev => prev.filter(m => m.id !== tempMsg.id));
     }
   };
 
@@ -213,7 +224,7 @@ function MessagesContent() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0 text-left">
-                    <h3 className="font-bold text-gray-900 truncate">{chat.otherUser.name || chat.otherUser.phone || 'İstifadəçi'}</h3>
+                    <h3 className="font-bold text-gray-900 truncate">{chat.otherUser?.name || chat.otherUser?.phone || 'İstifadəçi'}</h3>
                     <p className="text-sm text-gray-500 truncate">{chat.lastMessage.content}</p>
                   </div>
                 </button>
