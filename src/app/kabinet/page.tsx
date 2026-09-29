@@ -304,7 +304,7 @@ export default function KabinetPage() {
                       {isUploading 
                         ? <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
                         : avatar 
-                          ? <img src={avatar} fetchPriority="high" decoding="sync" className="w-full h-full object-cover" alt="Profil" />
+                          ? <Image src={avatar} priority fill sizes="128px" className="object-cover" alt="Profil" />
                           : <User className="w-16 h-16 text-gray-300" />}
                       <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-opacity gap-1">
                         <Camera className="w-8 h-8 text-white" />

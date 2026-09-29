@@ -201,7 +201,7 @@ export default function Header() {
                 title={user ? "Şəxsi kabinet" : "Giriş"}
               >
                 <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden relative">
-                  {user?.avatar ? <img src={user.avatar} fetchPriority="high" className="w-full h-full object-cover" alt="Profil" /> : <User className="w-5 h-5" />}
+                  {user?.avatar ? <Image src={user.avatar} priority fill sizes="40px" className="object-cover" alt="Profil" /> : <User className="w-5 h-5" />}
                 </div>
               </button>
             </div>
@@ -311,7 +311,7 @@ export default function Header() {
                 <div className="p-4 flex flex-col gap-3 border-b border-gray-100">
                   <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl mb-2" onClick={() => { setIsMobileMenuOpen(false); handleProfileClick(); }}>
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden relative shadow-sm border border-gray-200">
-                      {user?.avatar ? <img src={user.avatar} fetchPriority="high" className="w-full h-full object-cover" alt="Profil" /> : <User className="w-6 h-6 text-gray-400" />}
+                      {user?.avatar ? <Image src={user.avatar} priority fill sizes="48px" className="object-cover" alt="Profil" /> : <User className="w-6 h-6 text-gray-400" />}
                     </div>
                     <div>
                       <p className="font-bold text-black text-lg">{user ? (user.name || "İstifadəçi") : "Giriş / Qeydiyyat"}</p>

@@ -169,9 +169,9 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
               onTouchEnd={handleTouchEnd}
             >
               {(ad.images && ad.images.length > 0) ? (
-                <img src={ad.images[currentImageIndex]} alt={ad.title} fetchPriority="high" decoding="sync" className="w-full h-full object-contain relative z-10" />
+                <Image src={ad.images[currentImageIndex]} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-contain relative z-10" />
               ) : ad.imagePlaceholder.startsWith('http') ? (
-                <img src={ad.imagePlaceholder} alt={ad.title} fetchPriority="high" className="w-full h-full object-cover" />
+                <Image src={ad.imagePlaceholder} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-cover" />
               ) : (
                 ad.imagePlaceholder
               )}
@@ -194,7 +194,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                     onClick={() => setCurrentImageIndex(idx)}
                     className={`relative shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 transition-all snap-center ${currentImageIndex === idx ? 'border-blue-600 shadow-md scale-100' : 'border-transparent hover:border-gray-300 scale-95 opacity-80 hover:opacity-100'}`}
                   >
-                    <img src={img} className="w-full h-full object-cover" alt="Thumb" />
+                    <Image src={img} fill sizes="96px" className="object-cover" alt="Thumb" />
                   </button>
                 ))}
               </div>
@@ -260,8 +260,8 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           {/* Contact Box */}
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm z-10">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black border-2 border-blue-100 overflow-hidden flex-shrink-0">
-                {sellerAvatar ? <img src={sellerAvatar} className="w-full h-full object-cover" alt="" /> : ad.contactName.charAt(0)}
+              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black border-2 border-blue-100 overflow-hidden flex-shrink-0 relative">
+                {sellerAvatar ? <Image src={sellerAvatar} fill sizes="64px" className="object-cover" alt="" /> : ad.contactName.charAt(0)}
               </div>
               <div>
                 {dbUserId ? (
@@ -343,7 +343,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
             </div>
             <div className="flex-1 relative flex items-center justify-center p-4">
               <div className="relative w-full max-w-[300px] md:max-w-[420px] aspect-[3/4] bg-transparent flex items-center justify-center mx-auto">
-                <img src={ad.images[currentImageIndex]} fetchPriority="high" decoding="sync" className="w-full h-full object-contain drop-shadow-2xl rounded-lg" alt="" />
+                <Image src={ad.images[currentImageIndex]} priority fill sizes="(max-width: 768px) 100vw, 420px" className="object-contain drop-shadow-2xl rounded-lg" alt="" />
               </div>
               
               {ad.images.length > 1 && (

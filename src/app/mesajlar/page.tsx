@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
+import Image from "next/image";
 import { MessageCircle, Send, ArrowLeft, Loader2, User as UserIcon, Check, CheckCheck, Clock, Trash2 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import Link from "next/link";
@@ -60,7 +61,12 @@ function MessagesContent() {
 
         if (error) throw error;
 
-        const messagesData = data || [];
+        const deletedChats = JSON.parse(localStorage.getItem('deleted_chats_time') || '{}');
+        const messagesData = (data || []).filter(msg => {
+          const otherUserId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+          const delTime = deletedChats[otherUserId];
+          return !delTime || new Date(msg.created_at) > new Date(delTime);
+        });
         const userIds = new Set<string>();
         if (targetUserId && targetUserId !== user.id) userIds.add(targetUserId);
         
@@ -139,7 +145,11 @@ function MessagesContent() {
         .or(`and(sender_id.eq.${user.id},receiver_id.eq.${activeChat}),and(sender_id.eq.${activeChat},receiver_id.eq.${user.id})`)
         .order('created_at', { ascending: true });
         
-      setMessages(data || []);
+      const deletedChats = JSON.parse(localStorage.getItem('deleted_chats_time') || '{}');
+      const delTime = deletedChats[activeChat];
+      const visibleData = data?.filter(msg => !delTime || new Date(msg.created_at) > new Date(delTime)) || [];
+      
+      setMessages(visibleData);
       setTimeout(scrollToBottom, 150);
 
       // Mark unread as read using RPC
@@ -256,9 +266,10 @@ function MessagesContent() {
   
   const deleteChat = async () => {
     try {
-      const { error } = await supabase.from('messages').delete()
-        .or(`and(sender_id.eq.${user?.id},receiver_id.eq.${activeChat}),and(sender_id.eq.${activeChat},receiver_id.eq.${user?.id})`);
-      if (error) throw error;
+      if (!activeChat) return;
+      const deletedChats = JSON.parse(localStorage.getItem('deleted_chats_time') || '{}');
+      deletedChats[activeChat] = new Date().toISOString();
+      localStorage.setItem('deleted_chats_time', JSON.stringify(deletedChats));
       
       setMessages([]);
       setChats(prev => prev.filter(c => c.otherUser.id !== activeChat));
@@ -271,6 +282,12 @@ function MessagesContent() {
 
   const formatTime = (isoString: string) => {
     return new Date(isoString).toLocaleTimeString('az-AZ', { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const formatDateAz = (isoString: string) => {
+    const date = new Date(isoString);
+    const months = ['yanvar', 'fevral', 'mart', 'aprel', 'may', 'iyun', 'iyul', 'avqust', 'sentyabr', 'oktyabr', 'noyabr', 'dekabr'];
+    return `${date.getDate()} ${months[date.getMonth()]}`;
   };
 
   if (!isUserLoaded || isLoading) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-10 h-10 animate-spin text-blue-600" /></div>;
@@ -353,9 +370,9 @@ function MessagesContent() {
                 <button onClick={() => setActiveChat(null)} className="md:hidden p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-full transition-colors">
                   <ArrowLeft className="w-6 h-6" />
                 </button>
-                <div className="w-11 h-11 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border border-gray-200">
+                <div className="w-11 h-11 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border border-gray-200 relative">
                   {currentChatDetails?.avatar ? (
-                    <img src={currentChatDetails.avatar} className="w-full h-full object-cover" alt="" />
+                    <Image src={currentChatDetails.avatar} fill sizes="44px" priority className="object-cover" alt="" />
                   ) : (
                     <UserIcon className="w-5 h-5 text-gray-400" />
                   )}
@@ -379,7 +396,7 @@ function MessagesContent() {
                       {showDate && (
                         <div className="flex justify-center my-4">
                           <span className="bg-white/80 backdrop-blur text-gray-500 text-xs font-bold px-4 py-1.5 rounded-full shadow-sm">
-                            {new Date(msg.created_at).toLocaleDateString('az-AZ', { day: 'numeric', month: 'long' })}
+                            {formatDateAz(msg.created_at)}
                           </span>
                         </div>
                       )}

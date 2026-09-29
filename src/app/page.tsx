@@ -59,47 +59,41 @@ export default function Home_Page({ searchParams }: { searchParams: Promise<{ se
       </section>
 
       {/* Premium Ads Section */}
-      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-black text-black flex items-center gap-2">
-              <Crown className="w-6 h-6 md:w-8 md:h-8 text-orange-500" /> Premium elanlar
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-            {premiumAds.map(ad => (
-              <AdCard key={ad.id} ad={ad} />
-            ))}
-          </div>
-          {premiumAds.length === 0 && (
-            <div className="w-full p-6 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-              Premium elan yoxdur
+      {premiumAds.length > 0 && (
+        <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl md:text-3xl font-black text-black flex items-center gap-2">
+                <Crown className="w-6 h-6 md:w-8 md:h-8 text-orange-500" /> Premium elanlar
+              </h2>
             </div>
-          )}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+              {premiumAds.map(ad => (
+                <AdCard key={ad.id} ad={ad} />
+              ))}
+            </div>
         </section>
+      )}
 
       {/* VIP / Önə çıxan Ads Section */}
-      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
-          <div className="flex items-center justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-black text-black flex items-center gap-2">
-              Önə çıxan elanlar
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
-            {vipAds.map(ad => (
-              <AdCard key={ad.id} ad={ad} />
-            ))}
-          </div>
-          {vipAds.length === 0 && (
-            <div className="w-full p-6 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-              Önə çıxan elan yoxdur
+      {vipAds.length > 0 && (
+        <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
+            <div className="flex items-center justify-between mb-8">
+              <h2 className="text-2xl md:text-3xl font-black text-black flex items-center gap-2">
+                Önə çıxan elanlar
+              </h2>
             </div>
-          )}
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
+              {vipAds.map(ad => (
+                <AdCard key={ad.id} ad={ad} />
+              ))}
+            </div>
         </section>
+      )}
 
       {/* All Ads Section */}
       <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-16">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-2xl md:text-3xl font-black text-black">Son elanlar</h2>
+          <h2 className="text-2xl md:text-3xl font-black text-black">Elanlar</h2>
         </div>
         
         <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4 md:gap-6">
