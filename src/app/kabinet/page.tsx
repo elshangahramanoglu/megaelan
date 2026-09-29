@@ -42,7 +42,34 @@ export default function KabinetPage() {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       if (error) throw error;
-      setMyAds(data || []);
+      
+      let adsData = data || [];
+      
+      // Auto-approve pending ads older than 1 minute
+      const now = new Date().getTime();
+      let hasUpdates = false;
+      
+      for (const ad of adsData) {
+        if (ad.status === 'pending') {
+          const adTime = new Date(ad.created_at).getTime();
+          const diffMinutes = (now - adTime) / (1000 * 60);
+          
+          if (diffMinutes >= 1) {
+            // Auto approve
+            const { error: updateError } = await supabase
+              .from('ads')
+              .update({ status: 'active' })
+              .eq('id', ad.id);
+              
+            if (!updateError) {
+              ad.status = 'active';
+              hasUpdates = true;
+            }
+          }
+        }
+      }
+      
+      setMyAds([...adsData]);
     } catch (err) {
       console.error('Error fetching ads:', err);
     } finally {
