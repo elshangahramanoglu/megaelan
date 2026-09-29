@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase";
 
 export interface Ad {
   id: string;
+  contacts_count?: number;
   title: string;
   price: number;
   currency: string;
@@ -74,6 +75,9 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           // Convert Supabase ads to our local Ad type
           const formattedRealAds = realAds.map(dbAd => ({
             id: dbAd.id,
+            user_id: dbAd.user_id,
+            views: dbAd.views || 0,
+            contacts_count: dbAd.contacts_count || 0,
             title: dbAd.title,
             price: dbAd.price,
             currency: dbAd.currency || "AZN",
