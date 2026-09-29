@@ -485,7 +485,7 @@ export default function EditAdPage() {
             {/* Existing Images */}
             {existingImages.map((url, i) => (
               <div key={`ex-${i}`} className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shadow-sm border border-gray-200 group flex-shrink-0">
-                <Image src={url} fill sizes="128px" className="object-cover" alt="Preview" />
+                <Image unoptimized src={url} fill sizes="128px" className="object-cover" alt="Preview" />
                 <button 
                   type="button"
                   onClick={(e) => {

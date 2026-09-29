@@ -322,7 +322,7 @@ function MessagesContent() {
                   <div className="relative">
                     <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border border-gray-200 relative">
                       {chat.otherUser?.avatar ? (
-                        <Image src={chat.otherUser.avatar} fill sizes="56px" className="object-cover" alt="" />
+                        <Image unoptimized src={chat.otherUser.avatar} fill sizes="56px" className="object-cover" alt="" />
                       ) : (
                         <UserIcon className="w-6 h-6 text-gray-400" />
                       )}
@@ -374,7 +374,7 @@ function MessagesContent() {
                 </button>
                 <div className="w-11 h-11 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border border-gray-200 relative">
                   {currentChatDetails?.avatar ? (
-                    <Image src={currentChatDetails.avatar} fill sizes="44px" priority className="object-cover" alt="" />
+                    <Image unoptimized src={currentChatDetails.avatar} fill sizes="44px" priority className="object-cover" alt="" />
                   ) : (
                     <UserIcon className="w-5 h-5 text-gray-400" />
                   )}

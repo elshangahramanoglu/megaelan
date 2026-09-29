@@ -81,8 +81,8 @@ export default function Header() {
             >
               {/* Desktop View: Icon + Text */}
               <div className="hidden md:flex items-center gap-2">
-                <Image src="/LogoMobilBrauzer.png" alt="MegaElan Logo" width={200} height={200} className="w-auto h-8 lg:h-10 object-contain" priority quality={100} unoptimized />
-                <Image 
+                <Image unoptimized src="/LogoMobilBrauzer.png" alt="MegaElan Logo" width={200} height={200} className="w-auto h-8 lg:h-10 object-contain" priority quality={100}/>
+                <Image unoptimized 
                   src="/LogoMobilBrauzerText.png" 
                   alt="MegaElan Text" 
                   width={150} height={40} 
@@ -93,8 +93,8 @@ export default function Header() {
 
               {/* Mobile View: Icon + Text */}
               <div className="flex md:hidden items-center gap-1.5">
-                <Image src="/LogoMobilBrauzer.png" alt="MegaElan Logo" width={150} height={150} className="w-auto h-7 object-contain" priority quality={100} unoptimized />
-                <Image 
+                <Image unoptimized src="/LogoMobilBrauzer.png" alt="MegaElan Logo" width={150} height={150} className="w-auto h-7 object-contain" priority quality={100}/>
+                <Image unoptimized 
                   src="/LogoMobilBrauzerText.png" 
                   alt="MegaElan" 
                   width={140} height={40} 
@@ -140,7 +140,7 @@ export default function Header() {
                       >
                         <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                           {ad.images?.[0] ? (
-                            <Image src={ad.images[0]} alt={ad.title} fill className="object-cover" sizes="48px" priority={true} />
+                            <Image unoptimized src={ad.images[0]} alt={ad.title} fill className="object-cover" sizes="48px" priority={true} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">Yoxdur</div>
                           )}
@@ -201,7 +201,7 @@ export default function Header() {
                 title={user ? "Şəxsi kabinet" : "Giriş"}
               >
                 <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden relative">
-                  {user?.avatar ? <Image src={user.avatar} priority fill sizes="40px" className="object-cover" alt="Profil" /> : <User className="w-5 h-5" />}
+                  {user?.avatar ? <Image unoptimized src={user.avatar} priority fill sizes="40px" className="object-cover" alt="Profil" /> : <User className="w-5 h-5" />}
                 </div>
               </button>
             </div>
@@ -256,7 +256,7 @@ export default function Header() {
                   <div className="w-2/3 p-8 overflow-y-auto bg-slate-50 custom-scrollbar">
                     <h3 className="text-2xl font-black text-black mb-6 flex items-center gap-3">
                       {activeCategory.image.includes('.png') ? (
-                          <div className="w-6 h-6 relative"><Image src={activeCategory.image} fill sizes="24px" className="object-contain" alt="" /></div>
+                          <div className="w-6 h-6 relative"><Image unoptimized src={activeCategory.image} fill sizes="24px" className="object-contain" alt="" /></div>
                         ) : (
                           <activeCategory.icon className="w-6 h-6 text-blue-600" />
                         )}
@@ -298,8 +298,8 @@ export default function Header() {
                   onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
                   className="flex items-center gap-1.5"
                 >
-                  <Image src="/LogoMobilBrauzer.png" alt="MegaElan Logo" width={150} height={150} className="h-7 w-auto object-contain" priority quality={100} unoptimized />
-                  <Image src="/LogoMobilBrauzerText.png" alt="MegaElan" width={120} height={35} className="h-5 w-auto object-contain" />
+                  <Image unoptimized src="/LogoMobilBrauzer.png" alt="MegaElan Logo" width={150} height={150} className="h-7 w-auto object-contain" priority quality={100}/>
+                  <Image unoptimized src="/LogoMobilBrauzerText.png" alt="MegaElan" width={120} height={35} className="h-5 w-auto object-contain" />
                 </button>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="absolute right-4 p-2 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <X className="w-6 h-6" />
@@ -311,7 +311,7 @@ export default function Header() {
                 <div className="p-4 flex flex-col gap-3 border-b border-gray-100">
                   <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl mb-2" onClick={() => { setIsMobileMenuOpen(false); handleProfileClick(); }}>
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden relative shadow-sm border border-gray-200">
-                      {user?.avatar ? <Image src={user.avatar} priority fill sizes="48px" className="object-cover" alt="Profil" /> : <User className="w-6 h-6 text-gray-400" />}
+                      {user?.avatar ? <Image unoptimized src={user.avatar} priority fill sizes="48px" className="object-cover" alt="Profil" /> : <User className="w-6 h-6 text-gray-400" />}
                     </div>
                     <div>
                       <p className="font-bold text-black text-lg">{user ? (user.name || "İstifadəçi") : "Giriş / Qeydiyyat"}</p>
@@ -351,7 +351,7 @@ export default function Header() {
                         >
                           <div className="flex items-center gap-3">
                             {(cat.image.includes('.png') || cat.image.includes('http')) ? (
-                              <div className="w-5 h-5 relative"><Image src={cat.image} fill sizes="20px" className="object-contain" alt="" /></div>
+                              <div className="w-5 h-5 relative"><Image unoptimized src={cat.image} fill sizes="20px" className="object-contain" alt="" /></div>
                             ) : (
                               <cat.icon className="w-5 h-5 text-blue-600" />
                             )}

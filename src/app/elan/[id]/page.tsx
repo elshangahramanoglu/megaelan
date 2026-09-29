@@ -69,7 +69,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
   };
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [dbUserId, setDbUserId] = useState<string | null>(ad?.user_id || null);
-  const [sellerAvatar, setSellerAvatar] = useState<string | null>(null);
+  const [sellerAvatar, setSellerAvatar] = useState<string | null>(ad?.sellerAvatar || null);
 
   const [realViews, setRealViews] = useState<number>(ad?.views || 0);
   const [realContacts, setRealContacts] = useState<number>(ad?.contacts_count || 0);
@@ -95,6 +95,11 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
 
 
   React.useEffect(() => {
+    if (ad?.sellerAvatar) {
+      setSellerAvatar(ad.sellerAvatar);
+      return;
+    }
+    
     if (ad && !ad.user_id) {
       supabase.from('ads').select('user_id').eq('id', ad.id).single().then(({ data }) => {
         if (data?.user_id) {

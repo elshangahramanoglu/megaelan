@@ -50,7 +50,7 @@ export default function MarqueeCategories() {
             >
               <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm group-hover:scale-110 transition-transform overflow-hidden relative">
                 {(cat.image.includes('.png') || cat.image.includes('http')) ? (
-                  <Image src={cat.image} fill sizes="96px" className="object-cover rounded-2xl" alt={cat.name} />
+                  <Image unoptimized src={cat.image} fill sizes="96px" className="object-cover rounded-2xl" alt={cat.name} />
                 ) : (
                   <Icon className="w-6 h-6 md:w-10 md:h-10 text-blue-600" />
                 )}

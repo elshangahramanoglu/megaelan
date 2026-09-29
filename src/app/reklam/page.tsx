@@ -140,7 +140,7 @@ function ReklamContent() {
                   className="flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 hover:border-blue-500 hover:bg-blue-50 cursor-pointer transition-all active:scale-95"
                 >
                   <div className="w-20 h-20 relative flex-shrink-0">
-                    <Image src={ad.images?.[0] || ad.imagePlaceholder} fill sizes="80px" className="object-cover rounded-xl" alt="" />
+                    <Image unoptimized src={ad.images?.[0] || ad.imagePlaceholder} fill sizes="80px" className="object-cover rounded-xl" alt="" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-900 truncate">{ad.title}</h3>

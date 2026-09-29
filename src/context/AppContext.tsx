@@ -24,6 +24,7 @@ export interface Ad {
   details?: Record<string, string>;
   user_id?: string;
   status?: string;
+  sellerAvatar?: string;
   views?: number;
 }
 
@@ -76,10 +77,19 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           .order('created_at', { ascending: false });
           
         if (!error && realAds) {
+          // Fetch users for avatars
+          const userIds = [...new Set(realAds.map(ad => ad.user_id).filter(Boolean))];
+          const { data: usersData } = await supabase.from('users').select('id, avatar').in('id', userIds);
+          const userAvatarMap = (usersData || []).reduce((acc: any, user) => {
+            acc[user.id] = user.avatar;
+            return acc;
+          }, {});
+
           // Convert Supabase ads to our local Ad type
           const formattedRealAds = realAds.map(dbAd => ({
             id: dbAd.id,
             user_id: dbAd.user_id,
+            sellerAvatar: userAvatarMap[dbAd.user_id] || null,
             views: dbAd.views || 0,
             contacts_count: dbAd.contacts_count || 0,
             title: dbAd.title,

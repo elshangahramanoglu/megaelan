@@ -60,7 +60,7 @@ export default function RootLayout({
               <div className="flex flex-col items-start gap-5">
                 <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
                   <Link href="/" className="flex items-center flex-shrink-0">
-                    <Image 
+                    <Image unoptimized 
                       src="/LogoMain.png" 
                       alt="MegaElan" 
                       width={400} height={120} className="object-contain w-auto h-24 lg:h-[110px] origin-left"
