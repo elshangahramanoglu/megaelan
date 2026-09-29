@@ -450,7 +450,7 @@ export default function KabinetPage() {
                           <div>
                             <h3 className="font-black text-2xl text-black line-clamp-2 mb-2">{ad.title}</h3>
                             <p className="text-blue-600 font-black text-xl mb-2">{ad.price} {ad.currency}</p>
-                            <p className="text-sm text-gray-400 font-medium">{new Date(ad.created_at).toLocaleDateString('az-AZ')}</p>
+                            <p className="text-sm text-gray-400 font-medium">{new Date(ad.created_at).toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')}</p>
                             <div className="flex gap-3 mt-2">
                               <span className="text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600 font-bold">👁 {ad.views || 0} baxış</span>
                               <span className="text-xs bg-blue-50 px-2 py-1 rounded-md text-blue-600 font-bold">📞 {ad.contacts_count || 0} əlaqə</span>

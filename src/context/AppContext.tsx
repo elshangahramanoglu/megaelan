@@ -78,7 +78,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             price: dbAd.price,
             currency: dbAd.currency || "AZN",
             city: dbAd.city,
-            date: new Date(dbAd.created_at).toLocaleDateString(),
+            date: new Date(dbAd.created_at).toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ''),
             categoryId: dbAd.category_id,
             subCategory: dbAd.sub_category,
             isPremium: dbAd.is_premium || false,
