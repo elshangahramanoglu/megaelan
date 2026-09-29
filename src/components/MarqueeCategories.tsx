@@ -1,31 +1,27 @@
 "use client";
 
 import React from "react";
-import { motion } from "framer-motion";
 import { categoriesData } from "@/data/categories";
 import Link from "next/link";
 
 export default function MarqueeCategories() {
-  const marqueeItems = categoriesData;
+  const marqueeItems = [...categoriesData, ...categoriesData];
 
   return (
     <div className="w-full overflow-hidden bg-white py-8 md:py-12 relative flex">
+      <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
       
-      
-      
-      <div
-        className="flex gap-4 md:gap-6 px-4 md:px-8 overflow-x-auto hide-scrollbar snap-x snap-mandatory pb-4 pt-2"
-        style={{ WebkitOverflowScrolling: 'touch' }}
-      >
+      <div className="flex gap-4 md:gap-6 whitespace-nowrap px-4 animate-marquee hover:[animation-play-state:paused] w-max">
         {marqueeItems.map((cat, index) => {
           const Icon = cat.icon;
           return (
             <Link 
               key={`${cat.id}-${index}`}
               href={`/kateqoriya/${cat.id}`}
-              className="flex-shrink-0 flex flex-col items-center justify-start pt-4 px-2 pb-2 bg-slate-50/50 border border-gray-100 rounded-2xl w-[90px] h-[110px] md:w-[140px] md:h-[160px] hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group snap-start"
+              className="flex-shrink-0 flex flex-col items-center justify-start p-4 md:p-6 bg-slate-50 border border-gray-100 rounded-3xl w-[110px] h-[130px] md:w-[180px] md:h-[180px] hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group"
             >
-              <div className="w-14 h-14 md:w-24 md:h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm group-hover:scale-105 transition-transform overflow-hidden">
+              <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm group-hover:scale-110 transition-transform overflow-hidden">
                 {(cat.image.includes('.png') || cat.image.includes('http')) ? (
                   <img src={cat.image} alt={cat.name} className="w-full h-full object-cover rounded-2xl" />
                 ) : (

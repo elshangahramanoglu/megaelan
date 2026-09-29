@@ -314,7 +314,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
               </button>
             </div>
             <div className="flex-1 relative flex items-center justify-center p-4">
-              <img src={ad.images[currentImageIndex]} className="max-w-full max-h-full object-contain" alt="" />
+              <img src={ad.images[currentImageIndex]} className="w-full max-w-2xl max-h-[80vh] aspect-[3/4] object-contain bg-black/20 rounded-xl" alt="" />
               
               {ad.images.length > 1 && (
                 <>

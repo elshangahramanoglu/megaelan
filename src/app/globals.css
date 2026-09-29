@@ -54,3 +54,11 @@ html, body {
   50% { box-shadow: 0 0 0 10px rgba(37,99,235,0); }
 }
 .btn-pulse { animation: pulse-blue 2.2s infinite; }
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.animate-marquee {
+  animation: marquee-scroll 40s linear infinite;
+}
