@@ -146,6 +146,15 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
         <span className="font-bold text-black line-clamp-1">{ad.title}</span>
       </div>
 
+      
+      {/* Hidden preloader for instant swiping & lightbox */}
+      {ad.images && ad.images.length > 0 && (
+        <div className="hidden" aria-hidden="true">
+          {ad.images.map((img: string, i: number) => (
+            <img key={i} src={img} fetchPriority={i === 0 ? "high" : "low"} decoding="sync" />
+          ))}
+        </div>
+      )}
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Main Content */}
         <div className="w-full lg:w-2/3 flex flex-col gap-8">
@@ -160,7 +169,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
               onTouchEnd={handleTouchEnd}
             >
               {(ad.images && ad.images.length > 0) ? (
-                <><div className="absolute inset-0 bg-black/5 backdrop-blur-3xl z-0"><img src={ad.images[currentImageIndex]} className="w-full h-full object-cover opacity-50 blur-xl" alt="" /></div><img src={ad.images[currentImageIndex]} alt={ad.title} fetchPriority="high" decoding="async" className="w-full h-full object-contain relative z-10" /></>
+                <img src={ad.images[currentImageIndex]} alt={ad.title} fetchPriority="high" decoding="sync" className="w-full h-full object-contain relative z-10" />
               ) : ad.imagePlaceholder.startsWith('http') ? (
                 <img src={ad.imagePlaceholder} alt={ad.title} fetchPriority="high" className="w-full h-full object-cover" />
               ) : (
@@ -199,7 +208,8 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 <h1 className="text-2xl md:text-3xl font-black text-black mb-3">{ad.title}</h1>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium">
                   <span className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full"><MapPin className="w-4 h-4" /> {ad.city}</span>
-                  <span className="bg-gray-100 px-4 py-1.5 rounded-xl font-bold flex items-center gap-1.5 border border-gray-200 shadow-sm whitespace-nowrap text-gray-700">🗓️ {ad.date.split(' ')[0]} ⏰ {ad.date.split(' ')[1] || ''}</span>
+                  <span className="bg-gray-100 px-3 py-1.5 rounded-xl font-bold text-gray-700 border border-gray-200 shadow-sm whitespace-nowrap">Tarix: {ad.date.split(' ')[0]}</span>
+                  <span className="bg-gray-100 px-3 py-1.5 rounded-xl font-bold text-gray-700 border border-gray-200 shadow-sm whitespace-nowrap">Saat: {ad.date.split(' ')[1] || ''}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Eye className="w-4 h-4 text-gray-500" /> Baxış: {realViews}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Phone className="w-4 h-4 text-gray-500" /> Əlaqə: {realContacts}</span>
                 </div>
@@ -333,7 +343,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
             </div>
             <div className="flex-1 relative flex items-center justify-center p-4">
               <div className="relative w-full max-w-[300px] md:max-w-[420px] aspect-[3/4] bg-transparent flex items-center justify-center mx-auto">
-                <img src={ad.images[currentImageIndex]} className="w-full h-full object-contain drop-shadow-2xl rounded-lg" alt="" />
+                <img src={ad.images[currentImageIndex]} fetchPriority="high" decoding="sync" className="w-full h-full object-contain drop-shadow-2xl rounded-lg" alt="" />
               </div>
               
               {ad.images.length > 1 && (

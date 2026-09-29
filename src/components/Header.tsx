@@ -104,7 +104,7 @@ export default function Header() {
           </div>
 
           {/* Search Bar (Centered on Desktop, Hidden on Mobile) */}
-          <div className={`${isMobileSearchOpen ? "absolute top-full left-0 w-full bg-white p-4 shadow-xl border-t border-gray-100 flex z-50" : "hidden md:flex"} flex-1 justify-center md:px-4 max-w-3xl`}>
+          <div className={`${isMobileSearchOpen ? "absolute top-full left-0 w-full bg-white p-4 shadow-xl border-t border-gray-100 flex z-50 animate-in slide-in-from-top-4 fade-in duration-300" : "hidden md:flex"} flex-1 justify-center md:px-4 max-w-3xl`}>
             <div className="w-full relative group">
             <form onSubmit={handleSearchSubmit} className="w-full flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative z-50">
               <input 
@@ -199,7 +199,7 @@ export default function Header() {
                 title={user ? "Şəxsi kabinet" : "Giriş"}
               >
                 <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden relative">
-                  {user?.avatar ? <Image src={user.avatar} fill priority sizes="40px" className="object-cover" alt="Profil" /> : <User className="w-5 h-5" />}
+                  {user?.avatar ? <img src={user.avatar} fetchPriority="high" className="w-full h-full object-cover" alt="Profil" /> : <User className="w-5 h-5" />}
                 </div>
               </button>
             </div>
@@ -288,7 +288,7 @@ export default function Header() {
               initial={{ x: "-100%" }}
               animate={{ x: 0 }}
               exit={{ x: "-100%" }}
-              transition={{ type: "tween", duration: 0.3 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
               className="fixed inset-0 bg-white z-50 flex flex-col h-[100dvh] overflow-hidden lg:hidden"
             >
               <div className="flex items-center justify-center p-4 border-b border-gray-100 relative">
@@ -309,7 +309,7 @@ export default function Header() {
                 <div className="p-4 flex flex-col gap-3 border-b border-gray-100">
                   <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl mb-2" onClick={() => { setIsMobileMenuOpen(false); handleProfileClick(); }}>
                     <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden relative shadow-sm border border-gray-200">
-                      {user?.avatar ? <Image src={user.avatar} fill priority sizes="48px" className="object-cover" alt="Profil" /> : <User className="w-6 h-6 text-gray-400" />}
+                      {user?.avatar ? <img src={user.avatar} fetchPriority="high" className="w-full h-full object-cover" alt="Profil" /> : <User className="w-6 h-6 text-gray-400" />}
                     </div>
                     <div>
                       <p className="font-bold text-black text-lg">{user ? (user.name || "İstifadəçi") : "Giriş / Qeydiyyat"}</p>
