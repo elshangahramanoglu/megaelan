@@ -1,18 +1,44 @@
 "use client";
 
-import React from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { categoriesData } from "@/data/categories";
 import Link from "next/link";
 
 export default function MarqueeCategories() {
-  const marqueeItems = [...categoriesData, ...categoriesData];
+  const marqueeItems = [...categoriesData, ...categoriesData, ...categoriesData, ...categoriesData];
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [isPaused, setIsPaused] = useState(false);
+
+  useEffect(() => {
+    let animationFrameId: number;
+    const scrollContainer = scrollRef.current;
+    
+    const scrollStep = () => {
+      if (scrollContainer && !isPaused) {
+        scrollContainer.scrollLeft += 1;
+        if (scrollContainer.scrollLeft >= scrollContainer.scrollWidth / 2) {
+          scrollContainer.scrollLeft = 0;
+        }
+      }
+      animationFrameId = requestAnimationFrame(scrollStep);
+    };
+
+    animationFrameId = requestAnimationFrame(scrollStep);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isPaused]);
 
   return (
     <div className="w-full overflow-hidden bg-white py-8 md:py-12 relative flex">
       <div className="absolute inset-y-0 left-0 w-16 md:w-32 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none" />
       <div className="absolute inset-y-0 right-0 w-16 md:w-32 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none" />
       
-      <div className="flex gap-4 md:gap-6 whitespace-nowrap px-4 animate-marquee hover:[animation-play-state:paused] w-max">
+      <div ref={scrollRef}
+        className="flex gap-4 md:gap-6 whitespace-nowrap px-4 w-max overflow-x-auto hide-scrollbar"
+        style={{ WebkitOverflowScrolling: "touch" }}
+        onMouseEnter={() => setIsPaused(true)}
+        onMouseLeave={() => setIsPaused(false)}
+        onTouchStart={() => setIsPaused(true)}
+        onTouchEnd={() => setIsPaused(false)}>
         {marqueeItems.map((cat, index) => {
           const Icon = cat.icon;
           return (

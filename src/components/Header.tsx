@@ -29,6 +29,7 @@ export default function Header() {
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]);
   
   const { user, setLoginOpen, favorites = [], ads = [] } = useAppContext();
@@ -103,7 +104,7 @@ export default function Header() {
           </div>
 
           {/* Search Bar (Centered on Desktop, Hidden on Mobile) */}
-          <div className="hidden md:flex flex-1 justify-center px-4 max-w-3xl">
+          <div className={`${isMobileSearchOpen ? "absolute top-full left-0 w-full bg-white p-4 shadow-xl border-t border-gray-100 flex z-50" : "hidden md:flex"} flex-1 justify-center md:px-4 max-w-3xl`}>
             <div className="w-full relative group">
             <form onSubmit={handleSearchSubmit} className="w-full flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative z-50">
               <input 
@@ -186,8 +187,15 @@ export default function Header() {
               </Link>
 
               <button 
+                onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
+                className="flex md:hidden items-center justify-center p-2.5 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors"
+              >
+                {isMobileSearchOpen ? <X className="w-5 h-5" /> : <Search className="w-5 h-5" />}
+              </button>
+
+              <button 
                 onClick={handleProfileClick}
-                className="flex items-center justify-center p-2 text-black hover:text-blue-600 transition-colors"
+                className="hidden md:flex items-center justify-center p-2 text-black hover:text-blue-600 transition-colors"
                 title={user ? "Şəxsi kabinet" : "Giriş"}
               >
                 <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden relative">
@@ -296,8 +304,20 @@ export default function Header() {
                 </button>
               </div>
               
+              
               <div className="flex-1 overflow-y-auto pb-20">
                 <div className="p-4 flex flex-col gap-3 border-b border-gray-100">
+                  <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-2xl mb-2" onClick={() => { setIsMobileMenuOpen(false); handleProfileClick(); }}>
+                    <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center overflow-hidden relative shadow-sm border border-gray-200">
+                      {user?.avatar ? <Image src={user.avatar} fill priority sizes="48px" className="object-cover" alt="Profil" /> : <User className="w-6 h-6 text-gray-400" />}
+                    </div>
+                    <div>
+                      <p className="font-bold text-black text-lg">{user ? (user.name || "İstifadəçi") : "Giriş / Qeydiyyat"}</p>
+                      <p className="text-gray-500 text-sm font-medium">{user ? "Şəxsi kabinet" : "Hesabınıza daxil olun"}</p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400 ml-auto" />
+                  </div>
+                  
                   <Link href="/yeni-elan" onClick={() => setIsMobileMenuOpen(false)} className="bg-green-500 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 text-lg">
                     <span className="text-2xl leading-none">+</span> Yeni elan
                   </Link>
