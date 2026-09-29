@@ -551,18 +551,7 @@ export default function NewAdPage() {
 
         {/* Contact */}
         <div className="border-t-2 border-gray-100 pt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div>
-            <label className="block text-base font-bold text-black mb-2">Satıcı növü *</label>
-            <select 
-              name="sellerType"
-              value={formData.sellerType}
-              onChange={handleChange}
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium text-lg"
-            >
-              <option value="Fərdi">Fərdi</option>
-              <option value="Mağaza">Mağaza</option>
-            </select>
-          </div>
+
           <div>
             <label className="block text-base font-bold text-black mb-2">Adınız *</label>
             <input 
