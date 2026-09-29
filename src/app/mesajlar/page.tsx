@@ -38,7 +38,7 @@ function MessagesContent() {
         // Fetch all messages where user is sender or receiver
         const { data, error } = await supabase
           .from('messages')
-          .select('*, sender:users!messages_sender_id_fkey(id, name, avatar), receiver:users!messages_receiver_id_fkey(id, name, avatar)')
+          .select('*, sender:users!messages_sender_id_fkey(id, name, avatar, phone), receiver:users!messages_receiver_id_fkey(id, name, avatar, phone)')
           .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
           .order('created_at', { ascending: false });
 
@@ -49,7 +49,7 @@ function MessagesContent() {
         
         // If we arrived from a link to a specific user, ensure they are in the list
         if (targetUserId && targetUserId !== user.id) {
-          const { data: targetUser } = await supabase.from('users').select('id, name, avatar').eq('id', targetUserId).single();
+          const { data: targetUser } = await supabase.from('users').select('id, name, avatar, phone').eq('id', targetUserId).single();
           if (targetUser) {
             uniqueChats.set(targetUserId, {
               otherUser: targetUser,
@@ -108,6 +108,15 @@ function MessagesContent() {
           setMessages(prev => [...prev, payload.new]);
           setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
         }
+        // Force refresh chats to update last message
+        setChats(prev => {
+           const updated = [...prev];
+           const idx = updated.findIndex(c => c.otherUser.id === payload.new.sender_id);
+           if (idx > -1) {
+              updated[idx].lastMessage = payload.new;
+           }
+           return updated;
+        });
       })
       .subscribe();
 
@@ -185,7 +194,7 @@ function MessagesContent() {
                     )}
                   </div>
                   <div className="flex-1 min-w-0 text-left">
-                    <h3 className="font-bold text-gray-900 truncate">{chat.otherUser.name || 'İstifadəçi'}</h3>
+                    <h3 className="font-bold text-gray-900 truncate">{chat.otherUser.name || chat.otherUser.phone || 'İstifadəçi'}</h3>
                     <p className="text-sm text-gray-500 truncate">{chat.lastMessage.content}</p>
                   </div>
                 </button>
@@ -215,7 +224,7 @@ function MessagesContent() {
                     <UserIcon className="w-5 h-5 text-gray-400" />
                   )}
                 </div>
-                <h3 className="font-bold text-gray-900">{chats.find(c => c.otherUser.id === activeChat)?.otherUser.name || 'İstifadəçi'}</h3>
+                <h3 className="font-bold text-gray-900">{chats.find(c => c.otherUser.id === activeChat)?.otherUser.name || chats.find(c => c.otherUser.id === activeChat)?.otherUser.phone || 'İstifadəçi'}</h3>
               </div>
 
               {/* Messages */}
