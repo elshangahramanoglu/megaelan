@@ -10,14 +10,14 @@ import { useEffect, useState, Suspense } from "react";
 function SearchContent() {
   const searchParams = useSearchParams();
   const q = searchParams.get("q") || "";
-  const { ads, isUserLoaded } = useAppContext();
+  const { ads, isUserLoaded, isAdsLoaded } = useAppContext();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted || !isUserLoaded) return <div className="h-screen flex items-center justify-center text-gray-500 font-bold">Yüklənir...</div>;
+  if (!mounted || !isUserLoaded || !isAdsLoaded) return <div className="h-screen flex items-center justify-center text-blue-600"><span className="animate-pulse font-bold text-lg">Axtarış edilir...</span></div>;
 
   const searchResults = q.trim()
     ? ads.filter(ad => 
