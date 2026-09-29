@@ -14,7 +14,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Elanımı sonradan redaktə edə bilərəmmi?",
-    a: "Bəli. Siz Şəxsi Kabinetinizdən öz elanlarınızı redaktə edə bilərsiniz. Lakin təhlükəsizlik məqsədilə 24 saat ərzində maksimum 2 dəfə redaktə limitiniz var."
+    a: "Bəli. Siz Şəxsi Kabinetinizdən öz elanlarınızı redaktə edə bilərsiniz. Lakin təhlükəsizlik məqsədilə 24 saat ərzində maksimum 3 dəfə redaktə limitiniz var."
   },
   {
     q: "Şəxsi məlumatlarımı (Ad, Soyad) necə dəyişə bilərəm?",

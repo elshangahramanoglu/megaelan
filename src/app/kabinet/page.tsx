@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
-import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard, Camera, Bell, Shield, ChevronRight } from "lucide-react";
+import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard, Camera, Bell, Shield, ChevronRight, Eye, MessageCircle, Clock, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
@@ -301,7 +301,9 @@ export default function KabinetPage() {
                       </label>
                     </div>
                     <div className="text-center">
-                      <p className="text-sm text-gray-500 font-medium">Profil şəklinizi yeniləyin (maks. 15 MB)</p>
+                      <div className="inline-block bg-blue-100 text-blue-700 font-black text-[11px] uppercase tracking-wider px-3 py-1 rounded-full border border-blue-200">
+                        Fərdi Hesab
+                      </div>
                       {avatar && (
                         <button type="button" onClick={handleDeleteAvatar} className="text-xs text-red-500 hover:text-red-700 font-bold bg-red-50 hover:bg-red-100 px-4 py-2 rounded-full transition-all mt-2 inline-block">
                           Şəkli sil
@@ -351,13 +353,19 @@ export default function KabinetPage() {
                     />
                   </div>
 
-                  <div className="pt-2">
+                  <div className="pt-2 flex flex-col md:flex-row justify-between items-center gap-4">
                     <button 
                       type="submit" 
                       className="bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-black text-lg py-4 px-10 rounded-2xl transition-all shadow-lg shadow-blue-600/25"
                     >
                       Yadda saxla
                     </button>
+                    <div className="flex items-center gap-1.5 text-gray-500 font-bold bg-gray-50 px-4 py-2 rounded-xl border border-gray-100">
+                      Qeydiyyat: {user.created_at ? new Date(user.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' }) : '29 sentyabr 2026'}
+                      <div className="w-4 h-4 bg-blue-500 text-white rounded-full flex items-center justify-center ml-1">
+                        <Check className="w-3 h-3" />
+                      </div>
+                    </div>
                   </div>
                 </form>
               </motion.div>
@@ -435,10 +443,10 @@ export default function KabinetPage() {
                             <h3 className="font-black text-2xl text-black line-clamp-2 mb-2">{ad.title}</h3>
                             <p className="text-blue-600 font-black text-xl mb-2">{ad.price} {ad.currency}</p>
                             <p className="text-sm text-gray-400 font-medium">{new Date(ad.created_at).toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')}</p>
-                            <div className="flex gap-3 mt-2">
-                              <span className="text-xs bg-gray-100 px-2 py-1 rounded-md text-gray-600 font-bold">👁 {ad.views || 0} baxış</span>
-                              <span className="text-xs bg-blue-50 px-2 py-1 rounded-md text-blue-600 font-bold">📞 {ad.contacts_count || 0} əlaqə</span>
-                              <span className="text-xs bg-orange-50 px-2 py-1 rounded-md text-orange-600 font-bold">⏱ {Math.max(0, 30 - Math.floor((Date.now() - new Date(ad.created_at).getTime()) / (1000 * 60 * 60 * 24)))} gün qaldı</span>
+                            <div className="flex gap-3 mt-2 flex-wrap">
+                              <span className="flex items-center gap-1 text-[11px] bg-gray-100 px-2.5 py-1 rounded-md text-gray-600 font-bold"><Eye className="w-3.5 h-3.5" /> {ad.views || 0} baxış</span>
+                              <span className="flex items-center gap-1 text-[11px] bg-blue-50 px-2.5 py-1 rounded-md text-blue-600 font-bold"><MessageCircle className="w-3.5 h-3.5" /> {ad.contacts_count || 0} əlaqə</span>
+                              <span className="flex items-center gap-1 text-[11px] bg-orange-50 px-2.5 py-1 rounded-md text-orange-600 font-bold"><Clock className="w-3.5 h-3.5" /> {Math.max(0, 30 - Math.floor((Date.now() - new Date(ad.created_at).getTime()) / (1000 * 60 * 60 * 24)))} gün qaldı</span>
                             </div>
                           </div>
                         </div>

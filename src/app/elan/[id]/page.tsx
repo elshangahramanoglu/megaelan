@@ -3,7 +3,7 @@
 import React, { use, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { categoriesData } from "@/data/categories";
-import { Heart, Share2, MapPin, Phone, MessageCircle, AlertTriangle, ChevronRight, Crown, Star, Loader2 } from "lucide-react";
+import { Heart, Share2, MapPin, Phone, MessageCircle, AlertTriangle, ChevronRight, Crown, Star, Loader2, Eye } from "lucide-react";
 import Link from "next/link";
 import AdCard from "@/components/AdCard";
 import { supabase } from "@/lib/supabase";
@@ -17,6 +17,29 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
   const isFav = favorites.includes(adId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [dbUserId, setDbUserId] = useState<string | null>(ad?.user_id || null);
+
+  const [realViews, setRealViews] = useState<number>(ad?.views || 0);
+  const [realContacts, setRealContacts] = useState<number>(ad?.contacts_count || 0);
+
+  React.useEffect(() => {
+    if (!ad) return;
+    let isMounted = true;
+    const fetchAndIncrement = async () => {
+      try {
+        // Increment first
+        await supabase.rpc('increment_ad_views', { ad_id: ad.id });
+        // Then fetch latest
+        const { data } = await supabase.from('ads').select('views, contacts_count').eq('id', ad.id).single();
+        if (isMounted && data) {
+          setRealViews(data.views || (ad.views || 0) + 1);
+          setRealContacts(data.contacts_count || ad.contacts_count);
+        }
+      } catch (err) {}
+    };
+    fetchAndIncrement();
+    return () => { isMounted = false; };
+  }, [ad]);
+
 
   React.useEffect(() => {
     if (ad && !ad.user_id) {
@@ -113,8 +136,8 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium">
                   <span className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full"><MapPin className="w-4 h-4" /> {ad.city}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full">Yeniləndi: {ad.date}</span>
-                  <span className="bg-gray-100 px-3 py-1 rounded-full">Baxış: {ad.views || 1}</span>
-                  <span className="bg-gray-100 px-3 py-1 rounded-full">Əlaqə: {(ad as any).contacts_count || 0}</span>
+                  <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Eye className="w-4 h-4 text-gray-500" /> Baxış: {realViews}</span>
+                  <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Phone className="w-4 h-4 text-gray-500" /> Əlaqə: {realContacts}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -178,7 +201,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 {ad.contactPhone}
               </a>
               
-              <Link href={`/mesajlar?user_id=${dbUserId}&ad_id=${ad.id}`} onClick={() => { try { supabase.rpc('increment_ad_contacts', { ad_id: ad.id }) } catch(e){} }} className="w-full flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition-colors">
+              <Link href={`/mesajlar?user_id=${dbUserId}&ad_id=${ad.id}`} onClick={() => { try { { supabase.rpc('increment_ad_contacts', { ad_id: ad.id }); setRealContacts(prev => prev + 1); } } catch(e){} }} className="w-full flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition-colors">
                 <MessageCircle className="w-6 h-6" />
                 Mesaj yaz
               </Link>
