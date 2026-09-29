@@ -2,8 +2,9 @@
 
 import React, { use, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
+import { motion, AnimatePresence } from "framer-motion";
 import { categoriesData } from "@/data/categories";
-import { Heart, Share2, MapPin, Phone, MessageCircle, AlertTriangle, ChevronRight, Crown, Star, Loader2, Eye } from "lucide-react";
+import { Heart, Share2, MapPin, Phone, MessageCircle, AlertTriangle, ChevronRight, Crown, Star, Loader2, Eye, X, ChevronLeft } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import AdCard from "@/components/AdCard";
@@ -49,6 +50,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
 
   const isFav = favorites.includes(adId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [dbUserId, setDbUserId] = useState<string | null>(ad?.user_id || null);
   const [sellerAvatar, setSellerAvatar] = useState<string | null>(null);
 
@@ -136,7 +138,10 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           {/* Image Gallery (Placeholder) */}
           {/* Image Gallery */}
           <div className="flex flex-col gap-4">
-            <div className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group">
+            <div 
+              onClick={() => { if (ad.images && ad.images.length > 0) setIsLightboxOpen(true); }}
+              className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group cursor-zoom-in"
+            >
               {(ad.images && ad.images.length > 0) ? (
                 <><div className="absolute inset-0 bg-black/5 backdrop-blur-3xl z-0"><img src={ad.images[currentImageIndex]} className="w-full h-full object-cover opacity-50 blur-xl" alt="" /></div><img src={ad.images[currentImageIndex]} alt={ad.title} fetchPriority="high" decoding="async" className="w-full h-full object-contain relative z-10" /></>
               ) : ad.imagePlaceholder.startsWith('http') ? (
@@ -294,6 +299,43 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
       )}
+      <AnimatePresence>
+        {isLightboxOpen && ad.images && (
+          <motion.div 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1 }} 
+            exit={{ opacity: 0 }} 
+            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex flex-col"
+          >
+            <div className="flex justify-between items-center p-4">
+              <div className="text-white font-bold">{currentImageIndex + 1} / {ad.images.length}</div>
+              <button onClick={() => setIsLightboxOpen(false)} className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+            <div className="flex-1 relative flex items-center justify-center p-4">
+              <img src={ad.images[currentImageIndex]} className="max-w-full max-h-full object-contain" alt="" />
+              
+              {ad.images.length > 1 && (
+                <>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => prev === 0 ? ad.images!.length - 1 : prev - 1); }} 
+                    className="absolute left-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+                  >
+                    <ChevronLeft className="w-6 h-6" />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(prev => prev === ad.images!.length - 1 ? 0 : prev + 1); }} 
+                    className="absolute right-4 p-3 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"
+                  >
+                    <ChevronRight className="w-6 h-6" />
+                  </button>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
