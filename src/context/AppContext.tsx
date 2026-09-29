@@ -15,6 +15,7 @@ export interface Ad {
   categoryId: string;
   subCategory?: string;
   isPremium: boolean;
+  isVip?: boolean;
   imagePlaceholder: string;
   images?: string[];
   description: string;
@@ -87,6 +88,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             categoryId: dbAd.category_id,
             subCategory: dbAd.sub_category,
             isPremium: dbAd.is_premium || false,
+            isVip: dbAd.is_vip || false,
             imagePlaceholder: dbAd.images && dbAd.images.length > 0 ? dbAd.images[0] : "Şəkil",
             images: dbAd.images || [],
             description: dbAd.description,

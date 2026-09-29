@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
-import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard, Camera, Bell, Shield, ChevronRight, Eye, MessageCircle, Clock, Check } from "lucide-react";
+import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard, Camera, Bell, Shield, ChevronRight, Eye, MessageCircle, Clock, Check, Crown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
