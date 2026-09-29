@@ -77,7 +77,18 @@ function MessagesContent() {
         // Group into unique conversations
         const uniqueChats = new Map();
         
-        if (targetUserId && targetUserId !== user.id && usersMap.has(targetUserId)) {
+        if (targetUserId && targetUserId !== user.id) {
+          if (!usersMap.has(targetUserId)) {
+            // Try fetching individually just in case
+            const { data: fallbackUser } = await supabase.from('users').select('id, name, avatar, phone').eq('id', targetUserId).single();
+            if (fallbackUser) {
+              usersMap.set(targetUserId, fallbackUser);
+            } else {
+              // Create a dummy user if they really don't exist in DB (e.g. deleted user)
+              usersMap.set(targetUserId, { id: targetUserId, name: 'Naməlum İstifadəçi', phone: '', avatar: '' });
+            }
+          }
+          
           uniqueChats.set(targetUserId, {
             otherUser: usersMap.get(targetUserId),
             lastMessage: { content: "Yeni mesaj yazın...", created_at: new Date().toISOString() }
@@ -169,6 +180,16 @@ function MessagesContent() {
     };
     setMessages(prev => [...prev, tempMsg]);
     setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+    
+    // Update sidebar for sender
+    setChats(prev => {
+      const updated = [...prev];
+      const idx = updated.findIndex(c => c.otherUser.id === activeChat);
+      if (idx > -1) {
+        updated[idx].lastMessage = tempMsg;
+      }
+      return updated;
+    });
 
     try {
       const { error: insertError } = await supabase.from('messages').insert([{
