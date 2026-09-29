@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: "MegaElan",
   description: "Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!",
   icons: {
-    icon: '/LogoMegaElan.png',
+    icon: '/Favicon.png',
   },
 };
 
@@ -34,9 +34,9 @@ export default function RootLayout({
   return (
     <html lang="az">
       <head>
-        <link rel="icon" href="/LogoMegaElan.png" sizes="any" />
-        <link rel="icon" href="/LogoMegaElan.png" type="image/png" sizes="192x192" />
-        <link rel="apple-touch-icon" href="/LogoMegaElan.png" />
+        <link rel="icon" href="/Favicon.png" sizes="any" />
+        <link rel="icon" href="/Favicon.png" type="image/png" sizes="192x192" />
+        <link rel="apple-touch-icon" href="/Favicon.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 min-h-screen flex flex-col`}
