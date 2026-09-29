@@ -16,6 +16,15 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
   const ad = ads.find(a => a.id === adId);
   const isFav = favorites.includes(adId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [dbUserId, setDbUserId] = useState<string | null>(ad?.user_id || null);
+
+  React.useEffect(() => {
+    if (ad && !ad.user_id) {
+      supabase.from('ads').select('user_id').eq('id', ad.id).single().then(({ data }) => {
+        if (data?.user_id) setDbUserId(data.user_id);
+      });
+    }
+  }, [ad]);
   
   
   
@@ -169,7 +178,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 {ad.contactPhone}
               </a>
               
-              <Link href={`/mesajlar?user_id=${ad.user_id}&ad_id=${ad.id}`} onClick={() => { try { supabase.rpc('increment_ad_contacts', { ad_id: ad.id }) } catch(e){} }} className="w-full flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition-colors">
+              <Link href={`/mesajlar?user_id=${dbUserId}&ad_id=${ad.id}`} onClick={() => { try { supabase.rpc('increment_ad_contacts', { ad_id: ad.id }) } catch(e){} }} className="w-full flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition-colors">
                 <MessageCircle className="w-6 h-6" />
                 Mesaj yaz
               </Link>

@@ -14,8 +14,10 @@ function MessagesContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   
-  const targetUserId = searchParams.get('user_id');
-  const targetAdId = searchParams.get('ad_id');
+  let targetUserId = searchParams.get('user_id');
+  if (targetUserId === 'undefined' || targetUserId === 'null') targetUserId = null;
+  let targetAdId = searchParams.get('ad_id');
+  if (targetAdId === 'undefined' || targetAdId === 'null') targetAdId = null;
   useEffect(() => {
     if (targetUserId) {
       setActiveChat(targetUserId);
