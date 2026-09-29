@@ -448,6 +448,9 @@ export default function KabinetPage() {
                           <Link href={`/elan/${ad.id}`} className="p-3.5 flex justify-center items-center bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-xl transition-all" title="Elana bax">
                             <ExternalLink className="w-5 h-5" />
                           </Link>
+                          <Link href={`/reklam?adId=${ad.id}`} className="p-3.5 flex justify-center items-center gap-2 bg-orange-50 text-orange-500 hover:bg-orange-100 rounded-xl transition-all" title="Reklam et">
+                            <Crown className="w-5 h-5" />
+                          </Link>
                           <Link href={`/redakte/${ad.id}`} className="p-3.5 flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all" title="Redaktə et">
                             <Edit3 className="w-5 h-5" />
                           </Link>

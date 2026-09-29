@@ -562,7 +562,8 @@ export default function EditAdPage() {
               value={formData.contactName}
               onChange={handleChange}
               placeholder="Adınız"
-              className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none text-black font-medium"
+              disabled
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 bg-gray-50 text-gray-500 font-medium cursor-not-allowed"
                           />
           </div>
           <div>
