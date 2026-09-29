@@ -264,7 +264,7 @@ export default function Header() {
                           className="w-full p-4 flex items-center justify-between font-bold text-black"
                         >
                           <div className="flex items-center gap-3">
-                            {cat.image.includes('.png') ? (
+                            {(cat.image.includes('.png') || cat.image.includes('http')) ? (
                               <img src={cat.image} className="w-5 h-5 object-contain" />
                             ) : (
                               <cat.icon className="w-5 h-5 text-blue-600" />

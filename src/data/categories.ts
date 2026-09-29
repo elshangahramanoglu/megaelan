@@ -57,12 +57,12 @@ const PHONE_COLOR_FIELD: CategoryField = {
 
 export const categoriesData: Category[] = [
   {
-    id: "1", name: "Ev", icon: Home, image: "/ev.png",
+    id: "1", name: "Ev", icon: Home, image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Mebel", "Ev tekstili", "Qab-qacaq və mətbəx", "Bitkilər", "Bağ və bostan", "Təmir və tikinti", "İşıqlandırma", "Dekorasiya", "Ev əşyaları"],
     fields: [CONDITION_FIELD]
   },
   {
-    id: "2", name: "Nəqliyyat", icon: Car, image: "/neqliyyat.png",
+    id: "2", name: "Nəqliyyat", icon: Car, image: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Avtomobillər", "Avtobuslar və xüsusi texnika", "Motosikletlər və mopedlər", "Velosipedlər", "Su nəqliyyatı"],
     fields: [
       { name: "brand", label: "Marka", type: "select", options: ["Toyota", "Mercedes-Benz", "BMW", "Hyundai", "Kia", "LADA (VAZ)", "Nissan", "Chevrolet", "Ford", "Honda", "Lexus", "Mitsubishi", "Opel", "Volkswagen", "Audi", "Land Rover", "Porsche", "Mazda", "Subaru", "Peugeot", "Renault", "Skoda", "Volvo", "Infiniti", "Suzuki", "Daewoo", "UAZ", "GAZ", "BYD", "Chery", "Geely", "Haval", "Jeep", "Tesla", "Dodge", "Cadillac", "Jaguar", "MINI", "Seat", "Citroen", "Fiat", "Dacia", "SsangYong", "Digər"] },
@@ -118,7 +118,7 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "3", name: "Elektronika", icon: Tv, image: "/elektronika.png",
+    id: "3", name: "Elektronika", icon: Tv, image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?q=80&w=500&auto=format&fit=crop",
     subcategories: [
       "Telefonlar və Smartfonlar",
       "Nömrələr",
@@ -296,12 +296,12 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "4", name: "Ehtiyat hissələri və aksesuarlar", icon: Settings, image: "/ehtiyat.png",
+    id: "4", name: "Ehtiyat hissələri və aksesuarlar", icon: Settings, image: "https://images.unsplash.com/photo-1486262715619-670810a044e1?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Avto ehtiyat hissələri", "Avto aksesuarlar", "Moto ehtiyat hissələri", "Şinlər və disklər", "GPS və naviqatorlar", "Avto elektronika", "Avto kosmetika"],
     fields: [CONDITION_FIELD]
   },
   {
-    id: "5", name: "Daşınmaz əmlak", icon: Building2, image: "/dasinmaz.png",
+    id: "5", name: "Daşınmaz əmlak", icon: Building2, image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Mənzillər", "Villalar və bağ evləri", "Obyektlər və ofislər", "Torpaq", "Qarajlar", "Yataqxanalar"],
     fields: [
       { name: "dealType", label: "Əməliyyat növü", type: "select", options: ["Satılır", "Kirayə verilir", "Günlük kirayə"] },
@@ -313,7 +313,7 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "12", name: "İş elanları", icon: UserPlus, image: "/ish.png",
+    id: "12", name: "İş elanları", icon: UserPlus, image: "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Vakansiyalar", "CV-lər", "Təcrübə proqramları", "Freelance", "Müvəqqəti işlər"],
     fields: [
       { name: "field", label: "Sahə", type: "select", options: ["IT", "Satış", "Mühasibat", "Marketinq", "Tibb", "Hüquq", "Təhsil", "İnşaat", "Xidmət", "Nəqliyyat", "Mühəndislik", "İnsan resursları", "Maliyyə", "Media", "Turizm", "İdarəetmə", "Digər"] },
@@ -323,17 +323,17 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "13", name: "Heyvanlar", icon: Dog, image: "/heyvanlar.png",
+    id: "13", name: "Heyvanlar", icon: Dog, image: "https://images.unsplash.com/photo-1543466835-00a7907e9de1?q=80&w=500&auto=format&fit=crop",
     subcategories: ["İtlər", "Pişiklər", "Quşlar", "Balıqlar", "Gəmiricilər", "Sürünənlər", "Kənd heyvanları", "Heyvanlar üçün aksesuarlar"],
     fields: []
   },
   {
-    id: "14", name: "Məktəblilər üçün", icon: Backpack, image: "/mektebli.png",
+    id: "14", name: "Məktəblilər üçün", icon: Backpack, image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Məktəb formaları", "Dərsliklər", "Dəftərxana ləvazimatları", "Çantalar və bel çantaları", "Tədris kursları", "Repetitorlar"],
     fields: [CONDITION_FIELD]
   },
   {
-    id: "15", name: "Mağazalar", icon: Store, image: "/magazalar.png",
+    id: "15", name: "Mağazalar", icon: Store, image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Geyim mağazaları", "Texnika mağazaları", "Mebel mağazaları", "Avtosalonlar", "Ərzaq mağazaları", "Parfümeriya", "İdman mağazaları", "Digər mağazalar"],
     fields: []
   }
