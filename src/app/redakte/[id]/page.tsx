@@ -258,7 +258,7 @@ export default function EditAdPage() {
         .from('ads')
         .update({
           title: formData.title,
-          status: initialStatus,
+          status: 'pending',
           description: formData.description,
           price: Number(formData.price) || 0,
           city: formData.city,

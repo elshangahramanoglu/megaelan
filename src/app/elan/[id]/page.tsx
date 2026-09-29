@@ -3,6 +3,7 @@
 import React, { use, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { motion, AnimatePresence } from "framer-motion";
+import { createPortal } from "react-dom";
 import { categoriesData } from "@/data/categories";
 import { Heart, Share2, MapPin, Phone, MessageCircle, AlertTriangle, ChevronRight, Crown, Star, Loader2, Eye, X, ChevronLeft } from "lucide-react";
 import Link from "next/link";
@@ -182,7 +183,10 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 <h1 className="text-2xl md:text-3xl font-black text-black mb-3">{ad.title}</h1>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium">
                   <span className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full"><MapPin className="w-4 h-4" /> {ad.city}</span>
-                  <span className="bg-gray-100 px-3 py-1 rounded-full">Yeniləndi: {ad.date}</span>
+                  <div className="flex gap-2">
+                    <span className="bg-gray-100 px-3 py-1 rounded-full border border-gray-200">Tarix: {ad.date.split(' ')[0]}</span>
+                    <span className="bg-gray-100 px-3 py-1 rounded-full border border-gray-200">Saat: {ad.date.split(' ')[1] || ''}</span>
+                  </div>
                   <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Eye className="w-4 h-4 text-gray-500" /> Baxış: {realViews}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Phone className="w-4 h-4 text-gray-500" /> Əlaqə: {realContacts}</span>
                 </div>
@@ -299,13 +303,14 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           </div>
         </div>
       )}
-      <AnimatePresence>
-        {isLightboxOpen && ad.images && (
+      {isLightboxOpen && ad.images && typeof document !== 'undefined' && createPortal(
+        <AnimatePresence>
           <motion.div 
             initial={{ opacity: 0 }} 
             animate={{ opacity: 1 }} 
             exit={{ opacity: 0 }} 
-            className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex flex-col"
+            className="fixed inset-0 z-[99999] bg-black/95 backdrop-blur-sm flex flex-col"
+            style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0 }}
           >
             <div className="flex justify-between items-center p-4">
               <div className="text-white font-bold">{currentImageIndex + 1} / {ad.images.length}</div>
@@ -336,8 +341,9 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
               )}
             </div>
           </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>,
+        document.body
+      )}
     </div>
   );
 }
