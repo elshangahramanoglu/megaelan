@@ -36,33 +36,52 @@ function MessagesContent() {
     const fetchChats = async () => {
       try {
         // Fetch all messages where user is sender or receiver
+        // Fetch all messages for the user
         const { data, error } = await supabase
           .from('messages')
-          .select('*, sender:users!messages_sender_id_fkey(id, name, avatar, phone), receiver:users!messages_receiver_id_fkey(id, name, avatar, phone)')
+          .select('*')
           .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
           .order('created_at', { ascending: false });
 
         if (error) throw error;
 
+        const messagesData = data || [];
+        
+        // Extract all unique user IDs we chatted with
+        const userIds = new Set<string>();
+        if (targetUserId && targetUserId !== user.id) userIds.add(targetUserId);
+        
+        messagesData.forEach(msg => {
+          if (msg.sender_id !== user.id) userIds.add(msg.sender_id);
+          if (msg.receiver_id !== user.id) userIds.add(msg.receiver_id);
+        });
+        
+        // Fetch user details in one go
+        let usersMap = new Map();
+        if (userIds.size > 0) {
+          const { data: usersData } = await supabase
+            .from('users')
+            .select('id, name, avatar, phone')
+            .in('id', Array.from(userIds));
+            
+          (usersData || []).forEach(u => usersMap.set(u.id, u));
+        }
+
         // Group into unique conversations
         const uniqueChats = new Map();
         
-        // If we arrived from a link to a specific user, ensure they are in the list
-        if (targetUserId && targetUserId !== user.id) {
-          const { data: targetUser } = await supabase.from('users').select('id, name, avatar, phone').eq('id', targetUserId).single();
-          if (targetUser) {
-            uniqueChats.set(targetUserId, {
-              otherUser: targetUser,
-              lastMessage: { content: "Yeni mesaj yazın...", created_at: new Date().toISOString() }
-            });
-          }
+        if (targetUserId && targetUserId !== user.id && usersMap.has(targetUserId)) {
+          uniqueChats.set(targetUserId, {
+            otherUser: usersMap.get(targetUserId),
+            lastMessage: { content: "Yeni mesaj yazın...", created_at: new Date().toISOString() }
+          });
         }
 
-        (data || []).forEach(msg => {
-          const otherUser = msg.sender_id === user.id ? msg.receiver : msg.sender;
-          if (otherUser && !uniqueChats.has(otherUser.id)) {
-            uniqueChats.set(otherUser.id, {
-              otherUser,
+        messagesData.forEach(msg => {
+          const otherUserId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
+          if (usersMap.has(otherUserId) && !uniqueChats.has(otherUserId)) {
+            uniqueChats.set(otherUserId, {
+              otherUser: usersMap.get(otherUserId),
               lastMessage: msg
             });
           }
