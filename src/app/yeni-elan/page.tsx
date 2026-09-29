@@ -89,6 +89,7 @@ export default function NewAdPage() {
   const [dynamicDetails, setDynamicDetails] = useState<Record<string, string>>({});
   const [files, setFiles] = useState<File[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
   const [createdAdId, setCreatedAdId] = useState<string | null>(null);
   
   // Limit tracking
@@ -179,7 +180,7 @@ export default function NewAdPage() {
     if (!user) return;
     
     if (!formData.title || !formData.price || !formData.city || !formData.description || !formData.contactName || !formData.contactPhone) {
-      alert("Zəhmət olmasa bütün vacib xanaları (*) doldurun.");
+      setFormError("Zəhmət olmasa bütün vacib xanaları (*) doldurun.");
       return;
     }
 
@@ -198,17 +199,17 @@ export default function NewAdPage() {
     });
 
     if (missingField) {
-      alert("Zəhmət olmasa Əlavə Məlumatlar bölməsindəki bütün xüsusiyyətləri doldurun.");
+      setFormError("Zəhmət olmasa Əlavə Məlumatlar bölməsindəki bütün xüsusiyyətləri doldurun.");
       return;
     }
     
     if (Number(formData.price) < 1) {
-      alert("Qiymət minimum 1 AZN olmalıdır.");
+      setFormError("Qiymət minimum 1 AZN olmalıdır.");
       return;
     }
 
     if (files.length === 0) {
-      alert("Ən azı 1 şəkil yükləməyiniz mütləqdir!");
+      setFormError("Ən azı 1 şəkil yükləməyiniz mütləqdir!");
       return;
     }
     
@@ -540,6 +541,13 @@ export default function NewAdPage() {
                           />
           </div>
         </div>
+
+        {formError && (
+          <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded-xl text-red-700 font-bold flex items-center justify-between">
+            {formError}
+            <button type="button" onClick={() => setFormError("")} className="text-red-500 hover:text-red-800">✕</button>
+          </div>
+        )}
 
         {showAdPayment && (
           <div className="bg-orange-50 border-2 border-orange-300 p-6 rounded-2xl text-center">

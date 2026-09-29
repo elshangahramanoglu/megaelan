@@ -17,11 +17,20 @@ export default function KabinetPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<'profil' | 'elanlar' | 'balans'>('profil');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab');
+      if (tab === 'elanlar' || tab === 'balans') setActiveTab(tab);
+    }
+  }, []);
   const [balanceAmount, setBalanceAmount] = useState<string>('');
   const [isProcessingBalance, setIsProcessingBalance] = useState(false);
   const [adStatusTab, setAdStatusTab] = useState<'active' | 'pending' | 'rejected' | 'expired' | 'deleted'>('active');
   const [myAds, setMyAds] = useState<any[]>([]);
   const [isLoadingAds, setIsLoadingAds] = useState(false);
+  const [adToDelete, setAdToDelete] = useState<string | null>(null);
 
   const fetchMyAds = async () => {
     if (!user) return;
@@ -191,7 +200,7 @@ export default function KabinetPage() {
           {sidebarItems.map(({ key, label, icon: Icon }) => (
             <button
               key={key}
-              onClick={() => setActiveTab(key)}
+              onClick={() => { setActiveTab(key); router.push(`/kabinet?tab=${key}`, { scroll: false }); }}
               className={`w-full flex items-center gap-3 px-5 py-4 rounded-2xl font-bold text-base transition-all ${
                 activeTab === key 
                   ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/25' 
@@ -399,7 +408,7 @@ export default function KabinetPage() {
                               Bərpa et
                             </button>
                           ) : (
-                            <button onClick={() => handleDeleteAd(ad.id)} className="p-3.5 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
+                            <button onClick={() => setAdToDelete(ad.id)} className="p-3.5 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
                               <Trash2 className="w-5 h-5" />
                             </button>
                           )}
@@ -457,24 +466,6 @@ export default function KabinetPage() {
                         {isProcessingBalance ? <Loader2 className="w-6 h-6 animate-spin" /> : "Ödəniş et"}
                       </button>
                     </form>
-                    
-                    <div className="mt-5 pt-4 border-t border-gray-100 flex items-center gap-3">
-                      <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Dəstəklənən kartlar:</span>
-                      <div className="flex gap-2">
-                        {/* Visa */}
-                        <div className="bg-white border border-gray-200 px-3 py-1 rounded-md shadow-sm">
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="h-4 object-contain" />
-                        </div>
-                        {/* Mastercard */}
-                        <div className="bg-white border border-gray-200 px-2 py-1 rounded-md shadow-sm">
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-4 object-contain" />
-                        </div>
-                        {/* Maestro */}
-                        <div className="bg-white border border-gray-200 px-2 py-1 rounded-md shadow-sm">
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Maestro_logo.svg" alt="Maestro" className="h-4 object-contain" />
-                        </div>
-                      </div>
-                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -482,6 +473,38 @@ export default function KabinetPage() {
           </AnimatePresence>
         </div>
       </div>
+
+      {/* Delete Confirmation Modal */}
+      {adToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100 text-red-500 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-black text-black mb-2">Elanı silmək istəyirsiniz?</h3>
+            <p className="text-gray-500 font-medium mb-6">Bu elan "Silinmiş" bölməsinə köçürüləcək. İstədiyiniz vaxt bərpa edə bilərsiniz.</p>
+            <div className="flex gap-3 w-full">
+              <button 
+                onClick={() => setAdToDelete(null)}
+                className="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors"
+              >
+                Ləğv et
+              </button>
+              <button 
+                onClick={() => {
+                  if (adToDelete) {
+                    handleDeleteAd(adToDelete);
+                    setAdToDelete(null);
+                  }
+                }}
+                className="flex-1 py-3 px-4 bg-red-500 hover:bg-red-600 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-500/30"
+              >
+                Bəli, sil
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

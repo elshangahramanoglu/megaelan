@@ -241,8 +241,10 @@ export default function Header() {
               <div className="flex items-center justify-center p-4 border-b border-gray-100 relative">
                 <button 
                   onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
+                  className="flex items-center gap-1.5"
                 >
-                  <Image src="/LogoMain.png" alt="MegaElan" width={220} height={60} className="h-14 md:h-16 w-auto object-contain" />
+                  <Image src="/LogoMobilBrauzer.png" alt="MegaElan Logo" width={28} height={28} className="h-7 w-auto object-contain" />
+                  <Image src="/LogoMobilBrauzerText.png" alt="MegaElan" width={120} height={35} className="h-5 w-auto object-contain" />
                 </button>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="absolute right-4 p-2 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <X className="w-6 h-6" />
@@ -256,7 +258,7 @@ export default function Header() {
                   </Link>
                   <div className="flex gap-3">
                     <Link href="/beyendiklerim" onClick={() => setIsMobileMenuOpen(false)} className="flex-1 bg-gray-100 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2">
-                      <Heart className="w-5 h-5" /> Seçilmişlər
+                      <Heart className="w-5 h-5" /> Bəyəndiklərim
                     </Link>
                     <Link href="/mesajlar" onClick={() => setIsMobileMenuOpen(false)} className="flex-1 bg-gray-100 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2">
                       <MessageCircle className="w-5 h-5" /> Mesajlar

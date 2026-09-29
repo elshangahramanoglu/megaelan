@@ -149,6 +149,7 @@ export default function EditAdPage() {
   }, [user, adId]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formError, setFormError] = useState("");
   const [createdAdId, setCreatedAdId] = useState<string | null>(null);
   
   
@@ -207,17 +208,17 @@ export default function EditAdPage() {
     if (!user) return;
     
     if (!formData.title || !formData.price || !formData.city || !formData.description || !formData.contactName || !formData.contactPhone) {
-      alert("Zəhmət olmasa bütün vacib xanaları (*) doldurun.");
+      setFormError("Zəhmət olmasa bütün vacib xanaları (*) doldurun.");
       return;
     }
     
     if (Number(formData.price) < 1) {
-      alert("Qiymət minimum 1 AZN olmalıdır.");
+      setFormError("Qiymət minimum 1 AZN olmalıdır.");
       return;
     }
 
     if (files.length === 0 && existingImages.length === 0) {
-      alert("Ən azı 1 şəkil yükləməyiniz mütləqdir!");
+      setFormError("Ən azı 1 şəkil yükləməyiniz mütləqdir!");
       return;
     }
     
@@ -464,7 +465,7 @@ export default function EditAdPage() {
                         setFiles([...files, ...filesToAdd]);
                       }
                       if (newFiles.length > availableSlots) {
-                        alert(`Maksimum 10 şəkil icazə verilir. Yalnız ${availableSlots} şəkil əlavə edildi.`);
+                        setFormError("Maksimum 10 şəkil icazə verilir.");
                       }
                     }
                   }}
