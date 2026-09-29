@@ -75,7 +75,7 @@ import { useParams } from 'next/navigation';
 export default function EditAdPage() {
   const params = useParams();
   const adId = params.id as string;
-  const { user, addAd, setLoginOpen } = useAppContext();
+  const { user, isUserLoaded, addAd, setLoginOpen } = useAppContext();
   const router = useRouter();
 
   const [isSuccess, setIsSuccess] = useState(false);
@@ -98,6 +98,7 @@ export default function EditAdPage() {
   const [editTimestamps, setEditTimestamps] = useState<number[]>([]);
 
   React.useEffect(() => {
+    if (!isUserLoaded) return;
     if (!user || !adId) return;
     
     const fetchAd = async () => {
@@ -154,6 +155,8 @@ export default function EditAdPage() {
   
   
   
+
+  if (!isUserLoaded) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-10 h-10 animate-spin text-blue-600" /></div>;
 
   if (!user) {
     return (

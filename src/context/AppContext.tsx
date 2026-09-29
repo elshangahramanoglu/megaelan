@@ -37,6 +37,7 @@ interface AppContextType {
   favorites: string[];
   toggleFavorite: (adId: string) => void;
   user: User | null;
+  isUserLoaded: boolean;
   isLoginOpen: boolean;
   setLoginOpen: (val: boolean) => void;
   loginUser: (user: User) => void;
@@ -53,6 +54,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [ads, setAds] = useState<Ad[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [isUserLoaded, setIsUserLoaded] = useState(false);
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
 
@@ -99,10 +101,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     
     // Check local storage for user and favorites
     const savedUser = localStorage.getItem("megaelan_user");
-    // eslint-disable-next-line
     if (savedUser) {
-      setTimeout(() => setUser(JSON.parse(savedUser)), 0);
+      try {
+        setUser(JSON.parse(savedUser));
+      } catch (e) {}
     }
+    setIsUserLoaded(true);
     
     const savedFavs = localStorage.getItem("megaelan_favs");
     // eslint-disable-next-line
@@ -152,7 +156,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <AppContext.Provider value={{ ads, favorites, toggleFavorite, user, isLoginOpen, setLoginOpen, loginUser, logout, updateUser, addAd, removeAd }}>
+    <AppContext.Provider value={{ ads, favorites, toggleFavorite, user, isUserLoaded, isLoginOpen, setLoginOpen, loginUser, logout, updateUser, addAd, removeAd }}>
       {children}
     </AppContext.Provider>
   );

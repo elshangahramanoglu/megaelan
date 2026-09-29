@@ -71,7 +71,7 @@ const addWatermark = (file: File): Promise<File> => {
 };
 
 export default function NewAdPage() {
-  const { user, addAd, setLoginOpen, updateUser } = useAppContext();
+  const { user, isUserLoaded, addAd, setLoginOpen, updateUser } = useAppContext();
   const router = useRouter();
 
   const [isSuccess, setIsSuccess] = useState(false);
@@ -99,6 +99,8 @@ export default function NewAdPage() {
   
   
   
+
+  if (!isUserLoaded) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-10 h-10 animate-spin text-blue-600" /></div>;
 
   if (!user) {
     return (

@@ -9,7 +9,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function KabinetPage() {
-  const { user, updateUser, logout, removeAd } = useAppContext();
+  const { user, isUserLoaded, updateUser, logout, removeAd } = useAppContext();
   const router = useRouter();
   
   const [name, setName] = useState(user?.name || "");
@@ -80,9 +80,10 @@ export default function KabinetPage() {
   };
 
   React.useEffect(() => {
-    if (!user) router.push("/");
-  }, [user, router]);
+    if (isUserLoaded && !user) router.push("/");
+  }, [user, isUserLoaded, router]);
 
+  if (!isUserLoaded) return <div className="min-h-screen flex items-center justify-center"><Loader2 className="w-10 h-10 animate-spin text-blue-600" /></div>;
   if (!user) return null;
 
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
