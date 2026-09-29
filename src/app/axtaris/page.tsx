@@ -21,8 +21,7 @@ function SearchContent() {
 
   const searchResults = q.trim()
     ? ads.filter(ad => 
-        ad.title.toLowerCase().includes(q.toLowerCase()) && 
-        ad.status === 'active'
+        ad.title.toLowerCase().includes(q.toLowerCase())
       )
     : [];
 
