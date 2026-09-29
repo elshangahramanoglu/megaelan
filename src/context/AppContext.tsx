@@ -22,6 +22,7 @@ export interface Ad {
   details?: Record<string, string>;
   user_id?: string;
   status?: string;
+  views?: number;
 }
 
 export interface User {

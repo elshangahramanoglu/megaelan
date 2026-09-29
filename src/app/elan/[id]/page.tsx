@@ -104,7 +104,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium">
                   <span className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full"><MapPin className="w-4 h-4" /> {ad.city}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full">Yeniləndi: {ad.date}</span>
-                  <span className="bg-gray-100 px-3 py-1 rounded-full">Baxış: {ad.details?.views || (ad.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 350 + 15)}</span>
+                  <span className="bg-gray-100 px-3 py-1 rounded-full">Baxış: {ad.views || 1}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
@@ -168,7 +168,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 {ad.contactPhone}
               </a>
               
-              <Link href="/mesajlar" className="w-full flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition-colors">
+              <Link href={`/mesajlar?user_id=${ad.user_id}&ad_id=${ad.id}`} className="w-full flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition-colors">
                 <MessageCircle className="w-6 h-6" />
                 Mesaj yaz
               </Link>
