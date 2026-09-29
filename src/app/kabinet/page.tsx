@@ -227,7 +227,13 @@ export default function KabinetPage() {
           <h1 className="text-3xl md:text-4xl font-black text-black">
             {user.name ? user.name : 'Şəxsi Kabinet'}
           </h1>
-          <p className="text-gray-500 font-medium mt-1">{formattedPhone}</p>
+          <div className="flex items-center gap-3 mt-1">
+            <p className="text-gray-500 font-medium">{formattedPhone}</p>
+            <span className="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
+            <p className="text-gray-500 font-medium text-sm">
+              Qeydiyyat: {user.created_at ? new Date(user.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' }) : 'Bilinmir'}
+            </p>
+          </div>
         </div>
       </motion.div>
 

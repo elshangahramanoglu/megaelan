@@ -28,6 +28,7 @@ export interface Ad {
 
 export interface User {
   id: string;
+  created_at?: string;
   phone: string;
   name: string;
   balance?: number;

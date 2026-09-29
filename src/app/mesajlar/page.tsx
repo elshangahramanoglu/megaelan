@@ -1,11 +1,19 @@
 "use client";
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
-import { MessageCircle, Send, ArrowLeft, Loader2, User as UserIcon, Check, CheckCheck, Clock } from "lucide-react";
+import { MessageCircle, Send, ArrowLeft, Loader2, User as UserIcon, Check, CheckCheck, Clock, Trash2 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase";
+
+
+function uuidv4() {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+}
 
 function MessagesContent() {
   const { user, isUserLoaded } = useAppContext();
@@ -155,7 +163,10 @@ function MessagesContent() {
           (msg.sender_id === activeChat && msg.receiver_id === user.id) ||
           (msg.sender_id === user.id && msg.receiver_id === activeChat)
         ) {
-          setMessages(prev => [...prev, msg]);
+          setMessages(prev => {
+            if (prev.some(m => m.id === msg.id)) return prev;
+            return [...prev, msg];
+          });
           setTimeout(scrollToBottom, 100);
           
           // If we received it while chat is open, immediately mark as read
@@ -201,7 +212,7 @@ function MessagesContent() {
     setNewMessage("");
 
     const tempMsg = {
-      id: Math.random().toString(),
+      id: uuidv4(),
       sender_id: user.id,
       receiver_id: activeChat,
       content: msgContent,
@@ -226,6 +237,7 @@ function MessagesContent() {
 
     try {
       const { error: insertError } = await supabase.from('messages').insert([{
+        id: tempMsg.id,
         sender_id: user.id,
         receiver_id: activeChat,
         content: msgContent,
@@ -237,6 +249,22 @@ function MessagesContent() {
       }
     } catch (err: any) {
       alert("Xəta: " + err.message);
+    }
+  };
+
+  
+  const deleteChat = async () => {
+    if (!confirm("Söhbəti tamamilə silmək istədiyinizə əminsiniz?")) return;
+    try {
+      const { error } = await supabase.from('messages').delete()
+        .or(`and(sender_id.eq.${user?.id},receiver_id.eq.${activeChat}),and(sender_id.eq.${activeChat},receiver_id.eq.${user?.id})`);
+      if (error) throw error;
+      
+      setMessages([]);
+      setChats(prev => prev.filter(c => c.otherUser.id !== activeChat));
+      setActiveChat(null);
+    } catch(err) {
+      alert("Silinmədi: Xəta baş verdi");
     }
   };
 
@@ -332,9 +360,11 @@ function MessagesContent() {
                   )}
                 </div>
                 <div className="flex-1">
-                  <h3 className="font-bold text-gray-900 text-lg leading-tight">{currentChatDetails?.name || currentChatDetails?.phone || 'İstifadəçi'}</h3>
-                  <p className="text-xs text-green-500 font-bold tracking-wide">Aktiv</p>
+                  <Link href={`/istifadeci/${activeChat}`} className="font-bold text-gray-900 text-lg leading-tight hover:text-blue-600 transition-colors inline-block">{currentChatDetails?.name || currentChatDetails?.phone || 'İstifadəçi'}</Link>
                 </div>
+                <button onClick={deleteChat} className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-colors" title="Söhbəti sil">
+                  <Trash2 className="w-5 h-5" />
+                </button>
               </div>
 
               {/* Messages Area */}
