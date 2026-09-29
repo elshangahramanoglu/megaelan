@@ -24,7 +24,7 @@ export default function AdCard({ ad }: { ad: Ad }) {
           </div>
         )}
         {ad.imagePlaceholder.startsWith('http') ? (
-          <Image src={ad.imagePlaceholder} alt={ad.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+          <Image unoptimized src={ad.imagePlaceholder} alt={ad.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium group-hover:scale-105 transition-transform duration-500">
             {ad.imagePlaceholder}

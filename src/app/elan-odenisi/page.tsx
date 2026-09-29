@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "react-hot-toast";
+
 
 import React, { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -37,7 +39,7 @@ function PaymentContent() {
       setIsSuccess(true);
     } catch (error) {
       console.error(error);
-      alert("Ödəniş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
+      toast.error("Ödəniş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
     } finally {
       setIsProcessing(false);
     }

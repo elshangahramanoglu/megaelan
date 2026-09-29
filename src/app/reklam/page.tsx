@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "react-hot-toast";
+
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useAppContext } from "@/context/AppContext";
@@ -45,7 +47,7 @@ function ReklamContent() {
     if (!selectedTariff || !selectedAdId || !user) return;
     
     if ((user.balance || 0) < selectedTariff.price) {
-      alert("Balansınızda kifayət qədər vəsait yoxdur.");
+      toast.error("Balansınızda kifayət qədər vəsait yoxdur.");
       return;
     }
     
@@ -71,7 +73,7 @@ function ReklamContent() {
         setStep(3);
       } catch (err) {
         console.error(err);
-        alert("Xəta baş verdi.");
+        toast.error("Xəta baş verdi.");
       } finally {
         setIsProcessing(false);
       }
@@ -96,7 +98,7 @@ function ReklamContent() {
         setStep(3); // Success step
       } catch (err) {
         console.error(err);
-        alert("Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
+        toast.error("Xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.");
       } finally {
         setIsProcessing(false);
       }

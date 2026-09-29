@@ -11,6 +11,7 @@ import { uploadImageToImgBB } from "@/lib/imgbb";
 import { applySmartFilters } from "@/lib/smartFilters";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
+import { toast } from "react-hot-toast";
 
 
 const addWatermark = (file: File): Promise<File> => {
@@ -298,7 +299,7 @@ export default function NewAdPage() {
       }
     } catch (err) {
       console.error("Ad creation error:", err);
-      alert("Elan yerləşdirilərkən xəta baş verdi.");
+      toast.error("Elan yerləşdirilərkən xəta baş verdi.");
     } finally {
       setIsSubmitting(false);
     }
@@ -521,18 +522,17 @@ export default function NewAdPage() {
             </select>
           </div>
 
-          <div className="flex items-center gap-3 pt-2">
-            <input 
-              type="checkbox" 
-              id="delivery"
+          <div>
+            <label className="block text-base font-bold text-black mb-2">Çatdırılma</label>
+            <select 
               name="delivery"
-              checked={formData.delivery}
-              onChange={(e) => setFormData({...formData, delivery: e.target.checked})}
-              className="w-6 h-6 text-blue-600 rounded-md border-gray-300 focus:ring-blue-500 cursor-pointer"
-            />
-            <label htmlFor="delivery" className="text-lg font-bold text-gray-800 cursor-pointer select-none">
-              Çatdırılma mümkündür
-            </label>
+              value={formData.delivery ? "true" : "false"}
+              onChange={(e) => setFormData({...formData, delivery: e.target.value === "true"})}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium text-lg"
+            >
+              <option value="false">Çatdırılma yoxdur</option>
+              <option value="true">Çatdırılma var</option>
+            </select>
           </div>
         </div>
 
@@ -600,13 +600,12 @@ export default function NewAdPage() {
           <button 
             type="button" 
             onClick={() => {
-              if(confirm('Bütün məlumatları silmək istədiyinizə əminsiniz?')) {
-                setFormData({
-                  title: "", categoryId: categoriesData[0].id, subCategory: "", price: "", city: "Bakı", description: "", sellerType: "Fərdi", contactName: user ? user.name || '' : "", contactPhone: user ? user.phone || '' : "", delivery: false
-                });
-                setDynamicDetails({});
-                setFiles([]);
-              }
+              setFormData({
+                title: "", categoryId: categoriesData[0].id, subCategory: "", price: "", city: "Bakı", description: "", sellerType: "Fərdi", contactName: user ? user.name || '' : "", contactPhone: user ? user.phone || '' : "", delivery: false
+              });
+              setDynamicDetails({});
+              setFiles([]);
+              toast.success("Bütün məlumatlar sıfırlandı!");
             }}
             disabled={isSubmitting}
             className="w-full md:w-1/3 font-bold text-xl py-5 rounded-2xl transition-colors shadow-md bg-gray-100 hover:bg-gray-200 text-gray-700"

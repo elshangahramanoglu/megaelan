@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "react-hot-toast";
+
 
 import React, { useState, useEffect, useRef, Suspense } from "react";
 import Image from "next/image";
@@ -255,11 +257,11 @@ function MessagesContent() {
         ad_id: targetAdId || null
       }]);
       if (insertError) {
-        alert("Xəta: " + insertError.message);
+        toast.error("Xəta: " + insertError.message);
         setMessages(prev => prev.filter(m => m.id !== tempMsg.id));
       }
     } catch (err: any) {
-      alert("Xəta: " + err.message);
+      toast.error("Xəta: " + err.message);
     }
   };
 
@@ -276,7 +278,7 @@ function MessagesContent() {
       setActiveChat(null);
       setShowDeleteModal(false);
     } catch(err) {
-      alert("Silinmədi: Xəta baş verdi");
+      toast.error("Silinmədi: Xəta baş verdi");
     }
   };
 
@@ -308,7 +310,7 @@ function MessagesContent() {
             {chats.length === 0 ? (
               <div className="p-8 text-center text-gray-400 mt-10">
                 <MessageCircle className="w-14 h-14 mx-auto mb-3 opacity-20" />
-                <p className="font-bold">Hələ heç bir mesajınız yoxdur.</p>
+                <p className="font-bold">Heç bir mesajınız yoxdur.</p>
               </div>
             ) : (
               chats.map((chat) => (

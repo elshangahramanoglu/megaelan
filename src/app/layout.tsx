@@ -7,6 +7,7 @@ import { AppProvider } from "@/context/AppContext";
 import Image from "next/image";
 import { Share2, Mail } from "lucide-react";
 import LoginModal from "@/components/LoginModal";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -41,6 +42,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 min-h-screen flex flex-col`}
       >
+        <Toaster position="top-center" />
         <AppProvider>
           <Header />
 

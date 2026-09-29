@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "react-hot-toast";
+
 
 import React, { use, useState } from "react";
 import { useAppContext } from "@/context/AppContext";
@@ -163,9 +165,9 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
               onTouchEnd={handleTouchEnd}
             >
               {(ad.images && ad.images.length > 0) ? (
-                <Image src={ad.images[currentImageIndex]} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-contain relative z-10" />
+                <Image unoptimized src={ad.images[currentImageIndex]} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-contain relative z-10" />
               ) : ad.imagePlaceholder.startsWith('http') ? (
-                <Image src={ad.imagePlaceholder} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-cover" />
+                <Image unoptimized src={ad.imagePlaceholder} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-cover" />
               ) : (
                 ad.imagePlaceholder
               )}
@@ -188,7 +190,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                     onClick={() => setCurrentImageIndex(idx)}
                     className={`relative shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 transition-all snap-center ${currentImageIndex === idx ? 'border-blue-600 shadow-md scale-100' : 'border-transparent hover:border-gray-300 scale-95 opacity-80 hover:opacity-100'}`}
                   >
-                    <Image src={img} fill sizes="96px" className="object-cover" alt="Thumb" />
+                    <Image unoptimized src={img} fill sizes="96px" className="object-cover" alt="Thumb" />
                   </button>
                 ))}
               </div>
@@ -255,7 +257,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm z-10">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black border-2 border-blue-100 overflow-hidden flex-shrink-0 relative">
-                {sellerAvatar ? <Image src={sellerAvatar} fill sizes="64px" className="object-cover" alt="" /> : ad.contactName.charAt(0)}
+                {sellerAvatar ? <Image unoptimized src={sellerAvatar} fill sizes="64px" className="object-cover" alt="" /> : ad.contactName.charAt(0)}
               </div>
               <div>
                 {dbUserId ? (
@@ -289,7 +291,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
             </div>
 
             <div className="mt-6 pt-6 border-t border-gray-100 flex justify-between items-center text-sm font-bold">
-              <button onClick={() => navigator.share ? navigator.share({ title: ad.title, url: window.location.href }).catch(() => {}) : navigator.clipboard.writeText(window.location.href).then(() => alert('Link kopyalandı!')).catch(() => {})} className="text-gray-500 hover:text-blue-600 flex items-center gap-1 transition-colors">
+              <button onClick={() => navigator.share ? navigator.share({ title: ad.title, url: window.location.href }).catch(() => {}) : navigator.clipboard.writeText(window.location.href).then(() => toast.success('Link kopyalandı!')).catch(() => {})} className="text-gray-500 hover:text-blue-600 flex items-center gap-1 transition-colors">
                 <Share2 className="w-4 h-4" /> Paylaş
               </button>
               <button onClick={() => window.open(`https://wa.me/994703484901?text=${encodeURIComponent('Salam, bu elanı şikayət etmək istəyirəm:\n\n' + window.location.href)}`, '_blank')} className="text-gray-500 hover:text-red-500 flex items-center gap-1 transition-colors">
@@ -344,7 +346,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
             </div>
             <div className="flex-1 relative flex items-center justify-center p-4">
               <div className="relative w-full max-w-[300px] md:max-w-[420px] aspect-[3/4] bg-transparent flex items-center justify-center mx-auto">
-                <Image src={ad.images[currentImageIndex]} priority fill sizes="(max-width: 768px) 100vw, 420px" className="object-contain drop-shadow-2xl rounded-lg" alt="" />
+                <Image unoptimized src={ad.images[currentImageIndex]} priority fill sizes="(max-width: 768px) 100vw, 420px" className="object-contain drop-shadow-2xl rounded-lg" alt="" />
               </div>
               
               {ad.images.length > 1 && (

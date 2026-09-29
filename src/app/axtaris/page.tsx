@@ -21,7 +21,7 @@ function SearchContent() {
   const [city, setCity] = useState("Bütün şəhərlər");
   const [category, setCategory] = useState("Bütün kateqoriyalar");
   const [sellerType, setSellerType] = useState("Bütün");
-  const [delivery, setDelivery] = useState("Fərqi yoxdur");
+  const [delivery, setDelivery] = useState("Vacib deyil");
 
   useEffect(() => {
     setMounted(true);
@@ -50,7 +50,7 @@ function SearchContent() {
     }
     
     // Delivery filter
-    if (delivery !== "Fərqi yoxdur") {
+    if (delivery !== "Vacib deyil") {
       const adDelivery = ad.details?.delivery === "Var";
       if (delivery === "Çatdırılma var" && !adDelivery) return false;
       if (delivery === "Çatdırılma yoxdur" && adDelivery) return false;
@@ -100,7 +100,7 @@ function SearchContent() {
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Satıcı</label>
           <select value={sellerType} onChange={e => setSellerType(e.target.value)} className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 outline-none focus:border-blue-500 font-medium text-gray-800">
-            <option value="Bütün">Fərqi yoxdur</option>
+            <option value="Bütün">Vacib deyil</option>
             <option value="Fərdi">Fərdi</option>
             <option value="Mağaza">Mağaza</option>
           </select>
@@ -109,14 +109,14 @@ function SearchContent() {
         <div>
           <label className="block text-sm font-bold text-gray-700 mb-2">Çatdırılma</label>
           <select value={delivery} onChange={e => setDelivery(e.target.value)} className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 outline-none focus:border-blue-500 font-medium text-gray-800">
-            <option value="Fərqi yoxdur">Fərqi yoxdur</option>
+            <option value="Vacib deyil">Vacib deyil</option>
             <option value="Çatdırılma var">Çatdırılma var</option>
             <option value="Çatdırılma yoxdur">Çatdırılma yoxdur</option>
           </select>
         </div>
         
         <button 
-          onClick={() => { setMinPrice(""); setMaxPrice(""); setCity("Bütün şəhərlər"); setCategory("Bütün kateqoriyalar"); setSellerType("Bütün"); setDelivery("Fərqi yoxdur"); }}
+          onClick={() => { setMinPrice(""); setMaxPrice(""); setCity("Bütün şəhərlər"); setCategory("Bütün kateqoriyalar"); setSellerType("Bütün"); setDelivery("Vacib deyil"); }}
           className="w-full py-3 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold rounded-xl transition-colors mt-2"
         >
           Filtrləri təmizlə

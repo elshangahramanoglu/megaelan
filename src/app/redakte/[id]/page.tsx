@@ -1,4 +1,6 @@
 "use client";
+import { toast } from "react-hot-toast";
+
 
 import React, { useState } from "react";
 import { categoriesData } from "@/data/categories";
@@ -108,7 +110,7 @@ export default function EditAdPage() {
         if (error) throw error;
         
         if (data.user_id !== user.id) {
-          alert("Siz yalnız öz elanınızı redaktə edə bilərsiniz!");
+          toast.error("Siz yalnız öz elanınızı redaktə edə bilərsiniz!");
           router.push('/kabinet');
           return;
         }
@@ -116,16 +118,18 @@ export default function EditAdPage() {
         // Check edit limits
         const details = data.details || {};
         const timestamps: number[] = details.edit_timestamps || [];
-        const now = Date.now();
-        const last24h = timestamps.filter(t => (now - t) < 24 * 60 * 60 * 1000);
+        const formatter = new Intl.DateTimeFormat('en-US', { timeZone: 'Asia/Baku', year: 'numeric', month: 'numeric', day: 'numeric' });
+        const nowFormatted = formatter.format(new Date());
         
-        if (last24h.length >= 2) {
-          alert("Siz son 24 saat ərzində artıq 2 dəfə redaktə etmisiniz. Lütfən daha sonra cəhd edin.");
+        const todayEdits = timestamps.filter(t => formatter.format(new Date(t)) === nowFormatted);
+        
+        if (todayEdits.length >= 2) {
+          toast.error("Siz bu gün (Bakı vaxtı ilə) artıq 2 dəfə redaktə etmisiniz. Lütfən növbəti gün cəhd edin.");
           router.push('/kabinet');
           return;
         }
         
-        setEditTimestamps(last24h);
+        setEditTimestamps(todayEdits);
 
         setFormData({
           title: data.title,
@@ -301,7 +305,7 @@ export default function EditAdPage() {
       
     } catch (err) {
       console.error("Ad creation error:", err);
-      alert("Elan yerləşdirilərkən xəta baş verdi.");
+      toast.error("Elan yerləşdirilərkən xəta baş verdi.");
     } finally {
       setIsSubmitting(false);
     }

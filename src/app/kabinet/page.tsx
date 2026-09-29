@@ -8,6 +8,7 @@ import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
+import { toast } from "react-hot-toast";
 
 export default function KabinetPage() {
   const { user, isUserLoaded, updateUser, logout, removeAd } = useAppContext();
@@ -101,10 +102,10 @@ export default function KabinetPage() {
       if (error) throw error;
       setMyAds(prev => prev.map(ad => ad.id === adId ? { ...ad, status: 'deleted' } : ad));
       removeAd(adId); // Remove from global context so it doesn't show in home
-      alert('Elan silindi.');
+      toast.success('Elan silindi.');
     } catch (err) {
       console.error('Error deleting ad:', err);
-      alert("Xəta: Elanı silmək mümkün olmadı.");
+      toast.error("Xəta: Elanı silmək mümkün olmadı.");
     }
   };
   
@@ -113,10 +114,10 @@ export default function KabinetPage() {
       const { error } = await supabase.from('ads').update({ status: 'pending' }).eq('id', adId);
       if (error) throw error;
       setMyAds(prev => prev.map(ad => ad.id === adId ? { ...ad, status: 'pending' } : ad));
-      alert('Elan bərpa edildi və yoxlanışa göndərildi.');
+      toast.success('Elan bərpa edildi və yoxlanışa göndərildi.');
     } catch (err) {
       console.error('Error restoring ad:', err);
-      alert("Xəta: Elanı bərpa etmək mümkün olmadı.");
+      toast.error("Xəta: Elanı bərpa etmək mümkün olmadı.");
     }
   };
 
@@ -130,7 +131,7 @@ export default function KabinetPage() {
   const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 15 * 1024 * 1024) { alert("Şəkilin həcmi 15 MB-dan böyük ola bilməz!"); return; }
+    if (file.size > 15 * 1024 * 1024) { toast.error("Şəkilin həcmi 15 MB-dan böyük ola bilməz!"); return; }
     
     // INSTANT UI UPDATE using local blob URL
     const localUrl = URL.createObjectURL(file);
@@ -151,12 +152,12 @@ export default function KabinetPage() {
           updateUser({ avatar: imageUrl });
         }
       } else { 
-        alert("Şəkil yüklənmədi. Yenidən cəhd edin."); 
+        toast.error("Şəkil yüklənmədi. Yenidən cəhd edin."); 
         setAvatar(user?.avatar || ""); // revert on fail
       }
     } catch (err) { 
       console.error("Upload error:", err); 
-      alert("Xəta baş verdi");
+      toast.error("Xəta baş verdi");
       setAvatar(user?.avatar || ""); // revert on fail
     }
     finally { setIsUploading(false); }
@@ -183,13 +184,13 @@ export default function KabinetPage() {
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 3000);
       }
-    } catch (err) { console.error(err); alert("Xəta baş verdi"); }
+    } catch (err) { console.error(err); toast.error("Xəta baş verdi"); }
   };
 
   const handleTopUp = async (e: React.FormEvent) => {
     e.preventDefault();
     const amount = parseFloat(balanceAmount);
-    if (isNaN(amount) || amount <= 0) return alert('Düzgün məbləğ daxil edin');
+    if (isNaN(amount) || amount <= 0) return toast.error('Düzgün məbləğ daxil edin');
     setIsProcessingBalance(true);
     setTimeout(async () => {
       try {
@@ -199,7 +200,7 @@ export default function KabinetPage() {
         if (error) console.warn('DB update failed, using local context only.', error);
         updateUser({ balance: newBalance });
         setBalanceAmount('');
-        alert(`Balansınız uğurla ${amount.toFixed(2)} AZN artırıldı!`);
+        toast.success(`Balansınız uğurla ${amount.toFixed(2)} AZN artırıldı!`);
       } catch (err) { console.error(err); }
       finally { setIsProcessingBalance(false); }
     }, 2000);
@@ -219,7 +220,7 @@ export default function KabinetPage() {
       router.push("/");
     } catch (err) {
       console.error(err);
-      alert('Hesabı silərkən xəta baş verdi.');
+      toast.error('Hesabı silərkən xəta baş verdi.');
     } finally {
       setIsDeletingAccount(false);
       setShowDeleteAccountModal(false);
@@ -304,7 +305,7 @@ export default function KabinetPage() {
                       {isUploading 
                         ? <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
                         : avatar 
-                          ? <Image src={avatar} priority fill sizes="128px" className="object-cover" alt="Profil" />
+                          ? <Image unoptimized src={avatar} priority fill sizes="128px" className="object-cover" alt="Profil" />
                           : <User className="w-16 h-16 text-gray-300" />}
                       <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-opacity gap-1">
                         <Camera className="w-8 h-8 text-white" />
@@ -441,7 +442,7 @@ export default function KabinetPage() {
                       >
                         <div className="w-full md:w-52 h-44 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden relative">
                           {ad.images && ad.images.length > 0 
-                            ? <Image src={ad.images[0]} fill sizes="(max-width: 768px) 100vw, 208px" className="object-cover" alt={ad.title} />
+                            ? <Image unoptimized src={ad.images[0]} fill sizes="(max-width: 768px) 100vw, 208px" className="object-cover" alt={ad.title} />
                             : <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-bold">Şəkil yoxdur</div>}
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-between">

@@ -26,7 +26,7 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
   const [maxPrice, setMaxPrice] = useState("");
   const [city, setCity] = useState("Bütün şəhərlər");
   const [sellerType, setSellerType] = useState("Bütün");
-  const [delivery, setDelivery] = useState("Fərqi yoxdur");
+  const [delivery, setDelivery] = useState("Vacib deyil");
 
   useEffect(() => {
     setMounted(true);
@@ -68,7 +68,7 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
     }
     
     // Delivery filter
-    if (delivery !== "Fərqi yoxdur") {
+    if (delivery !== "Vacib deyil") {
       const adDelivery = ad.details?.delivery === "Var";
       if (delivery === "Çatdırılma var" && !adDelivery) return false;
       if (delivery === "Çatdırılma yoxdur" && adDelivery) return false;
@@ -172,7 +172,7 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Satıcı növü</label>
                   <select value={sellerType} onChange={e => setSellerType(e.target.value)} className="w-full p-2.5 rounded-xl bg-white border border-gray-200 outline-none focus:border-blue-500 font-medium text-gray-800 text-sm">
-                    <option value="Bütün">Fərqi yoxdur</option>
+                    <option value="Bütün">Vacib deyil</option>
                     <option value="Fərdi">Fərdi</option>
                     <option value="Mağaza">Mağaza</option>
                   </select>
@@ -181,14 +181,14 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
                 <div>
                   <label className="block text-sm font-bold text-gray-700 mb-2">Çatdırılma</label>
                   <select value={delivery} onChange={e => setDelivery(e.target.value)} className="w-full p-2.5 rounded-xl bg-white border border-gray-200 outline-none focus:border-blue-500 font-medium text-gray-800 text-sm">
-                    <option value="Fərqi yoxdur">Fərqi yoxdur</option>
+                    <option value="Vacib deyil">Vacib deyil</option>
                     <option value="Çatdırılma var">Çatdırılma var</option>
                     <option value="Çatdırılma yoxdur">Çatdırılma yoxdur</option>
                   </select>
                 </div>
 
                 <button 
-                  onClick={() => { setMinPrice(""); setMaxPrice(""); setCity("Bütün şəhərlər"); setSellerType("Bütün"); setDelivery("Fərqi yoxdur"); }}
+                  onClick={() => { setMinPrice(""); setMaxPrice(""); setCity("Bütün şəhərlər"); setSellerType("Bütün"); setDelivery("Vacib deyil"); }}
                   className="w-full py-2.5 bg-gray-200 hover:bg-gray-300 text-gray-700 font-bold rounded-xl transition-colors mt-2 text-sm"
                 >
                   Filtrləri təmizlə
