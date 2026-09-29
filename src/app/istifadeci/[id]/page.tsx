@@ -41,7 +41,9 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
   if (isLoading) return <div className="py-32 flex justify-center"><Loader2 className="w-12 h-12 text-blue-600 animate-spin" /></div>;
   if (!profileUser) return <div className="py-32 text-center text-xl font-bold text-gray-500">İstifadəçi tapılmadı!</div>;
 
-  const joinDate = profileUser.created_at ? new Date(profileUser.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' }) : '29 sentyabr 2026';
+  const joinDate = profileUser.created_at && !isNaN(new Date(profileUser.created_at).getTime()) 
+    ? new Date(profileUser.created_at).toLocaleDateString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.')
+    : '29.09.2026';
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">

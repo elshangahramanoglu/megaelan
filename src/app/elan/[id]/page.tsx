@@ -50,6 +50,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
   const isFav = favorites.includes(adId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [dbUserId, setDbUserId] = useState<string | null>(ad?.user_id || null);
+  const [sellerAvatar, setSellerAvatar] = useState<string | null>(null);
 
   const [realViews, setRealViews] = useState<number>(ad?.views || 0);
   const [realContacts, setRealContacts] = useState<number>(ad?.contacts_count || 0);
@@ -77,7 +78,16 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
   React.useEffect(() => {
     if (ad && !ad.user_id) {
       supabase.from('ads').select('user_id').eq('id', ad.id).single().then(({ data }) => {
-        if (data?.user_id) setDbUserId(data.user_id);
+        if (data?.user_id) {
+          setDbUserId(data.user_id);
+          supabase.from('users').select('avatar').eq('id', data.user_id).single().then(res => {
+            if (res.data?.avatar) setSellerAvatar(res.data.avatar);
+          });
+        }
+      });
+    } else if (ad?.user_id) {
+      supabase.from('users').select('avatar').eq('id', ad.user_id).single().then(res => {
+        if (res.data?.avatar) setSellerAvatar(res.data.avatar);
       });
     }
   }, [ad]);
@@ -218,8 +228,8 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           {/* Contact Box */}
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm z-10">
             <div className="flex items-center gap-4 mb-6">
-              <div className="w-16 h-16 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black">
-                {ad.contactName.charAt(0)}
+              <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black border-2 border-blue-100 overflow-hidden flex-shrink-0">
+                {sellerAvatar ? <img src={sellerAvatar} className="w-full h-full object-cover" alt="" /> : ad.contactName.charAt(0)}
               </div>
               <div>
                 {dbUserId ? (
