@@ -286,8 +286,9 @@ export default function NewAdPage() {
         contactPhone: insertedAd.contact_phone,
         details: insertedAd.details
       };
-      
-      addAd(newAd as any);
+      if (initialStatus === 'active') {
+        addAd(newAd as any);
+      }
       setIsSuccess(true);
       setCreatedAdId(newAd.id);
       

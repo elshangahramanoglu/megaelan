@@ -305,7 +305,9 @@ export default function EditAdPage() {
         details: insertedAd.details
       };
       
-      addAd(newAd as any);
+      if (initialStatus === 'active') {
+        addAd(newAd as any);
+      }
       setIsSuccess(true);
       setCreatedAdId(newAd.id); // Save ID for manual navigation
       

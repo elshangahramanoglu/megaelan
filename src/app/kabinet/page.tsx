@@ -386,15 +386,15 @@ export default function KabinetPage() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.35 }}
               >
-                <div className="flex justify-between items-center mb-8">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                   <h2 className="text-2xl font-black text-black">Mənim elanlarım</h2>
-                  <Link href="/yeni-elan" className="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl flex items-center gap-2 transition-all shadow-md">
+                  <Link href="/yeni-elan" className="bg-green-500 hover:bg-green-600 text-white font-bold px-6 py-3 rounded-xl flex items-center justify-center gap-2 transition-all shadow-md w-full md:w-auto">
                     <span className="text-xl leading-none">+</span> Yeni elan
                   </Link>
                 </div>
 
                 {/* Status Tabs */}
-                <div className="flex gap-2 mb-8 overflow-x-auto hide-scrollbar pb-2">
+                <div className="flex flex-wrap gap-2 mb-8 w-full">
                   {([
                     { key: 'active', label: 'Aktiv', color: 'green' },
                     { key: 'pending', label: 'Gözləmədə', color: 'orange' },
@@ -406,7 +406,7 @@ export default function KabinetPage() {
                     <button
                       key={key}
                       onClick={() => setAdStatusTab(key)}
-                      className={`px-5 py-3 rounded-xl font-bold text-sm whitespace-nowrap transition-all ${
+                      className={`px-4 py-2.5 rounded-xl font-bold text-xs md:text-sm whitespace-nowrap transition-all flex-grow md:flex-grow-0 text-center ${
                         adStatusTab === key 
                           ? color === 'green' ? 'bg-green-500 text-white shadow-md' 
                           : color === 'orange' ? 'bg-orange-500 text-white shadow-md'
@@ -439,47 +439,47 @@ export default function KabinetPage() {
                         initial={{ opacity: 0, y: 16 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.3, delay: i * 0.05 }}
-                        className="flex flex-col md:flex-row gap-5 p-5 border-2 border-gray-100 rounded-3xl bg-white shadow-sm hover:shadow-lg hover:border-blue-100 transition-all"
+                        className="flex flex-col md:flex-row gap-4 p-4 border-2 border-gray-100 rounded-3xl bg-white shadow-sm hover:shadow-lg hover:border-blue-100 transition-all"
                       >
-                        <div className="w-full md:w-52 h-44 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden relative">
+                        <div className="w-full md:w-40 h-48 md:h-32 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden relative">
                           {ad.images && ad.images.length > 0 
-                            ? <Image unoptimized src={ad.images[0]} fill sizes="(max-width: 768px) 100vw, 208px" className="object-cover" alt={ad.title} />
+                            ? <Image unoptimized src={ad.images[0]} fill sizes="(max-width: 768px) 100vw, 160px" className="object-cover" alt={ad.title} />
                             : <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-bold">Şəkil yoxdur</div>}
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-between">
                           <div>
-                            <h3 className="font-black text-2xl text-black line-clamp-2 mb-2">{ad.title}</h3>
-                            <p className="text-blue-600 font-black text-xl mb-2">{ad.price} {ad.currency}</p>
-                            <p className="text-sm text-gray-400 font-medium">{new Date(ad.created_at).toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')}</p>
-                            <div className="flex gap-3 mt-2 flex-wrap">
-                              <span className="flex items-center gap-1 text-[11px] bg-gray-100 px-2.5 py-1 rounded-md text-gray-600 font-bold"><Eye className="w-3.5 h-3.5" /> {ad.views || 0} baxış</span>
-                              <span className="flex items-center gap-1 text-[11px] bg-blue-50 px-2.5 py-1 rounded-md text-blue-600 font-bold"><MessageCircle className="w-3.5 h-3.5" /> {ad.contacts_count || 0} əlaqə</span>
-                              <span className="flex items-center gap-1 text-[11px] bg-orange-50 px-2.5 py-1 rounded-md text-orange-600 font-bold"><Clock className="w-3.5 h-3.5" /> {Math.max(0, 30 - Math.floor((Date.now() - new Date(ad.created_at).getTime()) / (1000 * 60 * 60 * 24)))} gün qaldı</span>
+                            <h3 className="font-black text-lg md:text-xl text-black line-clamp-2 mb-1 md:mb-2">{ad.title}</h3>
+                            <p className="text-blue-600 font-black text-base md:text-lg mb-2">{ad.price} {ad.currency}</p>
+                            <p className="text-xs md:text-sm text-gray-400 font-medium">{new Date(ad.created_at).toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', '')}</p>
+                            <div className="flex gap-2 mt-2 flex-wrap">
+                              <span className="flex items-center gap-1 text-[11px] bg-gray-100 px-2 py-1 rounded-md text-gray-600 font-bold"><Eye className="w-3 h-3" /> {ad.views || 0}</span>
+                              <span className="flex items-center gap-1 text-[11px] bg-blue-50 px-2 py-1 rounded-md text-blue-600 font-bold"><MessageCircle className="w-3 h-3" /> {ad.contacts_count || 0}</span>
+                              <span className="flex items-center gap-1 text-[11px] bg-orange-50 px-2 py-1 rounded-md text-orange-600 font-bold"><Clock className="w-3 h-3" /> {Math.max(0, 30 - Math.floor((Date.now() - new Date(ad.created_at).getTime()) / (1000 * 60 * 60 * 24)))} gün qaldı</span>
                             </div>
                           </div>
                         </div>
-                        <div className="flex md:flex-col gap-2 flex-shrink-0">
-                          <Link href={`/elan/${ad.id}`} className="p-3.5 flex justify-center items-center bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-xl transition-all" title="Elana bax">
+                        <div className="flex flex-wrap md:flex-col gap-2 flex-shrink-0 mt-3 md:mt-0">
+                          <Link href={`/elan/${ad.id}`} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-xl transition-all" title="Elana bax">
                             <ExternalLink className="w-5 h-5" />
                           </Link>
                           {ad.status === 'blocked' ? (
-                            <div className="p-3.5 flex justify-center items-center bg-red-100 text-red-600 rounded-xl font-bold text-sm" title="Qadağan olunub">
+                            <div className="p-2.5 flex justify-center items-center bg-red-100 text-red-600 rounded-xl font-bold text-sm" title="Qadağan olunub">
                               <Lock className="w-5 h-5 mr-1" /> Bloklanıb
                             </div>
                           ) : (
                             <>
-                              <Link href={`/reklam?adId=${ad.id}`} className="p-3.5 flex justify-center items-center gap-2 bg-orange-50 text-orange-500 hover:bg-orange-100 rounded-xl transition-all" title="Reklam et">
+                              <Link href={`/reklam?adId=${ad.id}`} className="p-2.5 flex-1 md:flex-none flex justify-center items-center gap-2 bg-orange-50 text-orange-500 hover:bg-orange-100 rounded-xl transition-all" title="Reklam et">
                                 <Crown className="w-5 h-5" />
                               </Link>
-                              <Link href={`/redakte/${ad.id}`} className="p-3.5 flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all" title="Redaktə et">
+                              <Link href={`/redakte/${ad.id}`} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all" title="Redaktə et">
                                 <Edit3 className="w-5 h-5" />
                               </Link>
                               {ad.status === 'deleted' ? (
-                                <button onClick={() => handleRestoreAd(ad.id)} className="p-3.5 flex justify-center items-center bg-green-50 text-green-600 hover:bg-green-100 rounded-xl transition-all font-bold text-sm">
+                                <button onClick={() => handleRestoreAd(ad.id)} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-green-50 text-green-600 hover:bg-green-100 rounded-xl transition-all font-bold text-sm">
                                   Bərpa et
                                 </button>
                               ) : (
-                                <button onClick={() => setAdToDelete(ad.id)} className="p-3.5 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
+                                <button onClick={() => setAdToDelete(ad.id)} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
                                   <Trash2 className="w-5 h-5" />
                                 </button>
                               )}

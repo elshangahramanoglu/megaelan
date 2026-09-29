@@ -2,7 +2,7 @@ export const BAD_WORDS = [
   // AZ
   "göt", "gijdillaq", "gijdıllaq", "cindir", "cındır", "peyser", "peysər", "amciq", "amcıq", 
   "pox", "sikis", "sikiş", "qehbe", "qəhbə", "petux", "zorlama", "sik", "dalbayob", 
-  "peys", "qanciq", "qancıq", "ambal", "got", "blat", "blət",
+  "peys", "qanciq", "qancıq", "ambal", "got", "blat", "blət", "söyüş", "scam", "saxta",
   
   // TR
   "amk", "amina", "amına", "siktir", "orospu", "pic", "piç", "yarrak", "yarak", "gavat", 
