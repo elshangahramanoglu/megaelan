@@ -613,7 +613,7 @@ export default function NewAdPage() {
             onClick={() => {
               if(confirm('Bütün məlumatları silmək istədiyinizə əminsiniz?')) {
                 setFormData({
-                  title: "", categoryId: categoriesData[0].id, subCategory: "", price: "", city: "Bakı", description: "", contactName: user ? user.name || '' : "", contactPhone: user ? user.phone || '' : "", delivery: false
+                  title: "", categoryId: categoriesData[0].id, subCategory: "", price: "", city: "Bakı", description: "", sellerType: "Fərdi", contactName: user ? user.name || '' : "", contactPhone: user ? user.phone || '' : "", delivery: false
                 });
                 setDynamicDetails({});
                 setFiles([]);
