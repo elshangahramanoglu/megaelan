@@ -51,21 +51,24 @@ export default function RootLayout({
           <LoginModal />
 
           {/* Footer */}
-          <footer className="bg-white py-10 mt-12">
+          <footer className="bg-white py-10 mt-12 border-t-4 border-blue-600 shadow-[0_-10px_40px_rgba(37,99,235,0.05)]">
             <div className="max-w-[1400px] mx-auto w-full px-4 lg:px-8 xl:px-12 flex flex-col md:flex-row justify-between items-start gap-8 md:gap-12">
               
               {/* Left Side: Logo, Slogan, Socials */}
               <div className="flex flex-col items-start gap-5">
-                <Link href="/" className="flex items-center gap-3">
-                  <Image 
-                    src="/LogoMegaElan.png" 
-                    alt="MegaElan" 
-                    width={350} height={100} className="object-contain w-auto h-20 lg:h-[100px] scale-125 origin-left"
-                  />
-                </Link>
-                <p className="text-gray-600 font-medium leading-relaxed max-w-[250px] text-sm">
-                  Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!
-                </p>
+                <div className="flex flex-col md:flex-row md:items-center gap-4 md:gap-8">
+                  <Link href="/" className="flex items-center flex-shrink-0">
+                    <Image 
+                      src="/LogoMegaElan.png" 
+                      alt="MegaElan" 
+                      width={350} height={100} className="object-contain w-auto h-20 lg:h-[100px] scale-125 origin-left"
+                    />
+                  </Link>
+                  <div className="hidden md:block h-16 w-px bg-gray-200"></div>
+                  <p className="text-gray-500 font-medium leading-relaxed max-w-[300px] text-sm italic">
+                    "Alış və satışın ən müasir, etibarlı və sürətli ünvanı. Arzuladığınız hər şey bir klik uzaqlıqda!"
+                  </p>
+                </div>
                 <div className="flex items-center gap-4 mt-2">
                   <a href="#" className="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 hover:bg-blue-600 hover:text-white transition-colors">
                     <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.597 1.323-1.324V1.325C24 .597 23.403 0 22.675 0z"/></svg>

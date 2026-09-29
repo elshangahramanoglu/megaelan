@@ -11,7 +11,8 @@ export default function QaydalarPage() {
         <h2 className="text-2xl font-black text-blue-600 mt-10 mb-4 border-b-2 border-blue-100 pb-2">1. Elan yerləşdirmə limitləri və Tariflər</h2>
         <p className="mb-4">Biz istifadəçilərimizə həm pulsuz, həm də ödənişli əlavə xidmətlər təqdim edirik:</p>
         <ul className="list-disc pl-5 mb-6 space-y-3">
-          <li><strong>Pulsuz Elanlar:</strong> Hər bir istifadəçi hər kateqoriya üzrə <span className="text-blue-600 font-black text-xl">1 pulsuz</span> elan yerləşdirə bilər. Eyni kateqoriyada 2-ci elan üçün ödəniş tələb olunacaq.</li>
+          <li><strong>Pulsuz Elanlar:</strong> Hər bir istifadəçi hər kateqoriya üzrə <span className="text-blue-600 font-black text-xl">2 pulsuz</span> elan yerləşdirə bilər. Eyni kateqoriyada 3-cü elan üçün ödəniş tələb olunacaq.</li>
+          <li><strong>Düzəliş (Redaktə) Limiti:</strong> 1 elana 24 saat ərzində yalnız <strong className="text-red-600">3 dəfə</strong> düzəliş edilə bilər.</li>
           <li><strong>İrəli Çək (VIP):</strong> Elanın axtarışda yuxarı qalxması üçün:
             <ul className="list-circle pl-5 mt-2 space-y-1 text-gray-700">
               <li>1 günlük - 0.50 AZN</li>

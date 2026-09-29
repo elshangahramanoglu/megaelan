@@ -145,7 +145,7 @@ export default function NewAdPage() {
       
       if (!error && count !== null) {
         setCategoryAdCount(count);
-        setShowAdPayment(count >= 1);
+        setShowAdPayment(count >= 2);
       }
     } catch (err) {
       console.error(err);
@@ -324,14 +324,7 @@ export default function NewAdPage() {
     <div className="w-full max-w-4xl mx-auto px-4 md:px-8 py-8 md:py-12">
       <h1 className="text-3xl font-bold text-black mb-6">Yeni elan yerləşdir</h1>
       
-      <div className="bg-blue-50 border border-blue-200 p-4 rounded-xl mb-8 flex items-start gap-3">
-        <Info className="w-6 h-6 text-blue-600 flex-shrink-0 mt-0.5" />
-        <p className="text-black font-medium text-sm leading-relaxed">
-          <span className="font-bold text-blue-700">Qayda:</span> Hər bir istifadəçi hər kateqoriya üzrə <span className="font-bold text-blue-600">1 pulsuz elan</span> yerləşdirə bilər. Eyni kateqoriyada 2-ci elan üçün ödəniş tələb olunacaq.
-          <br/>• İrəli çək: 1 gün - 0.50 AZN, 3 gün - 1.30 AZN, 7 gün - 3 AZN
-          <br/>• Premium: 1 gün - 1 AZN, 1 həftə - 5 AZN, 1 ay - 20 AZN
-        </p>
-      </div>
+      
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-8 bg-white p-6 md:p-8 rounded-3xl border border-gray-200 shadow-sm">
         
@@ -553,7 +546,7 @@ export default function NewAdPage() {
             <Crown className="w-10 h-10 text-orange-500 mx-auto mb-3" />
             <h3 className="text-xl font-black text-orange-700 mb-2">Ödəniş tələb olunur!</h3>
             <p className="text-orange-600 font-medium mb-4">
-              Bu kateqoriyada artıq <span className="font-black">{categoryAdCount} pulsuz elan</span> yerləşdirmisiniz. 
+              Bu kateqoriyada artıq <span className="font-black">{categoryAdCount} pulsuz elan</span> yerləşdirmisiniz (limit: 2). 
               Əlavə elan üçün ödəniş tələb olunur. Ödəniş sistemi tezliklə aktivləşdiriləcək.
             </p>
             <p className="text-sm text-gray-500">Digər kateqoriyalarda hələ pulsuz elan haqqınız ola bilər.</p>

@@ -19,7 +19,7 @@ export default function KabinetPage() {
   const [activeTab, setActiveTab] = useState<'profil' | 'elanlar' | 'balans'>('profil');
   const [balanceAmount, setBalanceAmount] = useState<string>('');
   const [isProcessingBalance, setIsProcessingBalance] = useState(false);
-  const [adStatusTab, setAdStatusTab] = useState<'active' | 'pending' | 'rejected' | 'expired'>('active');
+  const [adStatusTab, setAdStatusTab] = useState<'active' | 'pending' | 'rejected' | 'expired' | 'deleted'>('active');
   const [myAds, setMyAds] = useState<any[]>([]);
   const [isLoadingAds, setIsLoadingAds] = useState(false);
 
@@ -46,16 +46,27 @@ export default function KabinetPage() {
   }, [activeTab]);
 
   const handleDeleteAd = async (adId: string) => {
-    const previousAds = [...myAds];
-    setMyAds(prev => prev.filter(ad => ad.id !== adId));
     try {
-      const { error } = await supabase.from('ads').delete().eq('id', adId);
+      const { error } = await supabase.from('ads').update({ status: 'deleted' }).eq('id', adId);
       if (error) throw error;
-      removeAd(adId);
+      setMyAds(prev => prev.map(ad => ad.id === adId ? { ...ad, status: 'deleted' } : ad));
+      removeAd(adId); // Remove from global context so it doesn't show in home
+      alert('Elan silindi.');
     } catch (err) {
       console.error('Error deleting ad:', err);
-      setMyAds(previousAds);
       alert("Xəta: Elanı silmək mümkün olmadı.");
+    }
+  };
+  
+  const handleRestoreAd = async (adId: string) => {
+    try {
+      const { error } = await supabase.from('ads').update({ status: 'pending' }).eq('id', adId);
+      if (error) throw error;
+      setMyAds(prev => prev.map(ad => ad.id === adId ? { ...ad, status: 'pending' } : ad));
+      alert('Elan bərpa edildi və yoxlanışa göndərildi.');
+    } catch (err) {
+      console.error('Error restoring ad:', err);
+      alert("Xəta: Elanı bərpa etmək mümkün olmadı.");
     }
   };
 
@@ -324,6 +335,7 @@ export default function KabinetPage() {
                     { key: 'pending', label: 'Gözləmədə', color: 'orange' },
                     { key: 'rejected', label: 'Rədd edilən', color: 'red' },
                     { key: 'expired', label: 'Müddəti bitmiş', color: 'gray' },
+                    { key: 'deleted', label: 'Silinmiş', color: 'gray' },
                   ] as const).map(({ key, label, color }) => (
                     <button
                       key={key}
@@ -382,9 +394,15 @@ export default function KabinetPage() {
                           <Link href={`/redakte/${ad.id}`} className="p-3.5 flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all" title="Redaktə et">
                             <Edit3 className="w-5 h-5" />
                           </Link>
-                          <button onClick={() => handleDeleteAd(ad.id)} className="p-3.5 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
-                            <Trash2 className="w-5 h-5" />
-                          </button>
+                          {ad.status === 'deleted' ? (
+                            <button onClick={() => handleRestoreAd(ad.id)} className="p-3.5 flex justify-center items-center bg-green-50 text-green-600 hover:bg-green-100 rounded-xl transition-all font-bold text-sm">
+                              Bərpa et
+                            </button>
+                          ) : (
+                            <button onClick={() => handleDeleteAd(ad.id)} className="p-3.5 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
+                              <Trash2 className="w-5 h-5" />
+                            </button>
+                          )}
                         </div>
                       </motion.div>
                     ))}
@@ -405,39 +423,59 @@ export default function KabinetPage() {
                   <CreditCard className="w-6 h-6 text-blue-600" /> Balansım
                 </h2>
                 
-                <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-700 rounded-3xl p-8 text-white shadow-xl mb-8">
-                  <p className="text-blue-200 font-medium mb-2 text-sm">Cari balansınız</p>
-                  <h3 className="text-5xl font-black">{(user?.balance || 0).toFixed(2)} <span className="text-2xl font-bold text-blue-200">AZN</span></h3>
-                  <p className="text-blue-300 text-sm mt-4 font-medium">Son yenilənmə: Bu gün</p>
-                </div>
+                <div className="flex flex-col md:flex-row gap-6 mb-8">
+                  {/* Smaller Balance Card */}
+                  <div className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-700 rounded-2xl p-6 text-white shadow-md flex flex-col justify-center relative overflow-hidden">
+                    <div className="absolute top-0 right-0 opacity-10 transform translate-x-4 -translate-y-4">
+                      <CreditCard className="w-32 h-32" />
+                    </div>
+                    <p className="text-blue-100 font-medium mb-1 text-sm relative z-10">Cari balansınız</p>
+                    <h3 className="text-3xl font-black relative z-10">{(user?.balance || 0).toFixed(2)} <span className="text-lg font-bold text-blue-200">AZN</span></h3>
+                  </div>
 
-                <div className="bg-white rounded-3xl border-2 border-gray-100 p-8 shadow-sm">
-                  <h3 className="text-xl font-black text-black mb-6">Balansı artır</h3>
-                  <form onSubmit={handleTopUp} className="flex flex-col gap-5">
-                    <div>
-                      <label className="block text-sm font-bold text-gray-700 mb-2">Məbləğ (AZN)</label>
-                      <input 
-                        type="number" 
-                        step="0.10"
-                        min="1"
-                        value={balanceAmount}
-                        onChange={(e) => setBalanceAmount(e.target.value)}
-                        placeholder="Məsələn: 10.00"
-                        className="w-full px-5 py-4 text-xl rounded-2xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-black font-black transition-all"
-                        required
-                      />
+                  {/* Top Up Form */}
+                  <div className="flex-[2] bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
+                    <h3 className="text-lg font-bold text-black mb-4">Balansı artır</h3>
+                    <form onSubmit={handleTopUp} className="flex flex-col sm:flex-row gap-3">
+                      <div className="flex-1">
+                        <input 
+                          type="number" 
+                          step="0.10"
+                          min="1"
+                          value={balanceAmount}
+                          onChange={(e) => setBalanceAmount(e.target.value)}
+                          placeholder="Məbləğ (AZN)"
+                          className="w-full px-4 py-3 text-lg rounded-xl border border-gray-300 focus:border-blue-500 outline-none text-black font-bold transition-all"
+                          required
+                        />
+                      </div>
+                      <button 
+                        type="submit" 
+                        disabled={isProcessingBalance || !balanceAmount}
+                        className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 active:scale-95 text-white font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
+                      >
+                        {isProcessingBalance ? <Loader2 className="w-6 h-6 animate-spin" /> : "Ödəniş et"}
+                      </button>
+                    </form>
+                    
+                    <div className="mt-5 pt-4 border-t border-gray-100 flex items-center gap-3">
+                      <span className="text-xs text-gray-500 font-medium uppercase tracking-wider">Dəstəklənən kartlar:</span>
+                      <div className="flex gap-2">
+                        {/* Visa */}
+                        <div className="bg-white border border-gray-200 px-3 py-1 rounded-md shadow-sm">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" className="h-4 object-contain" />
+                        </div>
+                        {/* Mastercard */}
+                        <div className="bg-white border border-gray-200 px-2 py-1 rounded-md shadow-sm">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" alt="Mastercard" className="h-4 object-contain" />
+                        </div>
+                        {/* Maestro */}
+                        <div className="bg-white border border-gray-200 px-2 py-1 rounded-md shadow-sm">
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/f/fd/Maestro_logo.svg" alt="Maestro" className="h-4 object-contain" />
+                        </div>
+                      </div>
                     </div>
-                    <div className="bg-blue-50 p-4 rounded-2xl text-sm text-blue-700 font-medium border border-blue-100">
-                      Ödəniş et düyməsinə basdıqdan sonra bank səhifəsinə yönləndiriləcəksiniz.
-                    </div>
-                    <button 
-                      type="submit" 
-                      disabled={isProcessingBalance || !balanceAmount}
-                      className="w-full py-5 bg-green-600 hover:bg-green-700 active:scale-95 text-white font-black text-xl rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-600/25 disabled:opacity-60 disabled:cursor-not-allowed disabled:scale-100"
-                    >
-                      {isProcessingBalance ? <Loader2 className="w-7 h-7 animate-spin" /> : "Ödəniş et"}
-                    </button>
-                  </form>
+                  </div>
                 </div>
               </motion.div>
             )}
