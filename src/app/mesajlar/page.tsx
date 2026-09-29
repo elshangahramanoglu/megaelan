@@ -29,6 +29,7 @@ function MessagesContent() {
   const [chats, setChats] = useState<any[]>([]);
   const [newMessage, setNewMessage] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  const [refreshChatsTrigger, setRefreshChatsTrigger] = useState(0);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
@@ -97,9 +98,11 @@ function MessagesContent() {
 
         messagesData.forEach(msg => {
           const otherUserId = msg.sender_id === user.id ? msg.receiver_id : msg.sender_id;
-          if (usersMap.has(otherUserId) && !uniqueChats.has(otherUserId)) {
+          if (!uniqueChats.has(otherUserId)) {
             uniqueChats.set(otherUserId, {
-              otherUser: usersMap.get(otherUserId),
+              otherUser: usersMap.has(otherUserId) 
+                ? usersMap.get(otherUserId) 
+                : { id: otherUserId, name: 'İstifadəçi (və ya Gizli)', phone: '', avatar: '' },
               lastMessage: msg
             });
           }
@@ -114,7 +117,7 @@ function MessagesContent() {
     };
 
     fetchChats();
-  }, [user, isUserLoaded, targetUserId]);
+  }, [user, isUserLoaded, targetUserId, refreshChatsTrigger]);
 
   // Fetch messages for active chat & subscribe to realtime
   useEffect(() => {
@@ -145,12 +148,15 @@ function MessagesContent() {
           setMessages(prev => [...prev, payload.new]);
           setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
         }
-        // Force refresh chats to update last message
+        // Update sidebar or refetch if new chat
         setChats(prev => {
            const updated = [...prev];
            const idx = updated.findIndex(c => c.otherUser.id === payload.new.sender_id);
            if (idx > -1) {
               updated[idx].lastMessage = payload.new;
+           } else {
+              // Trigger a full refetch to get the new user's details
+              setTimeout(() => setRefreshChatsTrigger(t => t + 1), 100);
            }
            return updated;
         });
