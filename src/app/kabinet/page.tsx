@@ -131,7 +131,12 @@ export default function KabinetPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     if (file.size > 15 * 1024 * 1024) { alert("Şəkilin həcmi 15 MB-dan böyük ola bilməz!"); return; }
+    
+    // INSTANT UI UPDATE using local blob URL
+    const localUrl = URL.createObjectURL(file);
+    setAvatar(localUrl);
     setIsUploading(true);
+    
     const formData = new FormData();
     formData.append("image", file);
     try {
@@ -139,14 +144,21 @@ export default function KabinetPage() {
       const data = await res.json();
       if (data.success) {
         const imageUrl = data.data.url;
-        setAvatar(imageUrl);
+        setAvatar(imageUrl); // switch to permanent URL
         if (user) {
           const { error } = await supabase.from('users').update({ avatar: imageUrl }).eq('id', user.id);
           if (error) console.error("Avatar db error:", error);
           updateUser({ avatar: imageUrl });
         }
-      } else { alert("Şəkil yüklənmədi. Yenidən cəhd edin."); }
-    } catch (err) { console.error("Upload error:", err); alert("Xəta baş verdi"); }
+      } else { 
+        alert("Şəkil yüklənmədi. Yenidən cəhd edin."); 
+        setAvatar(user?.avatar || ""); // revert on fail
+      }
+    } catch (err) { 
+      console.error("Upload error:", err); 
+      alert("Xəta baş verdi");
+      setAvatar(user?.avatar || ""); // revert on fail
+    }
     finally { setIsUploading(false); }
   };
 
@@ -292,7 +304,7 @@ export default function KabinetPage() {
                       {isUploading 
                         ? <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
                         : avatar 
-                          ? <Image src={avatar} fill priority sizes="160px" className="object-cover" alt="Profil" />
+                          ? <img src={avatar} fetchPriority="high" decoding="sync" className="w-full h-full object-cover" alt="Profil" />
                           : <User className="w-16 h-16 text-gray-300" />}
                       <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-opacity gap-1">
                         <Camera className="w-8 h-8 text-white" />
