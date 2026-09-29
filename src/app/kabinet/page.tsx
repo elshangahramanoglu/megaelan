@@ -31,6 +31,8 @@ export default function KabinetPage() {
   const [myAds, setMyAds] = useState<any[]>([]);
   const [isLoadingAds, setIsLoadingAds] = useState(false);
   const [adToDelete, setAdToDelete] = useState<string | null>(null);
+  const [showDeleteAccountModal, setShowDeleteAccountModal] = useState(false);
+  const [isDeletingAccount, setIsDeletingAccount] = useState(false);
 
   const fetchMyAds = async () => {
     if (!user) return;
@@ -178,6 +180,26 @@ export default function KabinetPage() {
   };
 
   const handleLogout = () => { logout(); router.push("/"); };
+
+  const handleDeleteAccount = async () => {
+    if (!user) return;
+    setIsDeletingAccount(true);
+    try {
+      const { error } = await supabase.from('users').delete().eq('id', user.id);
+      if (error) throw error;
+      
+      // Clear local storage and logout
+      logout();
+      router.push("/");
+    } catch (err) {
+      console.error(err);
+      alert('Hesabı silərkən xəta baş verdi.');
+    } finally {
+      setIsDeletingAccount(false);
+      setShowDeleteAccountModal(false);
+    }
+  };
+
   
   const formattedPhone = user.phone.startsWith("+994") ? user.phone : user.phone.startsWith("994") ? "+" + user.phone : "+994 " + user.phone;
 
@@ -245,9 +267,16 @@ export default function KabinetPage() {
           
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-5 py-4 text-red-500 hover:bg-red-50 rounded-2xl font-bold transition-all"
+            className="w-full flex items-center gap-3 px-5 py-4 text-orange-500 hover:bg-orange-50 rounded-2xl font-bold transition-all mb-2"
           >
             <LogOut className="w-5 h-5" /> Çıxış et
+          </button>
+          
+          <button 
+            onClick={() => setShowDeleteAccountModal(true)}
+            className="w-full flex items-center gap-3 px-5 py-4 text-red-600 hover:bg-red-50 rounded-2xl font-bold transition-all"
+          >
+            <Trash2 className="w-5 h-5" /> Hesabı sil
           </button>
         </div>
 
@@ -502,6 +531,34 @@ export default function KabinetPage() {
         </div>
       </div>
 
+      {showDeleteAccountModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-8 max-w-sm w-full shadow-2xl flex flex-col items-center text-center animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mb-4">
+              <Trash2 className="w-8 h-8" />
+            </div>
+            <h3 className="text-2xl font-black text-black mb-2">Hesabınızı silmək istəyirsiniz?</h3>
+            <p className="text-gray-500 font-medium mb-6">Diqqət! Bu əməliyyat geri qaytarıla bilməz. Bütün elanlarınız və mesajlarınız həmişəlik silinəcək.</p>
+            <div className="flex gap-3 w-full">
+              <button 
+                onClick={() => setShowDeleteAccountModal(false)}
+                disabled={isDeletingAccount}
+                className="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold rounded-xl transition-colors disabled:opacity-50"
+              >
+                Xeyr, qal
+              </button>
+              <button 
+                onClick={handleDeleteAccount}
+                disabled={isDeletingAccount}
+                className="flex-1 py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl transition-colors shadow-lg shadow-red-600/30 flex items-center justify-center gap-2 disabled:opacity-50"
+              >
+                {isDeletingAccount ? <Loader2 className="w-5 h-5 animate-spin" /> : "Bəli, sil"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
       {/* Delete Confirmation Modal */}
       {adToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">

@@ -7,7 +7,9 @@ import { useAppContext } from '@/context/AppContext';
 
 export default function LoginModal() {
   const { isLoginOpen, setLoginOpen, loginUser } = useAppContext();
-  const [step, setStep] = useState<1 | 2>(1); // 1: Phone, 2: OTP
+  const [step, setStep] = useState<1 | 2>(1);
+  const [mode, setMode] = useState<'login' | 'register'>('login');
+  const [showRegisterPrompt, setShowRegisterPrompt] = useState(false);
   const [phone, setPhone] = useState('+994');
   const [otp, setOtp] = useState('');
   const [loading, setLoading] = useState(false);
@@ -18,6 +20,8 @@ export default function LoginModal() {
     setLoginOpen(false);
     setTimeout(() => {
       setStep(1);
+      setMode('login');
+      setShowRegisterPrompt(false);
       setPhone('+994');
       setOtp('');
       setError('');
@@ -25,8 +29,8 @@ export default function LoginModal() {
     }, 300);
   };
 
-  const handleSendOtp = async (e: React.FormEvent) => {
-    e.preventDefault();
+    const handleSendOtp = async (e?: React.FormEvent, forceSend = false) => {
+    if (e) e.preventDefault();
     const formattedPhone = phone.replace(/\s+/g, '');
     
     if (formattedPhone.length < 12) {
@@ -38,25 +42,44 @@ export default function LoginModal() {
     setLoading(true);
     
     try {
-      const response = await fetch('/api/auth/send-otp', {
+      if (!forceSend && !showRegisterPrompt) {
+        const checkRes = await fetch('/api/auth/check-phone', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: formattedPhone })
+        });
+        const checkData = await checkRes.json();
+        
+        if (!checkData.exists) {
+          setShowRegisterPrompt(true);
+          setLoading(false);
+          return;
+        }
+        setMode('login');
+      }
+
+      const res = await fetch('/api/auth/send-otp', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ phone: formattedPhone })
       });
+      const data = await res.json();
       
-      const data = await response.json();
-      
-      if (!response.ok) {
-        throw new Error(data.error || 'Xəta baş verdi');
+      if (res.ok) {
+        setStep(2);
+      } else {
+        setError(data.error || 'Xəta baş verdi');
       }
-      
-      setStep(2);
-    } catch (err: any) {
-      console.error(err);
-      setError(err.message || 'Xəta baş verdi. Nömrəni yoxlayıb yenidən cəhd edin.');
+    } catch (err) {
+      setError('Sistem xətası. Bir az sonra yenidən cəhd edin.');
     } finally {
       setLoading(false);
     }
+  };
+  
+  const handleRegisterClick = () => {
+    setMode('register');
+    handleSendOtp(undefined, true);
   };
 
   const handleVerifyOtp = async (e: React.FormEvent) => {
@@ -144,24 +167,54 @@ export default function LoginModal() {
                     <input
                       type="tel"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => {
+                        setPhone(e.target.value);
+                        setShowRegisterPrompt(false); // Reset prompt on change
+                      }}
                       placeholder="+994 50 123 45 67"
                       className="w-full pl-12 pr-4 py-4 bg-gray-50 border border-gray-200 rounded-xl text-black font-medium focus:bg-white focus:border-blue-600 focus:ring-2 focus:ring-blue-600/20 outline-none transition-all"
                       dir="ltr"
+                      disabled={showRegisterPrompt}
                     />
                   </div>
-                  <p className="mt-3 text-sm text-gray-500">
-                    Nömrənizə 6 rəqəmli təsdiq kodu göndəriləcək.
-                  </p>
                 </div>
 
-                <button 
-                  type="submit" 
-                  disabled={loading || phone.length < 12}
-                  className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors"
-                >
-                  {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Kodu Göndər'}
-                </button>
+                {!showRegisterPrompt ? (
+                  <>
+                    <p className="text-sm text-gray-500">
+                      Nömrənizə 6 rəqəmli təsdiq kodu göndəriləcək.
+                    </p>
+                    <button 
+                      type="submit" 
+                      disabled={loading || phone.length < 12}
+                      className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white font-bold py-4 rounded-xl flex items-center justify-center gap-2 transition-colors"
+                    >
+                      {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Davam et'}
+                    </button>
+                  </>
+                ) : (
+                  <div className="bg-orange-50 border border-orange-200 p-5 rounded-xl text-center">
+                    <p className="text-orange-800 font-medium mb-4">
+                      Bu nömrə sistemdə yoxdur. Qeydiyyatdan keçmək istəyirsiniz?
+                    </p>
+                    <div className="flex gap-3">
+                      <button 
+                        type="button"
+                        onClick={() => setShowRegisterPrompt(false)}
+                        className="flex-1 py-3 bg-white border border-gray-300 rounded-xl font-bold text-gray-700 hover:bg-gray-50"
+                      >
+                        Ləğv et
+                      </button>
+                      <button 
+                        type="button"
+                        onClick={handleRegisterClick}
+                        className="flex-1 py-3 bg-green-600 rounded-xl font-bold text-white hover:bg-green-700 shadow-md flex items-center justify-center"
+                      >
+                        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Qeydiyyatdan Keç'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </form>
             ) : (
               <form onSubmit={handleVerifyOtp} className="space-y-6">
