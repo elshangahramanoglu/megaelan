@@ -246,7 +246,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
             </div>
 
             <div className="mt-6 pt-6 border-t border-gray-100 flex justify-between items-center text-sm font-bold">
-              <button onClick={() => navigator.share ? navigator.share({ title: ad.title, url: window.location.href }) : navigator.clipboard.writeText(window.location.href).then(() => alert('Link kopyalandı!'))} className="text-gray-500 hover:text-blue-600 flex items-center gap-1 transition-colors">
+              <button onClick={() => navigator.share ? navigator.share({ title: ad.title, url: window.location.href }).catch(() => {}) : navigator.clipboard.writeText(window.location.href).then(() => alert('Link kopyalandı!')).catch(() => {})} className="text-gray-500 hover:text-blue-600 flex items-center gap-1 transition-colors">
                 <Share2 className="w-4 h-4" /> Paylaş
               </button>
               <button onClick={() => window.open(`https://wa.me/994703484901?text=${encodeURIComponent('Salam, bu elanı şikayət etmək istəyirəm:\n\n' + window.location.href)}`, '_blank')} className="text-gray-500 hover:text-red-500 flex items-center gap-1 transition-colors">

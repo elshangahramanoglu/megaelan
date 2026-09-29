@@ -15,11 +15,11 @@ export default function AdCard({ ad }: { ad: Ad }) {
   return (
     <Link 
       href={`/elan/${ad.id}`} 
-      className="group cursor-pointer bg-white rounded-2xl flex flex-col hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-gray-100 h-[320px] overflow-hidden relative"
+      className="group cursor-pointer bg-white rounded-2xl flex flex-col hover:shadow-2xl hover:-translate-y-1 active:scale-95 transition-all duration-300 border border-gray-100 h-[240px] md:h-[320px] overflow-hidden relative"
     >
-      <div className="h-44 bg-gray-100 relative w-full flex-shrink-0 overflow-hidden">
+      <div className="h-28 md:h-44 bg-gray-100 relative w-full flex-shrink-0 overflow-hidden">
         {isMine && (
-          <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-blue-600/90 backdrop-blur-sm text-white text-[10px] font-black px-3 py-1 rounded-full z-20 shadow-md flex items-center gap-1">
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 bg-blue-600/90 backdrop-blur-sm text-white text-[9px] md:text-[10px] font-black px-2 py-0.5 md:px-3 md:py-1 whitespace-nowrap rounded-full z-20 shadow-md flex items-center gap-1">
              Mənim elanım
           </div>
         )}
@@ -47,10 +47,10 @@ export default function AdCard({ ad }: { ad: Ad }) {
       </div>
       <div className="p-4 flex flex-col flex-1 justify-between">
         <div>
-          <h3 className="font-bold text-xl text-gray-900 mb-1">
+          <h3 className="font-bold text-lg md:text-xl text-gray-900 mb-1">
             {ad.price} <span className="text-sm font-normal">{ad.currency}</span>
           </h3>
-          <p className="text-gray-700 text-sm mb-2 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
+          <p className="text-gray-700 text-xs md:text-sm mb-1 md:mb-2 line-clamp-2 leading-tight group-hover:text-blue-600 transition-colors">
             {ad.title}
           </p>
         </div>

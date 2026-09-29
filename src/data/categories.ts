@@ -328,7 +328,7 @@ export const categoriesData: Category[] = [
     fields: []
   },
   {
-    id: "14", name: "Məktəblilər üçün", icon: Backpack, image: "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?q=80&w=500&auto=format&fit=crop",
+    id: "14", name: "Məktəblilər üçün", icon: Backpack, image: "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Məktəb formaları", "Dərsliklər", "Dəftərxana ləvazimatları", "Çantalar və bel çantaları", "Tədris kursları", "Repetitorlar"],
     fields: [CONDITION_FIELD]
   },

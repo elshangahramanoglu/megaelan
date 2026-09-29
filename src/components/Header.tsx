@@ -44,7 +44,7 @@ export default function Header() {
 
   
   const searchResults = searchQuery.trim().length > 1 
-    ? ads.filter(ad => ad.status === 'active' && ad.title.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6)
+    ? ads.filter(ad => ad.title.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6)
     : [];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
