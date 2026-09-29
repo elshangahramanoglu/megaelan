@@ -82,8 +82,10 @@ export default function NewAdPage() {
     price: "",
     city: "Bakı",
     description: "",
+    sellerType: "Fərdi",
     contactName: user ? user.name : "",
-    contactPhone: user ? user.phone : ""
+    contactPhone: user ? user.phone : "",
+    delivery: false
   });
   
   const [dynamicDetails, setDynamicDetails] = useState<Record<string, string>>({});
@@ -127,13 +129,19 @@ export default function NewAdPage() {
   const selectedCategory = categoriesData.find(c => c.id === formData.categoryId) || categoriesData[0];
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    let { name, value } = e.target;
+    
+    // Task 3: Truncate title to 100 chars, description to 1000 chars automatically
+    if (name === "title" && value.length > 100) value = value.substring(0, 100);
+    if (name === "description" && value.length > 1000) value = value.substring(0, 1000);
+
+    setFormData({ ...formData, [name]: value });
     // Reset subCategory when category changes
-    if (e.target.name === 'categoryId') {
-      setFormData(prev => ({ ...prev, subCategory: "", categoryId: e.target.value }));
+    if (name === 'categoryId') {
+      setFormData(prev => ({ ...prev, subCategory: "", categoryId: value }));
       setDynamicDetails({});
       // Check how many ads user already has in this category
-      checkCategoryAdCount(e.target.value);
+      checkCategoryAdCount(value);
     }
   };
 
@@ -252,7 +260,7 @@ export default function NewAdPage() {
           category_id: formData.categoryId,
           sub_category: formData.subCategory,
           images: imageUrls,
-          details: dynamicDetails,
+          details: { ...dynamicDetails, delivery: formData.delivery ? "Var" : "Yox", sellerType: formData.sellerType },
           contact_name: formData.contactName,
           contact_phone: formData.contactPhone || user.phone,
         })
@@ -302,16 +310,25 @@ export default function NewAdPage() {
         <div className="w-24 h-24 bg-green-100 text-green-500 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="w-12 h-12" />
         </div>
-        <h1 className="text-3xl font-bold text-black mb-4">Elanınız yoxlanışdadır (GÖZLƏMƏDƏ)!</h1>
-        <p className="text-gray-700 mb-8 font-medium">Elanınız avtomatik yoxlanışdan keçir. Elanlar siyahısında izləyə bilərsiniz.</p>
+        <h1 className="text-3xl font-black text-black mb-4">Elanınız yerləşdirildi! (GÖZLƏMƏDƏ)</h1>
+        <p className="text-gray-700 mb-8 font-medium">Elanınız avtomatik yoxlanışdan keçir. İndi elanınızı önə çıxararaq və ya Premium edərək daha çox alıcıya çata bilərsiniz.</p>
         
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex flex-col gap-4 max-w-sm mx-auto mb-6">
           <Link 
             href={`/reklam?adId=${createdAdId || ''}`}
-            className="px-8 py-4 bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-bold rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all"
+            className="w-full py-4 bg-orange-500 hover:bg-orange-600 active:scale-95 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all"
           >
-            <Crown className="w-5 h-5" /> Reklam et (Xidmətlər)
+            <Crown className="w-6 h-6" /> Premium olaraq yerləşdir
           </Link>
+          <Link 
+            href={`/reklam?adId=${createdAdId || ''}`}
+            className="w-full py-4 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold rounded-2xl flex items-center justify-center gap-2 shadow-lg transition-all"
+          >
+            <Star className="w-6 h-6" /> Önə çıxma olaraq yerləşdir
+          </Link>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
             href={`/kabinet`}
             className="px-8 py-4 bg-blue-50 hover:bg-blue-100 active:scale-95 text-blue-700 font-bold rounded-xl transition-all"
@@ -503,6 +520,20 @@ export default function NewAdPage() {
               ))}
             </select>
           </div>
+
+          <div className="flex items-center gap-3 pt-2">
+            <input 
+              type="checkbox" 
+              id="delivery"
+              name="delivery"
+              checked={formData.delivery}
+              onChange={(e) => setFormData({...formData, delivery: e.target.checked})}
+              className="w-6 h-6 text-blue-600 rounded-md border-gray-300 focus:ring-blue-500 cursor-pointer"
+            />
+            <label htmlFor="delivery" className="text-lg font-bold text-gray-800 cursor-pointer select-none">
+              Çatdırılma mümkündür
+            </label>
+          </div>
         </div>
 
         {/* Description */}
@@ -520,6 +551,18 @@ export default function NewAdPage() {
 
         {/* Contact */}
         <div className="border-t-2 border-gray-100 pt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-base font-bold text-black mb-2">Satıcı növü *</label>
+            <select 
+              name="sellerType"
+              value={formData.sellerType}
+              onChange={handleChange}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-300 focus:ring-blue-600 focus:border-blue-600 outline-none bg-white text-black font-medium text-lg"
+            >
+              <option value="Fərdi">Fərdi</option>
+              <option value="Mağaza">Mağaza</option>
+            </select>
+          </div>
           <div>
             <label className="block text-base font-bold text-black mb-2">Adınız *</label>
             <input 
@@ -564,21 +607,40 @@ export default function NewAdPage() {
           </div>
         )}
 
-        <button 
-          type="submit" 
-          disabled={isSubmitting}
-          className={`w-full font-bold text-xl py-5 rounded-2xl transition-colors mt-4 shadow-lg ${
-            showAdPayment ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-orange-500/30' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30'
-          }`}
-        >
-          {isSubmitting ? (
-            <span className="flex items-center justify-center gap-2"><Loader2 className="w-6 h-6 animate-spin" /> Yüklənir...</span>
-          ) : showAdPayment ? (
-            'Ödəniş tələb olunur'
-          ) : (
-            'Elanı yerləşdir'
-          )}
-        </button>
+        <div className="flex flex-col md:flex-row gap-4 mt-4">
+          <button 
+            type="button" 
+            onClick={() => {
+              if(confirm('Bütün məlumatları silmək istədiyinizə əminsiniz?')) {
+                setFormData({
+                  title: "", categoryId: categoriesData[0].id, subCategory: "", price: "", city: "Bakı", description: "", contactName: user ? user.name || '' : "", contactPhone: user ? user.phone || '' : "", delivery: false
+                });
+                setDynamicDetails({});
+                setFiles([]);
+              }
+            }}
+            disabled={isSubmitting}
+            className="w-full md:w-1/3 font-bold text-xl py-5 rounded-2xl transition-colors shadow-md bg-gray-100 hover:bg-gray-200 text-gray-700"
+          >
+            Sıfırla
+          </button>
+          
+          <button 
+            type="submit" 
+            disabled={isSubmitting}
+            className={`w-full md:w-2/3 font-bold text-xl py-5 rounded-2xl transition-colors shadow-lg ${
+              showAdPayment ? 'bg-orange-500 hover:bg-orange-600 text-white shadow-orange-500/30' : 'bg-blue-600 hover:bg-blue-700 text-white shadow-blue-600/30'
+            }`}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-2"><Loader2 className="w-6 h-6 animate-spin" /> Yüklənir...</span>
+            ) : showAdPayment ? (
+              'Ödəniş tələb olunur'
+            ) : (
+              'Elanı yerləşdir'
+            )}
+          </button>
+        </div>
       </form>
     </div>
   );

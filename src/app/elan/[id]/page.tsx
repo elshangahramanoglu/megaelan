@@ -51,6 +51,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
 
   const isFav = favorites.includes(adId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showPhone, setShowPhone] = useState(false);
   const [touchStartX, setTouchStartX] = useState(0);
   const [touchEndX, setTouchEndX] = useState(0);
   
@@ -269,10 +270,17 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
             </div>
 
             <div className="flex flex-col gap-3">
-              <a href={`tel:${ad.contactPhone}`} className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-black text-xl py-4 rounded-xl transition-colors shadow-lg shadow-green-500/30">
-                <Phone className="w-6 h-6" />
-                {ad.contactPhone}
-              </a>
+              {showPhone ? (
+                <a href={`tel:${ad.contactPhone}`} className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-black text-xl py-4 rounded-xl transition-colors shadow-lg shadow-green-500/30">
+                  <Phone className="w-6 h-6" />
+                  {ad.contactPhone}
+                </a>
+              ) : (
+                <button onClick={() => setShowPhone(true)} className="w-full flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white font-black text-xl py-4 rounded-xl transition-colors shadow-lg shadow-green-500/30">
+                  <Phone className="w-6 h-6" />
+                  Nömrəni göstər
+                </button>
+              )}
               
               <Link href={`/mesajlar?user_id=${dbUserId}&ad_id=${ad.id}`} onClick={() => { try { { supabase.rpc('increment_ad_contacts', { ad_id: ad.id }); setRealContacts(prev => prev + 1); } } catch(e){} }} className="w-full flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 hover:bg-blue-100 text-blue-700 font-bold py-4 rounded-xl transition-colors">
                 <MessageCircle className="w-6 h-6" />
