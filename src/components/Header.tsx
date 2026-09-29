@@ -28,9 +28,10 @@ export default function Header() {
   
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]);
   
-  const { user, setLoginOpen, favorites = [] } = useAppContext();
+  const { user, setLoginOpen, favorites = [], ads = [] } = useAppContext();
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -40,6 +41,11 @@ export default function Header() {
       setLoginOpen(true);
     }
   };
+
+  
+  const searchResults = searchQuery.trim().length > 1 
+    ? ads.filter(ad => ad.status === 'active' && ad.title.toLowerCase().includes(searchQuery.toLowerCase())).slice(0, 6)
+    : [];
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,11 +104,14 @@ export default function Header() {
 
           {/* Search Bar (Centered on Desktop, Hidden on Mobile) */}
           <div className="hidden md:flex flex-1 justify-center px-4 max-w-3xl">
-            <form onSubmit={handleSearchSubmit} className="w-full flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative">
+            <div className="w-full relative group">
+            <form onSubmit={handleSearchSubmit} className="w-full flex items-center bg-gray-100 rounded-xl border-2 border-transparent focus-within:border-blue-600 focus-within:bg-white transition-all overflow-hidden relative z-50">
               <input 
                 type="text" 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
                 placeholder="Elanın başlığını yazın..." 
                 className="w-full pl-4 pr-32 py-3 bg-transparent outline-none text-black font-medium placeholder-gray-500"
               />
@@ -113,6 +122,47 @@ export default function Header() {
                 <Search className="w-5 h-5" />
               </button>
             </form>
+            
+            {/* Live Search Results Dropdown */}
+            {isSearchFocused && searchQuery.trim().length > 1 && (
+              <div className="absolute top-full mt-2 w-full bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50 animate-in fade-in slide-in-from-top-4 duration-200">
+                {searchResults.length > 0 ? (
+                  <div className="flex flex-col">
+                    {searchResults.map(ad => (
+                      <Link 
+                        key={ad.id} 
+                        href={`/elan/${ad.id}`}
+                        onClick={() => { setIsSearchFocused(false); setSearchQuery(""); }}
+                        className="flex items-center gap-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-50 last:border-0"
+                      >
+                        <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
+                          {ad.images?.[0] ? (
+                            <Image src={ad.images[0]} alt={ad.title} fill className="object-cover" sizes="48px" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">Yoxdur</div>
+                          )}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-bold text-sm text-gray-900 truncate">{ad.title}</p>
+                          <p className="text-blue-600 font-bold text-xs">{ad.price} {ad.currency}</p>
+                        </div>
+                      </Link>
+                    ))}
+                    <button 
+                      onClick={handleSearchSubmit}
+                      className="w-full p-3 text-center text-sm text-blue-600 font-bold hover:bg-blue-50 transition-colors bg-gray-50/50"
+                    >
+                      Bütün nəticələrə bax
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-6 text-center text-gray-500 font-medium">
+                    Heç nə tapılmadı
+                  </div>
+                )}
+              </div>
+            )}
+            </div>
           </div>
 
           {/* Right Icons (Right aligned on Mobile and Desktop) */}

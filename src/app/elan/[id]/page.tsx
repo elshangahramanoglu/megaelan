@@ -14,7 +14,39 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
   const adId = resolvedParams.id;
   const { ads, favorites, toggleFavorite, user } = useAppContext();
   
-  const ad = ads.find(a => a.id === adId);
+  
+  const [localAd, setLocalAd] = useState<any>(null);
+  const [isFetchingAd, setIsFetchingAd] = useState(true);
+  
+  const ad = ads.find(a => a.id === adId) || localAd;
+
+  React.useEffect(() => {
+    if (ads.find(a => a.id === adId)) {
+      setIsFetchingAd(false);
+      return;
+    }
+    
+    let isMounted = true;
+    const fetchSingleAd = async () => {
+      try {
+        const { data } = await supabase.from('ads').select('*').eq('id', adId).single();
+        if (isMounted && data) {
+          setLocalAd({
+             ...data,
+             categoryId: data.category_id,
+             date: new Date(data.created_at).toLocaleString('az-AZ', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }).replace(',', ''),
+             isPremium: data.is_premium || false,
+          });
+        }
+      } catch(e) {}
+      finally {
+        if (isMounted) setIsFetchingAd(false);
+      }
+    };
+    fetchSingleAd();
+    return () => { isMounted = false; };
+  }, [adId, ads]);
+
   const isFav = favorites.includes(adId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [dbUserId, setDbUserId] = useState<string | null>(ad?.user_id || null);
@@ -57,9 +89,8 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
 
 
 
-  if (!ad) {
-    return <div className="text-center py-20 text-xl font-bold">Elan tapılmadı!</div>;
-  }
+  if (isFetchingAd) return <div className="py-32 flex justify-center"><Loader2 className="w-12 h-12 text-blue-600 animate-spin" /></div>;
+  if (!ad) return <div className="text-center py-32 text-xl font-bold text-gray-500">Elan tapılmadı və ya silinib!</div>;
 
   const category = categoriesData.find(c => c.id === ad.categoryId);
   
@@ -116,7 +147,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
             {/* Thumbnails */}
             {(ad.images && ad.images.length > 1) && (
               <div className="flex overflow-x-auto gap-3 pb-2 hide-scrollbar snap-x">
-                {ad.images.map((img, idx) => (
+                {ad.images.map((img: string, idx: number) => (
                   <button 
                     key={idx} 
                     onClick={() => setCurrentImageIndex(idx)}
