@@ -103,7 +103,26 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
     const savedUser = localStorage.getItem("megaelan_user");
     if (savedUser) {
       try {
-        setUser(JSON.parse(savedUser));
+        const parsedUser = JSON.parse(savedUser);
+        setUser(parsedUser);
+        
+        // Fetch latest data from Supabase to sync across devices
+        if (parsedUser && parsedUser.phone) {
+          supabase.from('users').select('*').eq('phone', parsedUser.phone).single()
+            .then(({ data, error }) => {
+              if (data && !error) {
+                const updatedUser = {
+                  id: data.id,
+                  phone: data.phone,
+                  name: data.name || parsedUser.name,
+                  balance: data.balance || 0,
+                  avatar: data.avatar || ""
+                };
+                setUser(updatedUser);
+                localStorage.setItem("megaelan_user", JSON.stringify(updatedUser));
+              }
+            });
+        }
       } catch (e) {}
     }
     setIsUserLoaded(true);
