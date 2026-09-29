@@ -245,22 +245,23 @@ export default function KabinetPage() {
           
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-5 py-4 text-orange-500 hover:bg-orange-50 rounded-2xl font-bold transition-all mb-2"
+            className="w-full hidden md:flex items-center gap-3 px-5 py-4 text-orange-500 hover:bg-orange-50 rounded-2xl font-bold transition-all mb-2"
           >
             <LogOut className="w-5 h-5" /> Çıxış et
           </button>
           
           <button 
             onClick={() => setShowDeleteAccountModal(true)}
-            className="w-full flex items-center gap-3 px-5 py-4 text-red-600 hover:bg-red-50 rounded-2xl font-bold transition-all"
+            className="w-full hidden md:flex items-center gap-3 px-5 py-4 text-red-600 hover:bg-red-50 rounded-2xl font-bold transition-all"
           >
             <Trash2 className="w-5 h-5" /> Hesabı sil
           </button>
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 p-6 md:p-10">
-          <AnimatePresence mode="wait">
+        <div className="flex-1 p-6 md:p-10 flex flex-col">
+          <div className="flex-1">
+            <AnimatePresence mode="wait">
             {activeTab === 'profil' && (
               <motion.div
                 key="profil"
@@ -513,6 +514,13 @@ export default function KabinetPage() {
               </motion.div>
             )}
           </AnimatePresence>
+          </div>
+          
+          {/* Mobile Logout Buttons */}
+          <div className="md:hidden mt-8 pt-8 border-t border-gray-100 flex flex-col gap-3">
+            <button onClick={handleLogout} className="w-full flex items-center justify-center gap-3 px-5 py-4 bg-orange-50 text-orange-600 rounded-2xl font-bold transition-all"><LogOut className="w-5 h-5" /> Çıxış et</button>
+            <button onClick={() => setShowDeleteAccountModal(true)} className="w-full flex items-center justify-center gap-3 px-5 py-4 bg-red-50 text-red-600 rounded-2xl font-bold transition-all"><Trash2 className="w-5 h-5" /> Hesabı sil</button>
+          </div>
         </div>
       </div>
 
