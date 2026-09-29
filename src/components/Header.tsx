@@ -137,7 +137,7 @@ export default function Header() {
                       >
                         <div className="w-12 h-12 bg-gray-100 rounded-lg overflow-hidden flex-shrink-0 relative">
                           {ad.images?.[0] ? (
-                            <Image src={ad.images[0]} alt={ad.title} fill className="object-cover" sizes="48px" />
+                            <Image src={ad.images[0]} alt={ad.title} fill className="object-cover" sizes="48px" priority={true} />
                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs">Yoxdur</div>
                           )}
@@ -190,8 +190,8 @@ export default function Header() {
                 className="flex items-center justify-center p-2 text-black hover:text-blue-600 transition-colors"
                 title={user ? "Şəxsi kabinet" : "Giriş"}
               >
-                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
-                  {user?.avatar ? <img src={user.avatar} className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5" />}
+                <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden relative">
+                  {user?.avatar ? <Image src={user.avatar} fill priority sizes="40px" className="object-cover" alt="Profil" /> : <User className="w-5 h-5" />}
                 </div>
               </button>
             </div>

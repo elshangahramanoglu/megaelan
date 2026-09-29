@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
+import Image from "next/image";
 
 export default function KabinetPage() {
   const { user, isUserLoaded, updateUser, logout, removeAd } = useAppContext();
@@ -15,12 +16,15 @@ export default function KabinetPage() {
   const [firstName, setFirstName] = useState((user?.name || "").split(' ')[0] || "");
   const [lastName, setLastName] = useState((user?.name || "").split(' ').slice(1).join(' ') || "");
   
-  useEffect(() => {
+    useEffect(() => {
     if (user?.name) {
       setFirstName(user.name.split(' ')[0] || "");
       setLastName(user.name.split(' ').slice(1).join(' ') || "");
     }
-  }, [user?.name]);
+    if (user?.avatar !== undefined) {
+      setAvatar(user.avatar || "");
+    }
+  }, [user?.name, user?.avatar]);
   const [avatar, setAvatar] = useState(user?.avatar || "");
   const [isUploading, setIsUploading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -162,6 +166,7 @@ export default function KabinetPage() {
       if (user) {
         const fullName = `${firstName} ${lastName}`.trim();
         await supabase.from('users').update({ name: fullName }).eq('id', user.id);
+        await supabase.from('ads').update({ contactName: fullName }).eq('user_id', user.id);
         updateUser({ name: fullName });
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 3000);
@@ -287,7 +292,7 @@ export default function KabinetPage() {
                       {isUploading 
                         ? <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
                         : avatar 
-                          ? <img src={avatar} alt="Profil" className="w-full h-full object-cover" />
+                          ? <Image src={avatar} fill priority sizes="160px" className="object-cover" alt="Profil" />
                           : <User className="w-16 h-16 text-gray-300" />}
                       <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-opacity gap-1">
                         <Camera className="w-8 h-8 text-white" />

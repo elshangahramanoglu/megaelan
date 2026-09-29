@@ -59,8 +59,7 @@ export default function Home_Page({ searchParams }: { searchParams: Promise<{ se
       </section>
 
       {/* Premium Ads Section */}
-      {premiumAds.length > 0 && (
-        <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
+      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-black text-black flex items-center gap-2">
               <Crown className="w-6 h-6 md:w-8 md:h-8 text-orange-500" /> Premium elanlar
@@ -71,12 +70,15 @@ export default function Home_Page({ searchParams }: { searchParams: Promise<{ se
               <AdCard key={ad.id} ad={ad} />
             ))}
           </div>
+          {premiumAds.length === 0 && (
+            <div className="w-full p-6 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+              Premium elan yoxdur
+            </div>
+          )}
         </section>
-      )}
 
       {/* VIP / Önə çıxan Ads Section */}
-      {vipAds.length > 0 && (
-        <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
+      <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-12">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-black text-black flex items-center gap-2">
               Önə çıxan elanlar
@@ -87,8 +89,12 @@ export default function Home_Page({ searchParams }: { searchParams: Promise<{ se
               <AdCard key={ad.id} ad={ad} />
             ))}
           </div>
+          {vipAds.length === 0 && (
+            <div className="w-full p-6 text-center text-gray-400 font-bold bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
+              Önə çıxan elan yoxdur
+            </div>
+          )}
         </section>
-      )}
 
       {/* All Ads Section */}
       <section className="w-full max-w-7xl mx-auto px-4 md:px-8 mt-16">
@@ -102,7 +108,7 @@ export default function Home_Page({ searchParams }: { searchParams: Promise<{ se
           ))}
         </div>
         
-        {normalAds.length === 0 && premiumAds.length === 0 && vipAds.length === 0 && (
+        {normalAds.length === 0 && (
           <div className="text-center py-20 text-gray-500 font-medium text-lg bg-gray-50 rounded-3xl mt-8 border border-gray-200">
             {searchQuery ? "Axtarışınıza uyğun elan tapılmadı." : "Bu şəhər üzrə elan tapılmadı."}
           </div>
