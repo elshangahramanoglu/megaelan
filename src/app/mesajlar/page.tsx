@@ -69,7 +69,7 @@ function MessagesContent() {
         if (userIds.size > 0) {
           const { data: usersData } = await supabase
             .from('users')
-            .select('id, name, avatar, phone')
+            .select('id, name, phone')
             .in('id', Array.from(userIds));
             
           (usersData || []).forEach(u => usersMap.set(u.id, u));
@@ -246,7 +246,7 @@ function MessagesContent() {
                   className={`w-full p-4 flex items-center gap-3 border-b border-gray-100 transition-colors ${activeChat === chat.otherUser.id ? 'bg-blue-50' : 'hover:bg-white'}`}
                 >
                   <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 flex items-center justify-center">
-                    {chat.otherUser.avatar ? (
+                    {chat.otherUser?.avatar ? (
                       <img src={chat.otherUser.avatar} className="w-full h-full object-cover" alt="" />
                     ) : (
                       <UserIcon className="w-6 h-6 text-gray-400" />
