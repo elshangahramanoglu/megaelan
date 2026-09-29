@@ -296,7 +296,7 @@ export const categoriesData: Category[] = [
     ]
   },
   {
-    id: "4", name: "Ehtiyat hissələri və aksesuarlar", icon: Settings, image: "https://images.unsplash.com/photo-1632731557089-9a7da8853b81?q=80&w=500&auto=format&fit=crop",
+    id: "4", name: "Ehtiyat hissələri və aksesuarlar", icon: Settings, image: "https://images.unsplash.com/photo-1530046339160-ce3e530c7d2f?q=80&w=500&auto=format&fit=crop",
     subcategories: ["Avto ehtiyat hissələri", "Avto aksesuarlar", "Moto ehtiyat hissələri", "Şinlər və disklər", "GPS və naviqatorlar", "Avto elektronika", "Avto kosmetika"],
     fields: [CONDITION_FIELD]
   },
@@ -333,7 +333,7 @@ export const categoriesData: Category[] = [
     fields: [CONDITION_FIELD]
   },
   {
-    id: "15", name: "Mağazalar", icon: Store, image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?q=80&w=500&auto=format&fit=crop",
+    id: "15", name: "Mağazalar", icon: Store, image: "/magazalar.png",
     subcategories: ["Geyim mağazaları", "Texnika mağazaları", "Mebel mağazaları", "Avtosalonlar", "Ərzaq mağazaları", "Parfümeriya", "İdman mağazaları", "Digər mağazalar"],
     fields: []
   }

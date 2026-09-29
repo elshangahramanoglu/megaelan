@@ -30,7 +30,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState(categoriesData[0]);
   
-  const { user, setLoginOpen } = useAppContext();
+  const { user, setLoginOpen, favorites = [] } = useAppContext();
   const router = useRouter();
 
   const handleProfileClick = () => {
@@ -118,7 +118,14 @@ export default function Header() {
           {/* Right Icons (Right aligned on Mobile and Desktop) */}
           <div className="flex flex-1 md:flex-none md:w-[25%] items-center justify-end gap-3 sm:gap-5">
               <Link href="/beyendiklerim" className="p-2 text-black hover:text-blue-600 transition-colors hidden sm:block">
-                <Heart className="w-6 h-6" />
+                <div className="relative">
+                  <Heart className="w-6 h-6" />
+                  {favorites.length > 0 && (
+                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
+                      {favorites.length}
+                    </span>
+                  )}
+                </div>
               </Link>
               <Link href="/mesajlar" className="p-2 text-black hover:text-blue-600 transition-colors hidden sm:block">
                 <MessageCircle className="w-6 h-6" />
@@ -246,7 +253,14 @@ export default function Header() {
                   </Link>
                   <div className="flex gap-3">
                     <Link href="/beyendiklerim" onClick={() => setIsMobileMenuOpen(false)} className="flex-1 bg-gray-100 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2">
-                      <Heart className="w-5 h-5" /> Bəyəndiklərim
+                      <div className="relative">
+                        <Heart className="w-5 h-5" />
+                        {favorites.length > 0 && (
+                          <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold w-3.5 h-3.5 flex items-center justify-center rounded-full">
+                            {favorites.length}
+                          </span>
+                        )}
+                      </div> Bəyəndiklərim
                     </Link>
                     <Link href="/mesajlar" onClick={() => setIsMobileMenuOpen(false)} className="flex-1 bg-gray-100 text-black font-bold py-3 rounded-xl flex items-center justify-center gap-2">
                       <MessageCircle className="w-5 h-5" /> Mesajlar

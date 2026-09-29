@@ -64,9 +64,9 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           <div className="flex flex-col gap-4">
             <div className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group">
               {(ad.images && ad.images.length > 0) ? (
-                <img src={ad.images[currentImageIndex]} alt={ad.title} className="w-full h-full object-cover" />
+                <><div className="absolute inset-0 bg-black/5 backdrop-blur-3xl z-0"><img src={ad.images[currentImageIndex]} className="w-full h-full object-cover opacity-50 blur-xl" alt="" /></div><img src={ad.images[currentImageIndex]} alt={ad.title} fetchPriority="high" decoding="async" className="w-full h-full object-contain relative z-10" /></>
               ) : ad.imagePlaceholder.startsWith('http') ? (
-                <img src={ad.imagePlaceholder} alt={ad.title} className="w-full h-full object-cover" />
+                <img src={ad.imagePlaceholder} alt={ad.title} fetchPriority="high" className="w-full h-full object-cover" />
               ) : (
                 ad.imagePlaceholder
               )}
@@ -104,7 +104,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium">
                   <span className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full"><MapPin className="w-4 h-4" /> {ad.city}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full">Yeniləndi: {ad.date}</span>
-                  <span className="bg-gray-100 px-3 py-1 rounded-full">Baxış: 142</span>
+                  <span className="bg-gray-100 px-3 py-1 rounded-full">Baxış: {ad.details?.views || (ad.id.split("").reduce((acc, char) => acc + char.charCodeAt(0), 0) % 350 + 15)}</span>
                 </div>
               </div>
               <div className="flex items-center gap-2">
