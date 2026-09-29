@@ -59,6 +59,15 @@ function SearchContent() {
     return true;
   });
 
+  // Sort search results (Premium > VIP > Regular)
+  searchResults.sort((a, b) => {
+    if (a.isPremium && !b.isPremium) return -1;
+    if (!a.isPremium && b.isPremium) return 1;
+    if (a.isVip && !b.isVip) return -1;
+    if (!a.isVip && b.isVip) return 1;
+    return parseInt(b.id.replace('new-', '')) - parseInt(a.id.replace('new-', ''));
+  });
+
   return (
     <div className="w-full max-w-7xl mx-auto px-4 md:px-8 py-8 md:py-12 min-h-[70vh] flex flex-col md:flex-row gap-8">
       {/* Filters Sidebar */}
