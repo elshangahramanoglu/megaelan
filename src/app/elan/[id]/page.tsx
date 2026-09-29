@@ -51,6 +51,19 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
 
   const isFav = favorites.includes(adId);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  
+  const handleTouchStart = (e: React.TouchEvent) => setTouchStartX(e.targetTouches[0].clientX);
+  const handleTouchMove = (e: React.TouchEvent) => setTouchEndX(e.targetTouches[0].clientX);
+  const handleTouchEnd = () => {
+    if (!ad?.images || ad.images.length <= 1) return;
+    const diff = touchStartX - touchEndX;
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) setCurrentImageIndex(prev => prev === ad.images.length - 1 ? 0 : prev + 1);
+      else setCurrentImageIndex(prev => prev === 0 ? ad.images.length - 1 : prev - 1);
+    }
+  };
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [dbUserId, setDbUserId] = useState<string | null>(ad?.user_id || null);
   const [sellerAvatar, setSellerAvatar] = useState<string | null>(null);
@@ -141,7 +154,10 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           <div className="flex flex-col gap-4">
             <div 
               onClick={() => { if (ad.images && ad.images.length > 0) setIsLightboxOpen(true); }}
-              className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group cursor-zoom-in"
+              className="bg-gray-100 rounded-3xl aspect-[4/3] flex flex-col items-center justify-center text-gray-400 text-2xl font-bold border border-gray-200 relative overflow-hidden group cursor-zoom-in select-none"
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
             >
               {(ad.images && ad.images.length > 0) ? (
                 <><div className="absolute inset-0 bg-black/5 backdrop-blur-3xl z-0"><img src={ad.images[currentImageIndex]} className="w-full h-full object-cover opacity-50 blur-xl" alt="" /></div><img src={ad.images[currentImageIndex]} alt={ad.title} fetchPriority="high" decoding="async" className="w-full h-full object-contain relative z-10" /></>
@@ -183,10 +199,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                 <h1 className="text-2xl md:text-3xl font-black text-black mb-3">{ad.title}</h1>
                 <div className="flex flex-wrap items-center gap-4 text-sm text-gray-600 font-medium">
                   <span className="flex items-center gap-1 bg-gray-100 px-3 py-1 rounded-full"><MapPin className="w-4 h-4" /> {ad.city}</span>
-                  <div className="flex gap-2">
-                    <span className="bg-gray-100 px-3 py-1 rounded-full border border-gray-200">Tarix: {ad.date.split(' ')[0]}</span>
-                    <span className="bg-gray-100 px-3 py-1 rounded-full border border-gray-200">Saat: {ad.date.split(' ')[1] || ''}</span>
-                  </div>
+                  <span className="bg-gray-100 px-4 py-1.5 rounded-xl font-bold flex items-center gap-1.5 border border-gray-200 shadow-sm whitespace-nowrap text-gray-700">🗓️ {ad.date.split(' ')[0]} ⏰ {ad.date.split(' ')[1] || ''}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Eye className="w-4 h-4 text-gray-500" /> Baxış: {realViews}</span>
                   <span className="bg-gray-100 px-3 py-1 rounded-full flex items-center gap-1.5"><Phone className="w-4 h-4 text-gray-500" /> Əlaqə: {realContacts}</span>
                 </div>
