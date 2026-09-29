@@ -3,6 +3,7 @@
 import React, { use, useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { User as UserIcon, Calendar, Phone, PackageOpen, Loader2 } from "lucide-react";
+import Image from "next/image";
 import AdCard from "@/components/AdCard";
 import { useAppContext } from "@/context/AppContext";
 
@@ -48,9 +49,9 @@ export default function UserProfilePage({ params }: { params: Promise<{ id: stri
   return (
     <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
       <div className="bg-white rounded-[24px] shadow-lg border border-gray-100 p-6 md:p-10 mb-8 flex flex-col md:flex-row items-center md:items-start gap-6">
-        <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border-4 border-gray-50 flex-shrink-0 shadow-md">
+        <div className="w-24 h-24 md:w-32 md:h-32 rounded-full overflow-hidden bg-gray-100 flex items-center justify-center border-4 border-gray-50 flex-shrink-0 shadow-md relative">
           {profileUser.avatar ? (
-            <img src={profileUser.avatar} alt="Profile" className="w-full h-full object-cover" />
+            <Image src={profileUser.avatar} priority fill sizes="128px" className="object-cover" alt="Profile" />
           ) : (
             <UserIcon className="w-12 h-12 text-gray-400" />
           )}

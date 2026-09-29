@@ -147,14 +147,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
       </div>
 
       
-      {/* Hidden preloader for instant swiping & lightbox */}
-      {ad.images && ad.images.length > 0 && (
-        <div className="hidden" aria-hidden="true">
-          {ad.images.map((img: string, i: number) => (
-            <img key={i} src={img} fetchPriority={i === 0 ? "high" : "low"} decoding="sync" />
-          ))}
-        </div>
-      )}
+      {/* Preloader removed to prevent massive unoptimized image downloads on page load */}
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Main Content */}
         <div className="w-full lg:w-2/3 flex flex-col gap-8">

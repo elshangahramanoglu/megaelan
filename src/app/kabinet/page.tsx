@@ -439,9 +439,9 @@ export default function KabinetPage() {
                         transition={{ duration: 0.3, delay: i * 0.05 }}
                         className="flex flex-col md:flex-row gap-5 p-5 border-2 border-gray-100 rounded-3xl bg-white shadow-sm hover:shadow-lg hover:border-blue-100 transition-all"
                       >
-                        <div className="w-full md:w-52 h-44 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden">
+                        <div className="w-full md:w-52 h-44 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden relative">
                           {ad.images && ad.images.length > 0 
-                            ? <img src={ad.images[0]} className="w-full h-full object-cover" alt={ad.title} />
+                            ? <Image src={ad.images[0]} fill sizes="(max-width: 768px) 100vw, 208px" className="object-cover" alt={ad.title} />
                             : <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-bold">Şəkil yoxdur</div>}
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-between">

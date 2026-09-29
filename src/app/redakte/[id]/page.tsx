@@ -5,6 +5,7 @@ import { categoriesData } from "@/data/categories";
 import { useAppContext } from "@/context/AppContext";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { UploadCloud, CheckCircle, Info, Plus, ArrowRight, Crown, Star } from "lucide-react";
 import { AZERBAIJAN_CITIES } from "@/data/cities";
 import { uploadImageToImgBB } from "@/lib/imgbb";
@@ -474,7 +475,7 @@ export default function EditAdPage() {
             {/* Existing Images */}
             {existingImages.map((url, i) => (
               <div key={`ex-${i}`} className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shadow-sm border border-gray-200 group flex-shrink-0">
-                <img src={url} alt="Preview" className="w-full h-full object-cover" />
+                <Image src={url} fill sizes="128px" className="object-cover" alt="Preview" />
                 <button 
                   type="button"
                   onClick={(e) => {

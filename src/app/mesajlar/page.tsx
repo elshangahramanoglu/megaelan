@@ -318,9 +318,9 @@ function MessagesContent() {
                   className={`w-full p-4 flex items-center gap-4 border-b border-gray-50 transition-all hover:bg-gray-50 ${activeChat === chat.otherUser.id ? 'bg-blue-50/50 border-l-4 border-l-blue-600' : 'border-l-4 border-l-transparent'}`}
                 >
                   <div className="relative">
-                    <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border border-gray-200">
+                    <div className="w-14 h-14 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 flex items-center justify-center border border-gray-200 relative">
                       {chat.otherUser?.avatar ? (
-                        <img src={chat.otherUser.avatar} className="w-full h-full object-cover" alt="" />
+                        <Image src={chat.otherUser.avatar} fill sizes="56px" className="object-cover" alt="" />
                       ) : (
                         <UserIcon className="w-6 h-6 text-gray-400" />
                       )}

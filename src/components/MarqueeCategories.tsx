@@ -3,6 +3,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { categoriesData } from "@/data/categories";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function MarqueeCategories() {
   const marqueeItems = [...categoriesData, ...categoriesData, ...categoriesData, ...categoriesData];
@@ -47,9 +48,9 @@ export default function MarqueeCategories() {
               href={`/kateqoriya/${cat.id}`}
               className="flex-shrink-0 flex flex-col items-center justify-start p-4 md:p-6 bg-slate-50 border border-gray-100 rounded-3xl w-[110px] h-[130px] md:w-[180px] md:h-[180px] hover:border-blue-500 hover:shadow-lg transition-all cursor-pointer group"
             >
-              <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm group-hover:scale-110 transition-transform overflow-hidden">
+              <div className="w-16 h-16 md:w-24 md:h-24 bg-gray-100 rounded-2xl flex items-center justify-center mb-2 md:mb-4 shadow-sm group-hover:scale-110 transition-transform overflow-hidden relative">
                 {(cat.image.includes('.png') || cat.image.includes('http')) ? (
-                  <img src={cat.image} alt={cat.name} className="w-full h-full object-cover rounded-2xl" />
+                  <Image src={cat.image} fill sizes="96px" className="object-cover rounded-2xl" alt={cat.name} />
                 ) : (
                   <Icon className="w-6 h-6 md:w-10 md:h-10 text-blue-600" />
                 )}

@@ -4,6 +4,7 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useAppContext } from "@/context/AppContext";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Crown, Star, ArrowUpCircle, CheckCircle, Loader2, CreditCard, ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 
 type Tariff = { id: string, name: string, price: number, type: 'vip' | 'premium', days: number };
@@ -136,7 +137,9 @@ function ReklamContent() {
                   onClick={() => { setSelectedAdId(ad.id); setStep(2); }}
                   className="flex items-center gap-4 p-4 rounded-2xl border-2 border-gray-100 hover:border-blue-500 hover:bg-blue-50 cursor-pointer transition-all active:scale-95"
                 >
-                  <img src={ad.images?.[0] || ad.imagePlaceholder} className="w-20 h-20 object-cover rounded-xl" />
+                  <div className="w-20 h-20 relative flex-shrink-0">
+                    <Image src={ad.images?.[0] || ad.imagePlaceholder} fill sizes="80px" className="object-cover rounded-xl" alt="" />
+                  </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-bold text-gray-900 truncate">{ad.title}</h3>
                     <p className="text-blue-600 font-black">{ad.price} {ad.currency}</p>

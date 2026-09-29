@@ -256,7 +256,7 @@ export default function Header() {
                   <div className="w-2/3 p-8 overflow-y-auto bg-slate-50 custom-scrollbar">
                     <h3 className="text-2xl font-black text-black mb-6 flex items-center gap-3">
                       {activeCategory.image.includes('.png') ? (
-                          <img src={activeCategory.image} className="w-6 h-6 object-contain" />
+                          <div className="w-6 h-6 relative"><Image src={activeCategory.image} fill sizes="24px" className="object-contain" alt="" /></div>
                         ) : (
                           <activeCategory.icon className="w-6 h-6 text-blue-600" />
                         )}
@@ -351,7 +351,7 @@ export default function Header() {
                         >
                           <div className="flex items-center gap-3">
                             {(cat.image.includes('.png') || cat.image.includes('http')) ? (
-                              <img src={cat.image} className="w-5 h-5 object-contain" />
+                              <div className="w-5 h-5 relative"><Image src={cat.image} fill sizes="20px" className="object-contain" alt="" /></div>
                             ) : (
                               <cat.icon className="w-5 h-5 text-blue-600" />
                             )}
