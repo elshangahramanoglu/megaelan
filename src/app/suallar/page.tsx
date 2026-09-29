@@ -6,7 +6,7 @@ import { ChevronDown } from "lucide-react";
 const FAQ_ITEMS = [
   {
     q: "Saytda elan yerləşdirmək pulludur?",
-    a: "Xeyr, saytda adi elan yerləşdirmək tamamilə pulsuzdur. Siz hər kateqoriya üzrə 1 pulsuz elan yerləşdirə bilərsiniz. Bu limiti keçdikdən sonra eyni kateqoriyada əlavə hər elan üçün xidmət haqqı tələb olunur."
+    a: "Xeyr, saytda adi elan yerləşdirmək tamamilə pulsuzdur. Siz hər kateqoriya üzrə 2 pulsuz elan yerləşdirə bilərsiniz. Bu limiti keçdikdən sonra eyni kateqoriyada əlavə hər elan üçün xidmət haqqı tələb olunur."
   },
   {
     q: "Elanım nə vaxt saytda görünəcək?",
@@ -29,10 +29,6 @@ const FAQ_ITEMS = [
     a: "Elanlar yalnız MegaElan qaydalarını pozduqda (məsələn: nalayiq ifadələr, qeyri-etik şəkillər, saxtakarlıq) süni intellekt botumuz və ya moderatorlarımız tərəfindən rədd edilir."
   },
   {
-    q: "Şifrəmi unutmuşam, necə bərpa edim?",
-    a: "Sistemimiz yalnız SMS təsdiqi ilə işlədiyi üçün şifrəyə ehtiyac yoxdur. Telefon nömrənizi daxil edərək gələn yeni kodla hər zaman təhlükəsiz giriş edə bilərsiniz."
-  },
-  {
     q: "Elanımı necə silə bilərəm?",
     a: "Şəxsi kabinetinizə daxil olaraq 'Mənim Elanlarım' bölməsindəki elan siyahınızda zibil qutusu ikonuna (Sil) klikləyərək elanınızı anında silə bilərsiniz."
   },
@@ -42,7 +38,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Digər istifadəçilərlə necə əlaqə saxlaya bilərəm?",
-    a: "Elan detalları səhifəsində satıcının əlaqə nömrəsi qeyd olunur. Birbaşa nömrəyə zəng edə və ya Whatsapp üzərindən əlaqə saxlaya bilərsiniz."
+    a: "Elan detalları səhifəsində satıcının əlaqə nömrəsi qeyd olunur. Birbaşa nömrəyə zəng edə, Whatsapp üzərindən əlaqə saxlaya və ya saytın daxili mesajlaşma (Çat) sistemi vasitəsilə birbaşa yaza bilərsiniz."
   }
 ];
 
@@ -51,7 +47,7 @@ export default function FAQPage() {
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4 md:px-8 py-12 animate-in fade-in slide-in-from-bottom-4 duration-500">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Tez-tez verilən suallar</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Sual-Cavab</h1>
       
       <div className="space-y-4">
         {FAQ_ITEMS.map((item, idx) => (
