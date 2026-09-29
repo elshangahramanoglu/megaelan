@@ -68,17 +68,16 @@ export default function Header() {
             <Link 
               href="/" 
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-              className="flex items-center gap-2 lg:gap-3 flex-shrink-0"
+              className="flex items-center flex-shrink-0"
             >
               <Image 
-                src="/logo.png" 
+                src="/LogoMegaElan.png" 
                 alt="MegaElan" 
-                width={130} 
-                height={40} 
-                className="object-contain w-auto h-7 sm:h-8 md:h-10 lg:h-11"
+                width={180} 
+                height={50} 
+                className="object-contain h-9 sm:h-10 md:h-11 lg:h-12 w-auto"
                 priority
               />
-              <span className="text-xl lg:text-2xl font-black text-black tracking-tight">MegaElan</span>
             </Link>
           </div>
 
@@ -120,7 +119,7 @@ export default function Header() {
                 title={user ? "Şəxsi kabinet" : "Giriş"}
               >
                 <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center overflow-hidden">
-                  {user?.avatar ? <img src={user.avatar} className="w-5 h-5 rounded-full object-cover" /> : <User className="w-5 h-5" />}
+                  {user?.avatar ? <img src={user.avatar} className="w-full h-full rounded-full object-cover" /> : <User className="w-5 h-5" />}
                 </div>
               </button>
             </div>
@@ -214,13 +213,9 @@ export default function Header() {
             >
               <div className="flex items-center justify-center p-4 border-b border-gray-100 relative">
                 <button 
-                  onClick={() => {
-                    setIsMobileMenuOpen(false);
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }} 
-                  className="text-2xl font-black text-black tracking-tight"
+                  onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
                 >
-                  MegaElan
+                  <Image src="/LogoMegaElan.png" alt="MegaElan" width={150} height={40} className="h-9 w-auto object-contain" />
                 </button>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="absolute right-4 p-2 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <X className="w-6 h-6" />

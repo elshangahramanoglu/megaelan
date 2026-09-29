@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   title: "MegaElan",
   description: "Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!",
   icons: {
-    icon: '/icon.png',
+    icon: '/LogoMegaElan.png',
   },
 };
 
@@ -34,7 +34,7 @@ export default function RootLayout({
   return (
     <html lang="az">
       <head>
-        <link rel="icon" href="/logo.png" />
+        <link rel="icon" href="/LogoMegaElan.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 min-h-screen flex flex-col`}
@@ -43,7 +43,7 @@ export default function RootLayout({
           <Header />
 
           {/* Main Content */}
-          <main className="flex-1 w-full bg-white flex flex-col">
+          <main className="flex-1 w-full bg-white flex flex-col page-enter">
             {children}
           </main>
           <LoginModal />
@@ -56,13 +56,12 @@ export default function RootLayout({
               <div className="flex flex-col items-start gap-5">
                 <Link href="/" className="flex items-center gap-3">
                   <Image 
-                    src="/logo.png" 
+                    src="/LogoMegaElan.png" 
                     alt="MegaElan" 
-                    width={130} 
-                    height={40} 
+                    width={200} 
+                    height={56} 
                     className="object-contain w-auto h-10 lg:h-12"
                   />
-                  <span className="text-2xl lg:text-3xl font-black text-black tracking-tight">MegaElan</span>
                 </Link>
                 <p className="text-gray-600 font-medium leading-relaxed max-w-[250px] text-sm">
                   Azərbaycanda ən geniş və rahat elanlar platforması. İndi tap və ya sat!
