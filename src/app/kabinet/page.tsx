@@ -40,7 +40,7 @@ export default function KabinetPage() {
   }, []);
   const [balanceAmount, setBalanceAmount] = useState<string>('');
   const [isProcessingBalance, setIsProcessingBalance] = useState(false);
-  const [adStatusTab, setAdStatusTab] = useState<'active' | 'pending' | 'rejected' | 'blocked' | 'expired' | 'deleted'>('active');
+  const [adStatusTab, setAdStatusTab] = useState<'active' | 'pending' | 'rejected' | 'expired' | 'deleted'>('active');
   const [myAds, setMyAds] = useState<any[]>([]);
   const [isLoadingAds, setIsLoadingAds] = useState(false);
   const [adToDelete, setAdToDelete] = useState<string | null>(null);
@@ -399,7 +399,6 @@ export default function KabinetPage() {
                     { key: 'active', label: 'Aktiv', color: 'green' },
                     { key: 'pending', label: 'Gözləmədə', color: 'orange' },
                     { key: 'rejected', label: 'Rədd edilən', color: 'red' },
-                    { key: 'blocked', label: 'Bloklanmış', color: 'red' },
                     { key: 'expired', label: 'Müddəti bitmiş', color: 'gray' },
                     { key: 'deleted', label: 'Silinmiş', color: 'gray' },
                   ] as const).map(({ key, label, color }) => (
@@ -415,7 +414,7 @@ export default function KabinetPage() {
                           : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                       }`}
                     >
-                      {label} ({myAds.filter(a => a.status === key).length})
+                      {label} ({myAds.filter(a => key === 'rejected' ? (a.status === 'rejected' || a.status === 'blocked') : a.status === key).length})
                     </button>
                   ))}
                 </div>
@@ -424,7 +423,7 @@ export default function KabinetPage() {
                   <div className="flex items-center justify-center py-24 text-blue-600">
                     <Loader2 className="w-12 h-12 animate-spin" />
                   </div>
-                ) : myAds.filter(ad => ad.status === adStatusTab).length === 0 ? (
+                ) : myAds.filter(ad => adStatusTab === 'rejected' ? (ad.status === 'rejected' || ad.status === 'blocked') : ad.status === adStatusTab).length === 0 ? (
                   <div className="text-center py-24 text-gray-400">
                     <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                       <Bell className="w-10 h-10 text-gray-300" />
@@ -433,7 +432,7 @@ export default function KabinetPage() {
                   </div>
                 ) : (
                   <div className="flex flex-col gap-5">
-                    {myAds.filter(ad => ad.status === adStatusTab).map((ad, i) => (
+                    {myAds.filter(ad => adStatusTab === 'rejected' ? (ad.status === 'rejected' || ad.status === 'blocked') : ad.status === adStatusTab).map((ad, i) => (
                       <motion.div
                         key={ad.id}
                         initial={{ opacity: 0, y: 16 }}
