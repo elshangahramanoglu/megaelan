@@ -9,6 +9,8 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { UploadCloud, CheckCircle, Info, Plus, ArrowRight, Crown, Star } from "lucide-react";
+import { containsProfanity } from "@/lib/profanity";
+
 import { AZERBAIJAN_CITIES } from "@/data/cities";
 import { uploadImageToImgBB } from "@/lib/imgbb";
 import { applySmartFilters } from "@/lib/smartFilters";
@@ -109,6 +111,12 @@ export default function EditAdPage() {
         const { data, error } = await supabase.from('ads').select('*').eq('id', adId).single();
         if (error) throw error;
         
+        if (data.status === 'blocked') {
+          toast.error("Bu elan qaydaları pozduğu üçün bloklanıb və redaktə edilə bilməz!");
+          router.push('/kabinet');
+          return;
+        }
+
         if (data.user_id !== user.id) {
           toast.error("Siz yalnız öz elanınızı redaktə edə bilərsiniz!");
           router.push('/kabinet');
@@ -232,14 +240,12 @@ export default function EditAdPage() {
     
 
     // Basic AI Moderation: Text checking
-    const badWords = ["söyüş", "pis söz", "porno", "scam", "saxta", "şiddət", "fuck", "bitch", "блядь", "сука", "qəhbə", "cındır"];
+    // Advanced AI Moderation: Profanity filtering in 4 languages
     const textToCheck = `${formData.title} ${formData.description}`.toLowerCase();
     
     let initialStatus = 'pending';
-    if (badWords.some(word => textToCheck.includes(word))) {
-      initialStatus = 'rejected';
-      // In a real app we'd still let it insert but as rejected, 
-      // or we can reject it right here before uploading images.
+    if (containsProfanity(textToCheck)) {
+      initialStatus = 'blocked';
     }
     
     setIsSubmitting(true);
@@ -263,7 +269,7 @@ export default function EditAdPage() {
         .from('ads')
         .update({
           title: formData.title,
-          status: 'pending',
+          status: initialStatus,
           description: formData.description,
           price: Number(formData.price) || 0,
           city: formData.city,

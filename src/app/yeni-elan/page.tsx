@@ -12,6 +12,7 @@ import { applySmartFilters } from "@/lib/smartFilters";
 import { supabase } from "@/lib/supabase";
 import { Loader2 } from "lucide-react";
 import { toast } from "react-hot-toast";
+import { containsProfanity } from "@/lib/profanity";
 
 
 const addWatermark = (file: File): Promise<File> => {
@@ -225,15 +226,12 @@ export default function NewAdPage() {
     }
     
 
-    // Basic AI Moderation: Text checking
-    const badWords = ["söyüş", "pis söz", "porno", "scam", "saxta", "şiddət", "fuck", "bitch", "блядь", "сука", "qəhbə", "cındır"];
+    // Advanced AI Moderation: Profanity filtering in 4 languages
     const textToCheck = `${formData.title} ${formData.description}`.toLowerCase();
     
     let initialStatus = showAdPayment ? 'payment_pending' : 'pending';
-    if (badWords.some(word => textToCheck.includes(word))) {
-      initialStatus = 'rejected';
-      // In a real app we'd still let it insert but as rejected, 
-      // or we can reject it right here before uploading images.
+    if (containsProfanity(textToCheck)) {
+      initialStatus = 'blocked';
     }
     
     setIsSubmitting(true);

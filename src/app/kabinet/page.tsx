@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useAppContext } from "@/context/AppContext";
-import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard, Camera, Bell, Shield, ChevronRight, Eye, MessageCircle, Clock, Check, Crown } from "lucide-react";
+import { User, LogOut, CheckCircle, Trash2, ExternalLink, Loader2, Edit3, CreditCard, Camera, Bell, Shield, ChevronRight, Eye, MessageCircle, Clock, Check, Crown, Lock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import Link from "next/link";
@@ -40,7 +40,7 @@ export default function KabinetPage() {
   }, []);
   const [balanceAmount, setBalanceAmount] = useState<string>('');
   const [isProcessingBalance, setIsProcessingBalance] = useState(false);
-  const [adStatusTab, setAdStatusTab] = useState<'active' | 'pending' | 'rejected' | 'expired' | 'deleted'>('active');
+  const [adStatusTab, setAdStatusTab] = useState<'active' | 'pending' | 'rejected' | 'blocked' | 'expired' | 'deleted'>('active');
   const [myAds, setMyAds] = useState<any[]>([]);
   const [isLoadingAds, setIsLoadingAds] = useState(false);
   const [adToDelete, setAdToDelete] = useState<string | null>(null);
@@ -399,6 +399,7 @@ export default function KabinetPage() {
                     { key: 'active', label: 'Aktiv', color: 'green' },
                     { key: 'pending', label: 'Gözləmədə', color: 'orange' },
                     { key: 'rejected', label: 'Rədd edilən', color: 'red' },
+                    { key: 'blocked', label: 'Bloklanmış', color: 'red' },
                     { key: 'expired', label: 'Müddəti bitmiş', color: 'gray' },
                     { key: 'deleted', label: 'Silinmiş', color: 'gray' },
                   ] as const).map(({ key, label, color }) => (
@@ -461,20 +462,28 @@ export default function KabinetPage() {
                           <Link href={`/elan/${ad.id}`} className="p-3.5 flex justify-center items-center bg-gray-100 text-gray-600 hover:bg-gray-200 rounded-xl transition-all" title="Elana bax">
                             <ExternalLink className="w-5 h-5" />
                           </Link>
-                          <Link href={`/reklam?adId=${ad.id}`} className="p-3.5 flex justify-center items-center gap-2 bg-orange-50 text-orange-500 hover:bg-orange-100 rounded-xl transition-all" title="Reklam et">
-                            <Crown className="w-5 h-5" />
-                          </Link>
-                          <Link href={`/redakte/${ad.id}`} className="p-3.5 flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all" title="Redaktə et">
-                            <Edit3 className="w-5 h-5" />
-                          </Link>
-                          {ad.status === 'deleted' ? (
-                            <button onClick={() => handleRestoreAd(ad.id)} className="p-3.5 flex justify-center items-center bg-green-50 text-green-600 hover:bg-green-100 rounded-xl transition-all font-bold text-sm">
-                              Bərpa et
-                            </button>
+                          {ad.status === 'blocked' ? (
+                            <div className="p-3.5 flex justify-center items-center bg-red-100 text-red-600 rounded-xl font-bold text-sm" title="Qadağan olunub">
+                              <Lock className="w-5 h-5 mr-1" /> Bloklanıb
+                            </div>
                           ) : (
-                            <button onClick={() => setAdToDelete(ad.id)} className="p-3.5 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
-                              <Trash2 className="w-5 h-5" />
-                            </button>
+                            <>
+                              <Link href={`/reklam?adId=${ad.id}`} className="p-3.5 flex justify-center items-center gap-2 bg-orange-50 text-orange-500 hover:bg-orange-100 rounded-xl transition-all" title="Reklam et">
+                                <Crown className="w-5 h-5" />
+                              </Link>
+                              <Link href={`/redakte/${ad.id}`} className="p-3.5 flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all" title="Redaktə et">
+                                <Edit3 className="w-5 h-5" />
+                              </Link>
+                              {ad.status === 'deleted' ? (
+                                <button onClick={() => handleRestoreAd(ad.id)} className="p-3.5 flex justify-center items-center bg-green-50 text-green-600 hover:bg-green-100 rounded-xl transition-all font-bold text-sm">
+                                  Bərpa et
+                                </button>
+                              ) : (
+                                <button onClick={() => setAdToDelete(ad.id)} className="p-3.5 flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
+                                  <Trash2 className="w-5 h-5" />
+                                </button>
+                              )}
+                            </>
                           )}
                         </div>
                       </motion.div>
