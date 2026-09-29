@@ -34,7 +34,7 @@ export default function QaydalarPage() {
           <li>Elan başlığı yalnız satılan məhsulu ifadə etməlidir. Başlıqda qiymət və ya nömrə yazmaq qadağandır.</li>
           <li>Yüklənəcək şəkillər minimum 1, maksimum 10 ədəd ola bilər. 1 şəklin ölçüsü maksimum 15MB olmalıdır.</li>
           <li>Şəkillər məhsulun özünə aid olmalı, üzərində digər saytların loqoları olmamalıdır.</li>
-          <li>Əgər məhsul hədiyyə edilirsə (pulsuz verilirsə), qiymət bölməsində 0 AZN qeyd edilə bilər. Əks halda real satış qiyməti yazılmalıdır.</li>
+          <li></li>
         </ul>
 
         <h2 className="text-2xl font-black text-blue-600 mt-10 mb-4 border-b-2 border-blue-100 pb-2">3. Qadağan olunmuş məhsullar</h2>

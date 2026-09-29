@@ -5,6 +5,7 @@ import { useAppContext } from "@/context/AppContext";
 import { categoriesData } from "@/data/categories";
 import { Heart, Share2, MapPin, Phone, MessageCircle, AlertTriangle, ChevronRight, Crown, Star, Loader2, Eye } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import AdCard from "@/components/AdCard";
 import { supabase } from "@/lib/supabase";
 

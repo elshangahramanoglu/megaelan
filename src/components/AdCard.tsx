@@ -2,6 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Heart, Crown } from "lucide-react";
 import { Ad, useAppContext } from "@/context/AppContext";
 

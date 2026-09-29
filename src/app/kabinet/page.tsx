@@ -12,7 +12,15 @@ export default function KabinetPage() {
   const { user, isUserLoaded, updateUser, logout, removeAd } = useAppContext();
   const router = useRouter();
   
-  const [name, setName] = useState(user?.name || "");
+  const [firstName, setFirstName] = useState((user?.name || "").split(' ')[0] || "");
+  const [lastName, setLastName] = useState((user?.name || "").split(' ').slice(1).join(' ') || "");
+  
+  useEffect(() => {
+    if (user?.name) {
+      setFirstName(user.name.split(' ')[0] || "");
+      setLastName(user.name.split(' ').slice(1).join(' ') || "");
+    }
+  }, [user?.name]);
   const [avatar, setAvatar] = useState(user?.avatar || "");
   const [isUploading, setIsUploading] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -152,8 +160,9 @@ export default function KabinetPage() {
     e.preventDefault();
     try {
       if (user) {
-        await supabase.from('users').update({ name }).eq('id', user.id);
-        updateUser({ name });
+        const fullName = `${firstName} ${lastName}`.trim();
+        await supabase.from('users').update({ name: fullName }).eq('id', user.id);
+        updateUser({ name: fullName });
         setIsSaved(true);
         setTimeout(() => setIsSaved(false), 3000);
       }
@@ -214,22 +223,7 @@ export default function KabinetPage() {
       <div className="bg-white rounded-3xl border border-gray-100 shadow-lg overflow-hidden flex flex-col md:flex-row min-h-[600px]">
         {/* Sidebar */}
         <div className="w-full md:w-[280px] bg-gradient-to-b from-slate-50 to-gray-50 border-r border-gray-100 p-6 flex flex-col gap-2 flex-shrink-0">
-          {/* User info in sidebar */}
-          <div className="flex items-center gap-3 mb-6 p-4 bg-white rounded-2xl border border-gray-100 shadow-sm">
-            <div className="w-12 h-12 rounded-full overflow-hidden bg-blue-50 border-2 border-blue-100 flex-shrink-0">
-              {avatar 
-                ? <img src={avatar} className="w-full h-full object-cover" alt="" />
-                : <User className="w-6 h-6 text-blue-400 m-3" />}
-            </div>
-            <div className="min-w-0">
-              <p className="font-black text-black text-sm truncate">{user.name || 'İstifadəçi'}</p>
-              <p className="text-gray-400 text-xs font-medium">{formattedPhone}</p>
-              <div className="flex items-center gap-1 mt-1">
-                <p className="text-gray-400 text-[10px] font-bold">Qeydiyyat: {user.created_at ? new Date(user.created_at).toLocaleDateString('az-AZ', { month: 'long', year: 'numeric' }) : '29 sentyabr 2026'}</p>
-                <svg className="w-3 h-3 text-blue-500" viewBox="0 0 24 24" fill="currentColor"><path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>
-              </div>
-            </div>
-          </div>
+
 
           {sidebarItems.map(({ key, label, icon: Icon }) => (
             <button
@@ -318,11 +312,8 @@ export default function KabinetPage() {
                       <label className="block text-sm font-bold text-gray-700 mb-2">Ad</label>
                       <input 
                         type="text" 
-                        value={name.split(' ')[0] || ''}
-                        onChange={(e) => {
-                          const [, ...rest] = name.split(' ');
-                          setName(`${e.target.value} ${rest.join(' ')}`.trim());
-                        }}
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
                         placeholder="Adınızı daxil edin"
                         className="w-full px-5 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-black font-medium transition-all"
                       />
@@ -331,11 +322,8 @@ export default function KabinetPage() {
                       <label className="block text-sm font-bold text-gray-700 mb-2">Soyad</label>
                       <input 
                         type="text" 
-                        value={name.split(' ').slice(1).join(' ') || ''}
-                        onChange={(e) => {
-                          const [first] = name.split(' ');
-                          setName(`${first || ''} ${e.target.value}`.trim());
-                        }}
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
                         placeholder="Soyadınızı daxil edin"
                         className="w-full px-5 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none text-black font-medium transition-all"
                       />
