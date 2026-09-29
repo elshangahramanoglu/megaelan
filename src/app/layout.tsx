@@ -58,9 +58,9 @@ export default function RootLayout({
                   <Image 
                     src="/LogoMegaElan.png" 
                     alt="MegaElan" 
-                    width={200} 
-                    height={56} 
-                    className="object-contain w-auto h-10 lg:h-12"
+                    width={240} 
+                    height={68} 
+                    className="object-contain w-auto h-14 lg:h-16"
                   />
                 </Link>
                 <p className="text-gray-600 font-medium leading-relaxed max-w-[250px] text-sm">

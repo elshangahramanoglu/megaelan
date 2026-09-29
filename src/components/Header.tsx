@@ -73,9 +73,9 @@ export default function Header() {
               <Image 
                 src="/LogoMegaElan.png" 
                 alt="MegaElan" 
-                width={180} 
-                height={50} 
-                className="object-contain h-9 sm:h-10 md:h-11 lg:h-12 w-auto"
+                width={220} 
+                height={64} 
+                className="object-contain h-12 sm:h-13 md:h-14 lg:h-16 w-auto"
                 priority
               />
             </Link>
@@ -215,7 +215,7 @@ export default function Header() {
                 <button 
                   onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
                 >
-                  <Image src="/LogoMegaElan.png" alt="MegaElan" width={150} height={40} className="h-9 w-auto object-contain" />
+                  <Image src="/LogoMegaElan.png" alt="MegaElan" width={180} height={50} className="h-12 w-auto object-contain" />
                 </button>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="absolute right-4 p-2 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <X className="w-6 h-6" />
