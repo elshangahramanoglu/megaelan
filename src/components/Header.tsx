@@ -51,7 +51,9 @@ export default function Header() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      router.push(`/?search=${encodeURIComponent(searchQuery)}`);
+      setIsMobileSearchOpen(false);
+      setIsSearchFocused(false);
+      router.push(`/axtaris?q=${encodeURIComponent(searchQuery)}`);
     }
   };
 
