@@ -31,7 +31,7 @@ function MessagesContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [refreshChatsTrigger, setRefreshChatsTrigger] = useState(0);
   
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   // Fetch unique conversations
   useEffect(() => {
@@ -131,7 +131,11 @@ function MessagesContent() {
         .order('created_at', { ascending: true });
         
       setMessages(data || []);
-      setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+      setTimeout(() => {
+      if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+    }, 100);
     };
 
     fetchMessages();
@@ -146,7 +150,11 @@ function MessagesContent() {
       }, (payload) => {
         if (payload.new.sender_id === activeChat) {
           setMessages(prev => [...prev, payload.new]);
-          setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+          setTimeout(() => {
+      if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+    }, 100);
         }
         // Update sidebar or refetch if new chat
         setChats(prev => {
@@ -185,7 +193,11 @@ function MessagesContent() {
       ad_id: targetAdId || null
     };
     setMessages(prev => [...prev, tempMsg]);
-    setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' }), 100);
+    setTimeout(() => {
+      if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    }
+    }, 100);
     
     // Update sidebar for sender
     setChats(prev => {
@@ -287,7 +299,7 @@ function MessagesContent() {
               </div>
 
               {/* Messages */}
-              <div className="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3">
+              <div ref={messagesContainerRef} className="flex-1 p-4 overflow-y-auto bg-slate-50 flex flex-col gap-3">
                 {messages.map((msg) => {
                   const isMe = msg.sender_id === user.id;
                   return (
@@ -301,7 +313,7 @@ function MessagesContent() {
                     </div>
                   );
                 })}
-                <div ref={messagesEndRef} />
+                
               </div>
 
               {/* Input Area */}
