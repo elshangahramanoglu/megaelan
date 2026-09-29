@@ -70,12 +70,34 @@ export default function Header() {
               onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
               className="flex items-center flex-shrink-0"
             >
-              <Image 
-                src="/LogoMegaElan.png" 
-                alt="MegaElan" 
-                width={300} height={88} className="object-contain h-16 sm:h-20 md:h-24 lg:h-[90px] w-auto scale-110 lg:scale-125 origin-left"
-                priority
-              />
+              {/* Desktop View: Icon + Text */}
+              <div className="hidden md:flex items-center gap-3">
+                <Image 
+                  src="/LogoMobilBrauzer.png" 
+                  alt="MegaElan Logo" 
+                  width={80} height={80} 
+                  className="w-auto h-14 lg:h-[70px] object-contain" 
+                  priority 
+                />
+                <Image 
+                  src="/LogoMobilBrauzerText.png" 
+                  alt="MegaElan Text" 
+                  width={200} height={60} 
+                  className="w-auto h-10 lg:h-12 object-contain" 
+                  priority 
+                />
+              </div>
+
+              {/* Mobile View: Just Text */}
+              <div className="flex md:hidden items-center">
+                <Image 
+                  src="/LogoMobilBrauzerText.png" 
+                  alt="MegaElan" 
+                  width={220} height={60} 
+                  className="w-auto h-12 object-contain scale-110" 
+                  priority 
+                />
+              </div>
             </Link>
           </div>
 

@@ -463,7 +463,7 @@ export default function KabinetPage() {
                       <div className="flex gap-2">
                         {/* Visa */}
                         <div className="bg-white border border-gray-200 px-3 py-1 rounded-md shadow-sm">
-                          <img src="https://upload.wikimedia.org/wikipedia/commons/0/04/Visa.svg" alt="Visa" className="h-4 object-contain" />
+                          <img src="https://upload.wikimedia.org/wikipedia/commons/4/41/Visa_Logo.png" alt="Visa" className="h-4 object-contain" />
                         </div>
                         {/* Mastercard */}
                         <div className="bg-white border border-gray-200 px-2 py-1 rounded-md shadow-sm">
