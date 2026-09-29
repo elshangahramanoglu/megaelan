@@ -245,7 +245,7 @@ export default function EditAdPage() {
       }
       
       // 2. Update Supabase
-      const finalImages = imageUrls.length > 0 ? imageUrls : existingImages;
+      const finalImages = [...existingImages, ...imageUrls];
       
       const newEditTimestamps = [...editTimestamps, Date.now()];
       const updatedDetails = { ...dynamicDetails, edit_timestamps: newEditTimestamps };
@@ -443,35 +443,73 @@ export default function EditAdPage() {
         </div>
 
         {/* Images */}
-        <div>
+        <div className="flex flex-col gap-3">
           <label className="block text-base font-bold text-black mb-2">Şəkillər (Maks 10 şəkil) *</label>
-          <label className="w-full border-2 border-dashed border-gray-300 hover:border-blue-500 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer bg-gray-50 transition-colors relative">
-            <input 
-              type="file" 
-              multiple 
-              accept="image/*" 
-              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-              onChange={(e) => {
-                if (e.target.files) {
-                  const selectedFiles = Array.from(e.target.files).slice(0, 10);
-                  setFiles(selectedFiles);
-                }
-              }}
-            />
-            <UploadCloud className="w-10 h-10 text-gray-500 mb-4" />
-            <p className="text-black font-bold mb-1 text-lg">Şəkil yükləmək üçün bura klikləyin</p>
-            <p className="text-gray-600 text-sm font-medium mb-4">Maksimum 10 şəkil icazə verilir.</p>
+          <div className="flex flex-wrap gap-4">
             
-            {files.length > 0 && (
-              <div className="flex flex-wrap gap-2 justify-center mt-4">
-                {files.map((f, i) => (
-                  <span key={i} className="bg-blue-100 text-blue-700 text-xs px-2 py-1 rounded-md font-medium border border-blue-200">
-                    {f.name.length > 15 ? f.name.substring(0,15) + '...' : f.name}
-                  </span>
-                ))}
-              </div>
+            {/* Upload Button */}
+            {(files.length + existingImages.length) < 10 && (
+              <label className="w-24 h-24 sm:w-32 sm:h-32 border-2 border-dashed border-blue-400 hover:border-blue-600 bg-blue-50/50 hover:bg-blue-50 rounded-2xl flex flex-col items-center justify-center text-center cursor-pointer transition-colors shadow-sm flex-shrink-0 relative overflow-hidden">
+                <input 
+                  type="file" 
+                  multiple 
+                  accept="image/*" 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  onChange={(e) => {
+                    if (e.target.files) {
+                      const newFiles = Array.from(e.target.files);
+                      const availableSlots = 10 - (files.length + existingImages.length);
+                      const filesToAdd = newFiles.slice(0, availableSlots);
+                      if (filesToAdd.length > 0) {
+                        setFiles([...files, ...filesToAdd]);
+                      }
+                      if (newFiles.length > availableSlots) {
+                        alert(`Maksimum 10 şəkil icazə verilir. Yalnız ${availableSlots} şəkil əlavə edildi.`);
+                      }
+                    }
+                  }}
+                />
+                <Plus className="w-8 h-8 text-blue-500 mb-1" />
+                <span className="text-[10px] sm:text-xs font-bold text-blue-600">Şəkil seç</span>
+              </label>
             )}
-          </label>
+
+            {/* Existing Images */}
+            {existingImages.map((url, i) => (
+              <div key={`ex-${i}`} className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shadow-sm border border-gray-200 group flex-shrink-0">
+                <img src={url} alt="Preview" className="w-full h-full object-cover" />
+                <button 
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setExistingImages(existingImages.filter((_, index) => index !== i));
+                  }}
+                  className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shadow-md transition-transform active:scale-95 z-10 cursor-pointer"
+                >
+                  ✕
+                </button>
+                {i === 0 && <div className="absolute bottom-0 inset-x-0 bg-blue-600/90 text-white text-[10px] py-1 text-center font-bold z-10">ƏSAS ŞƏKİL</div>}
+              </div>
+            ))}
+
+            {/* New Files Preview */}
+            {files.map((f, i) => (
+              <div key={`new-${i}`} className="relative w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden shadow-sm border border-gray-200 group flex-shrink-0">
+                <img src={URL.createObjectURL(f)} alt="Preview" className="w-full h-full object-cover" />
+                <button 
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setFiles(files.filter((_, index) => index !== i));
+                  }}
+                  className="absolute top-1.5 right-1.5 bg-red-500 hover:bg-red-600 text-white w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold shadow-md transition-transform active:scale-95 z-10 cursor-pointer"
+                >
+                  ✕
+                </button>
+                {existingImages.length === 0 && i === 0 && <div className="absolute bottom-0 inset-x-0 bg-blue-600/90 text-white text-[10px] py-1 text-center font-bold z-10">ƏSAS ŞƏKİL</div>}
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Price & City */}

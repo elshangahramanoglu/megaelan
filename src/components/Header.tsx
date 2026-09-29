@@ -71,19 +71,19 @@ export default function Header() {
               className="flex items-center flex-shrink-0"
             >
               {/* Desktop View: Icon + Text */}
-              <div className="hidden md:flex items-center gap-3">
+              <div className="hidden md:flex items-center gap-2">
                 <Image 
                   src="/LogoMobilBrauzer.png" 
                   alt="MegaElan Logo" 
-                  width={80} height={80} 
-                  className="w-auto h-14 lg:h-[70px] object-contain" 
+                  width={40} height={40} 
+                  className="w-auto h-8 lg:h-10 object-contain" 
                   priority 
                 />
                 <Image 
                   src="/LogoMobilBrauzerText.png" 
                   alt="MegaElan Text" 
-                  width={200} height={60} 
-                  className="w-auto h-10 lg:h-12 object-contain" 
+                  width={150} height={40} 
+                  className="w-auto h-6 lg:h-8 object-contain" 
                   priority 
                 />
               </div>
@@ -93,8 +93,8 @@ export default function Header() {
                 <Image 
                   src="/LogoMobilBrauzerText.png" 
                   alt="MegaElan" 
-                  width={220} height={60} 
-                  className="w-auto h-12 object-contain scale-110" 
+                  width={140} height={40} 
+                  className="w-auto h-7 object-contain" 
                   priority 
                 />
               </div>
@@ -235,7 +235,7 @@ export default function Header() {
                 <button 
                   onClick={() => { setIsMobileMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }} 
                 >
-                  <Image src="/LogoMegaElan.png" alt="MegaElan" width={250} height={70} className="h-16 md:h-20 w-auto object-contain scale-125 origin-center" />
+                  <Image src="/LogoMain.png" alt="MegaElan" width={150} height={45} className="h-10 w-auto object-contain" />
                 </button>
                 <button onClick={() => setIsMobileMenuOpen(false)} className="absolute right-4 p-2 text-black bg-gray-100 hover:bg-gray-200 rounded-full transition-colors">
                   <X className="w-6 h-6" />

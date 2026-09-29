@@ -300,7 +300,7 @@ export default function NewAdPage() {
           <CheckCircle className="w-12 h-12" />
         </div>
         <h1 className="text-3xl font-bold text-black mb-4">Elanınız yoxlanışdadır (GÖZLƏMƏDƏ)!</h1>
-        <p className="text-gray-700 mb-8 font-medium">Elanınız avtomatik yoxlanışdan keçir (1 dəqiqə ərzində aktiv olacaq). Elanlar siyahısında izləyə bilərsiniz.</p>
+        <p className="text-gray-700 mb-8 font-medium">Elanınız avtomatik yoxlanışdan keçir. Elanlar siyahısında izləyə bilərsiniz.</p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link 
