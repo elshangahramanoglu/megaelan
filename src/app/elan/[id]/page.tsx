@@ -170,9 +170,9 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
               onTouchEnd={handleTouchEnd}
             >
               {(ad.images && ad.images.length > 0) ? (
-                <Image unoptimized src={ad.images[currentImageIndex]} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-contain relative z-10" />
+                <Image src={ad.images[currentImageIndex]} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-contain relative z-10" />
               ) : ad.imagePlaceholder.startsWith('http') ? (
-                <Image unoptimized src={ad.imagePlaceholder} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-cover" />
+                <Image src={ad.imagePlaceholder} alt={ad.title} priority fill sizes="(max-width: 768px) 100vw, 66vw" className="object-cover" />
               ) : (
                 ad.imagePlaceholder
               )}
@@ -195,7 +195,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
                     onClick={() => setCurrentImageIndex(idx)}
                     className={`relative shrink-0 w-24 h-24 rounded-xl overflow-hidden border-2 transition-all snap-center ${currentImageIndex === idx ? 'border-blue-600 shadow-md scale-100' : 'border-transparent hover:border-gray-300 scale-95 opacity-80 hover:opacity-100'}`}
                   >
-                    <Image unoptimized src={img} fill sizes="96px" className="object-cover" alt="Thumb" />
+                    <Image src={img} fill sizes="96px" className="object-cover" alt="Thumb" loading="lazy" />
                   </button>
                 ))}
               </div>
@@ -262,7 +262,7 @@ export default function AdDetailsPage({ params }: { params: Promise<{ id: string
           <div className="bg-white p-6 rounded-3xl border border-gray-200 shadow-sm z-10">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-16 h-16 bg-blue-50 text-blue-600 rounded-full flex items-center justify-center text-2xl font-black border-2 border-blue-100 overflow-hidden flex-shrink-0 relative">
-                {sellerAvatar ? <Image unoptimized src={sellerAvatar} fill sizes="64px" className="object-cover" alt="" /> : ad.contactName.charAt(0)}
+                {sellerAvatar ? <Image src={sellerAvatar} fill sizes="64px" className="object-cover" alt="" /> : ad.contactName.charAt(0)}
               </div>
               <div>
                 {dbUserId ? (

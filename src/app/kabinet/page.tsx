@@ -318,7 +318,7 @@ export default function KabinetPage() {
                       {isUploading 
                         ? <Loader2 className="w-10 h-10 animate-spin text-blue-600" />
                         : avatar 
-                          ? <Image unoptimized src={avatar} priority fill sizes="128px" className="object-cover" alt="Profil" />
+                          ? <Image src={avatar} priority fill sizes="128px" className="object-cover" alt="Profil" />
                           : <User className="w-16 h-16 text-gray-300" />}
                       <label className="absolute inset-0 bg-black/40 opacity-0 hover:opacity-100 flex flex-col items-center justify-center cursor-pointer transition-opacity gap-1">
                         <Camera className="w-8 h-8 text-white" />
@@ -455,7 +455,7 @@ export default function KabinetPage() {
                       >
                         <div className="w-full md:w-40 h-48 md:h-32 bg-gray-100 rounded-2xl flex-shrink-0 overflow-hidden relative">
                           {ad.images && ad.images.length > 0 
-                            ? <Image unoptimized src={ad.images[0]} fill sizes="(max-width: 768px) 100vw, 160px" className="object-cover" alt={ad.title} />
+                            ? <Image src={ad.images[0]} fill sizes="(max-width: 768px) 100vw, 160px" className="object-cover" alt={ad.title} />
                             : <div className="w-full h-full flex items-center justify-center text-gray-400 text-xs font-bold">Şəkil yoxdur</div>}
                         </div>
                         <div className="flex-1 min-w-0 flex flex-col justify-between">

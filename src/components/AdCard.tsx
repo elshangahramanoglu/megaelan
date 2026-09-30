@@ -9,7 +9,6 @@ import { Ad, useAppContext } from "@/context/AppContext";
 export default function AdCard({ ad }: { ad: Ad }) {
   const { favorites, toggleFavorite, user } = useAppContext();
   const isFav = favorites.includes(ad.id);
-
   const isMine = user && ad.user_id === user.id;
 
   return (
@@ -24,7 +23,14 @@ export default function AdCard({ ad }: { ad: Ad }) {
           </div>
         )}
         {ad.imagePlaceholder.startsWith('http') ? (
-          <Image unoptimized src={ad.imagePlaceholder} alt={ad.title} fill sizes="(max-width: 768px) 50vw, 25vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
+          <Image
+            src={ad.imagePlaceholder}
+            alt={ad.title}
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+          />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-gray-400 font-medium group-hover:scale-105 transition-transform duration-500">
             {ad.imagePlaceholder}

@@ -38,6 +38,11 @@ export default function RootLayout({
         <link rel="icon" href="/Favicon.png" sizes="any" />
         <link rel="icon" href="/Favicon.png" type="image/png" sizes="192x192" />
         <link rel="apple-touch-icon" href="/Favicon.png" />
+        {/* Preconnect to image CDNs for faster mobile loading */}
+        <link rel="preconnect" href="https://i.ibb.co" />
+        <link rel="preconnect" href="https://ibb.co" />
+        <link rel="dns-prefetch" href="https://i.ibb.co" />
+        <link rel="dns-prefetch" href="https://ibb.co" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-white text-gray-900 min-h-screen flex flex-col`}
