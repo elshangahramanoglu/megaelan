@@ -67,8 +67,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     setIsMounted(true);
-    // Initialize mock data and fetch real data from Supabase
-    const timer = setTimeout(async () => {
+    // Fetch real data from Supabase immediately (no delay)
+    const fetchData = async () => {
       try {
         const { data: realAds, error } = await supabase
           .from('ads')
@@ -120,7 +120,8 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       } finally {
         setIsAdsLoaded(true);
       }
-    }, 0);
+    };
+    fetchData();
     
     // Check local storage for user and favorites
     const savedUser = localStorage.getItem("megaelan_user");
@@ -156,7 +157,7 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
       setTimeout(() => setFavorites(JSON.parse(savedFavs)), 0);
     }
 
-    return () => clearTimeout(timer);
+    return () => {};
   }, []);
 
   // Prevent rendering children until mounted to avoid hydration mismatches 

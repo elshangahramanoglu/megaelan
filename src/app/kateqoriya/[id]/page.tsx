@@ -19,6 +19,7 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
   
   const [mounted, setMounted] = useState(false);
   const [sortOrder, setSortOrder] = useState<"newest" | "cheapest" | "expensive">("newest");
+  const [subDrawerOpen, setSubDrawerOpen] = useState(false);
   
   // Filters state
   const [subCategory, setSubCategory] = useState(initialSubCategory || "");
@@ -115,11 +116,46 @@ export default function CategoryPage({ params, searchParams }: { params: Promise
       </div>
 
       <div className="flex flex-col md:flex-row gap-8">
-        {/* Sidebar Filters */}
-        <aside className="w-full md:w-1/4 flex flex-col gap-6">
+
+        {/* Mobile: Subcategory Drawer Button */}
+        <div className="md:hidden w-full">
+          <button
+            onClick={() => setSubDrawerOpen(!subDrawerOpen)}
+            className="w-full flex items-center justify-between px-5 py-3.5 bg-white border-2 border-gray-200 rounded-2xl font-bold text-gray-800 text-sm shadow-sm"
+          >
+            <span className="flex items-center gap-2">
+              <category.icon className="w-4 h-4 text-blue-600" />
+              {subCategory || "Bütün alt kateqoriyalar"}
+            </span>
+            <ChevronRight className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${subDrawerOpen ? 'rotate-90' : ''}`} />
+          </button>
+
+          {subDrawerOpen && (
+            <div className="mt-2 bg-white border border-gray-200 rounded-2xl shadow-lg overflow-hidden animate-in slide-in-from-top-2 duration-200">
+              <button
+                onClick={() => { setSubCategory(""); setSubDrawerOpen(false); }}
+                className={`block w-full text-left px-5 py-3 text-sm font-bold border-b border-gray-100 ${!subCategory ? 'text-blue-600 bg-blue-50' : 'text-gray-700'}`}
+              >
+                Bütün alt kateqoriyalar
+              </button>
+              {category.subcategories.map(sub => (
+                <button
+                  key={sub}
+                  onClick={() => { setSubCategory(sub); setSubDrawerOpen(false); }}
+                  className={`block w-full text-left px-5 py-3 text-sm font-medium border-b border-gray-50 last:border-0 ${subCategory === sub ? 'text-blue-600 font-bold bg-blue-50' : 'text-gray-700'}`}
+                >
+                  {sub}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar Filters — desktop only */}
+        <aside className="hidden md:flex w-full md:w-1/4 flex-col gap-6">
           <div className="bg-slate-50 p-6 rounded-3xl border border-gray-100 shadow-sm flex flex-col gap-6 sticky top-24">
             
-            {/* Subcategories */}
+            {/* Subcategories - desktop */}
             <div>
               <h2 className="text-lg font-black text-black mb-4 flex items-center gap-2">
                 <category.icon className="w-5 h-5 text-blue-600" />

@@ -23,6 +23,12 @@ function SearchContent() {
   const [sellerType, setSellerType] = useState("Bütün");
   const [delivery, setDelivery] = useState("Vacib deyil");
 
+  // Reset all filters when search query changes
+  useEffect(() => {
+    setMinPrice(""); setMaxPrice(""); setCity("Bütün şəhərlər");
+    setCategory("Bütün kateqoriyalar"); setSellerType("Bütün"); setDelivery("Vacib deyil");
+  }, [q]);
+
   useEffect(() => {
     setMounted(true);
   }, []);

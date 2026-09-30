@@ -121,6 +121,19 @@ export default function KabinetPage() {
     }
   };
 
+  const handlePermanentDeleteAd = async (adId: string) => {
+    try {
+      const { error } = await supabase.from('ads').delete().eq('id', adId);
+      if (error) throw error;
+      setMyAds(prev => prev.filter(ad => ad.id !== adId));
+      removeAd(adId);
+      toast.success('Elan kökündən silindi.');
+    } catch (err) {
+      console.error('Error permanently deleting ad:', err);
+      toast.error("Xəta: Elanı silmək mümkün olmadı.");
+    }
+  };
+
   React.useEffect(() => {
     if (isUserLoaded && !user) router.push("/");
   }, [user, isUserLoaded, router]);
@@ -467,16 +480,21 @@ export default function KabinetPage() {
                             </div>
                           ) : (
                             <>
-                              <Link href={`/reklam?adId=${ad.id}`} className="p-2.5 flex-1 md:flex-none flex justify-center items-center gap-2 bg-orange-50 text-orange-500 hover:bg-orange-100 rounded-xl transition-all" title="Reklam et">
+                              <div className="p-2.5 flex-1 md:flex-none flex justify-center items-center gap-2 bg-gray-100 text-gray-400 rounded-xl cursor-not-allowed" title="Ödəniş sistemi tezliklə aktiv olacaq">
                                 <Crown className="w-5 h-5" />
-                              </Link>
+                              </div>
                               <Link href={`/redakte/${ad.id}`} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-xl transition-all" title="Redaktə et">
                                 <Edit3 className="w-5 h-5" />
                               </Link>
                               {ad.status === 'deleted' ? (
-                                <button onClick={() => handleRestoreAd(ad.id)} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-green-50 text-green-600 hover:bg-green-100 rounded-xl transition-all font-bold text-sm">
-                                  Bərpa et
-                                </button>
+                                <>
+                                  <button onClick={() => handleRestoreAd(ad.id)} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-green-50 text-green-600 hover:bg-green-100 rounded-xl transition-all font-bold text-sm">
+                                    Bərpa et
+                                  </button>
+                                  <button onClick={() => handlePermanentDeleteAd(ad.id)} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-red-600 text-white hover:bg-red-700 rounded-xl transition-all font-bold text-xs" title="Kökündən sil">
+                                    <Trash2 className="w-4 h-4 mr-1" /> Kökündən sil
+                                  </button>
+                                </>
                               ) : (
                                 <button onClick={() => setAdToDelete(ad.id)} className="p-2.5 flex-1 md:flex-none flex justify-center items-center bg-red-50 text-red-500 hover:bg-red-100 rounded-xl transition-all" title="Sil">
                                   <Trash2 className="w-5 h-5" />
@@ -514,30 +532,13 @@ export default function KabinetPage() {
                     <h3 className="text-3xl font-black relative z-10">{(user?.balance || 0).toFixed(2)} <span className="text-lg font-bold text-blue-200">AZN</span></h3>
                   </div>
 
-                  {/* Top Up Form */}
-                  <div className="flex-[2] bg-white rounded-2xl border border-gray-200 p-6 shadow-sm">
-                    <h3 className="text-lg font-bold text-black mb-4">Balansı artır</h3>
-                    <form onSubmit={handleTopUp} className="flex flex-col sm:flex-row gap-3">
-                      <div className="flex-1">
-                        <input 
-                          type="number" 
-                          step="0.10"
-                          min="1"
-                          value={balanceAmount}
-                          onChange={(e) => setBalanceAmount(e.target.value)}
-                          placeholder="Məbləğ (AZN)"
-                          className="w-full px-4 py-3 text-lg rounded-xl border border-gray-300 focus:border-blue-500 outline-none text-black font-bold transition-all"
-                          required
-                        />
-                      </div>
-                      <button 
-                        type="submit" 
-                        disabled={isProcessingBalance || !balanceAmount}
-                        className="w-full sm:w-auto px-8 py-3 bg-green-600 hover:bg-green-700 active:scale-95 text-white font-bold text-lg rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                      >
-                        {isProcessingBalance ? <Loader2 className="w-6 h-6 animate-spin" /> : "Ödəniş et"}
-                      </button>
-                    </form>
+                  {/* Top Up Form - Disabled (payment not yet connected) */}
+                  <div className="flex-[2] bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200 p-6 flex flex-col items-center justify-center text-center gap-3">
+                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                      <CreditCard className="w-6 h-6 text-orange-500" />
+                    </div>
+                    <h3 className="text-base font-bold text-gray-700">Ödəniş sistemi tezliklə aktiv olacaq</h3>
+                    <p className="text-sm text-gray-500 font-medium">Hal-hazırda ödəniş sistemi qoşulmayıb. Tezliklə aktivləşdiriləcək.</p>
                   </div>
                 </div>
               </motion.div>
